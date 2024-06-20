@@ -1,27 +1,110 @@
 import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
-  Dimensions,
   View,
   ScrollView,
   Text,
-  Button,
+  TouchableOpacity,
   TextInput,
   PermissionsAndroid,
   Platform,
-  TouchableOpacity,
 } from 'react-native';
 import RNBluetoothClassic, {
   BluetoothDevice,
 } from 'react-native-bluetooth-classic';
-import styles from './styles';
-import {
-  checkBluetoothEnabled,
-  requestBluetoothPermissions,
-  connectToDevice,
-  disconnectFromDevice,
-} from './bluetoothUtils';
 
+// Utility Functions
+const checkBluetoothEnabled = async () => {
+  try {
+    const enabled = await RNBluetoothClassic.isBluetoothEnabled();
+    if (!enabled) {
+      await RNBluetoothClassic.requestBluetoothEnabled();
+    }
+  } catch (error) {
+    console.error('Bluetooth Classic is not available on this device.');
+  }
+};
+
+const requestBluetoothPermissions = async () => {
+  try {
+    const grantedScan = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+      {
+        title: 'Bluetooth Scan Permission',
+        message:
+          'This app needs Bluetooth Scan permission to discover devices.',
+        buttonPositive: 'OK',
+        buttonNegative: 'Cancel',
+      },
+    );
+
+    const grantedConnect = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+      {
+        title: 'Bluetooth Connect Permission',
+        message:
+          'This app needs Bluetooth Connect permission to connect to devices.',
+        buttonPositive: 'OK',
+        buttonNegative: 'Cancel',
+      },
+    );
+
+    const grantedLocation = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      {
+        title: 'Fine Location Permission',
+        message: 'This app needs to know location of device.',
+        buttonPositive: 'OK',
+        buttonNegative: 'Cancel',
+      },
+    );
+
+    return (
+      grantedScan === PermissionsAndroid.RESULTS.GRANTED &&
+      grantedConnect === PermissionsAndroid.RESULTS.GRANTED &&
+      grantedLocation === PermissionsAndroid.RESULTS.GRANTED
+    );
+  } catch (err) {
+    console.warn(err);
+    return false;
+  }
+};
+
+const connectToDeviceUtil = async (device: BluetoothDevice) => {
+  try {
+    console.log('Connecting to device');
+    let connection = await device.isConnected();
+    if (!connection) {
+      console.log('Connecting to device');
+      await device.connect({
+        connectorType: 'rfcomm',
+        DELIMITER: '\n',
+        DEVICE_CHARSET: Platform.OS === 'ios' ? 1536 : 'utf-8',
+      });
+    }
+    return true;
+  } catch (error) {
+    console.error('Error connecting to device:', error);
+    return false;
+  }
+};
+
+const disconnectFromDevice = async (
+  device: BluetoothDevice,
+  clearIntervalId: () => void,
+) => {
+  try {
+    clearIntervalId();
+    await device.clear();
+    console.log('BT buffer cleared');
+    await device.disconnect();
+    console.log('Disconnected from device');
+  } catch (error) {
+    console.error('Error disconnecting:', error);
+  }
+};
+
+// Component
 const BluetoothClassicTerminal = () => {
   const [devices, setDevices] = useState<any[]>([]);
   const [paired, setPaired] = useState<any[]>([]);
@@ -30,16 +113,6 @@ const BluetoothClassicTerminal = () => {
   const [receivedMessage, setReceivedMessage] = useState('');
   const [isConnected, setIsConnected] = useState(false);
   const [intervalId, setIntervalId] = useState<NodeJS.Timer>();
-
-  /*const [state, setState] = useState({
-    devices: [],
-    paired: [],
-    selectedDevice: null,
-    messageToSend: "",
-    receivedMessage: "",
-    isConnected: false,
-    intervalId: null,
-  })*/
 
   const startDeviceDiscovery = async () => {
     console.log('searching for devices...');
@@ -50,96 +123,75 @@ const BluetoothClassicTerminal = () => {
     } catch (error) {
       console.error('Error bonded devices:', error);
     }
-
-    /*try {
-      const devices = await RNBluetoothClassic.startDiscovery();
-      this.setState({ devices });
-      console.log("Discovered peripherals: " + devices.length);
-    } catch (error) {
-      console.error('Error discovering devices:', error);
-    }*/
   };
 
   const connectToDevice = async (device: BluetoothDevice) => {
-    try {
-      console.log('Connecting to device');
-      let connection = await device.isConnected();
-      if (!connection) {
-        console.log('Connecting to device');
-        await device.connect({
-          connectorType: 'rfcomm',
-          DELIMITER: '\n',
-          DEVICE_CHARSET: Platform.OS === 'ios' ? 1536 : 'utf-8',
-        });
-      }
+    const connectionSuccess = await connectToDeviceUtil(device);
+    if (connectionSuccess) {
       setSelectedDevice(device);
       setIsConnected(true);
-      console.log('is connected : ', isConnected);
-      //device.onDataReceived((data) => this.readData());
-      //const intervalId = setInterval(() => {readData();}, 100);
-      //setIntervalId(intervalId);
-    } catch (error) {
-      console.error('Error connecting to device:', error);
     }
   };
 
-  /*async onReceivedData() {
-  const { selectedDevice, receivedMessage } = this.state;
-  //console.log("event : recived message", event);
-  try{
-    //const message = await selectedDevice.read();
-    console.log("reieved msg from", selectedDevice.name);
-    const messages = await selectedDevice.available();
-  if (messages.length > 0) {
-    console.log("msg waiting : ", messages.length);
-  }
-    //this.setState({ receivedMessage: message.data });
-  } catch (error) {
-    console.error('Error receiving data:', error);
-  }
-}*/
-
-  const sendMessage = async () => {
-    if (selectedDevice && isConnected) {
-      console.log('isConnected in message', isConnected);
-      try {
-        await selectedDevice.write(messageToSend);
-      } catch (error) {
-        console.error('Error sending message:', error);
+  const parseDataStream = (data: string) => {
+    const lines = data.split('\n');
+    const parsedData = lines.map(line => {
+      const fields = line.split(',');
+      const sentenceType = fields[0];
+      switch (sentenceType) {
+        case '$GPRMC':
+          return {
+            type: 'GPRMC',
+            time: fields[1],
+            status: fields[2],
+            latitude: fields[3] + ' ' + fields[4],
+            longitude: fields[5] + ' ' + fields[6],
+            speed: fields[7],
+            date: fields[9],
+          };
+        case '$GPVTG':
+          return {
+            type: 'GPVTG',
+            course: fields[1],
+            speed: fields[7],
+          };
+        case '$GPGGA':
+          return {
+            type: 'GPGGA',
+            time: fields[1],
+            latitude: fields[2] + ' ' + fields[3],
+            longitude: fields[4] + ' ' + fields[5],
+            fixQuality: fields[6],
+            altitude: fields[9] + ' ' + fields[10],
+          };
+        case '$GPGLL':
+          return {
+            type: 'GPGLL',
+            latitude: fields[1] + ' ' + fields[2],
+            longitude: fields[3] + ' ' + fields[4],
+            time: fields[5],
+          };
+        case '$GPGSA':
+          return {
+            type: 'GPGSA',
+            mode: fields[1],
+            fixType: fields[2],
+            satellitesUsed: fields.slice(3, 15).filter(sat => sat !== ''),
+          };
+        case '$GPGSV':
+          return {
+            type: 'GPGSV',
+            numberOfMessages: fields[1],
+            messageNumber: fields[2],
+            satellitesInView: fields[3],
+            satellitesInfo: fields.slice(4, fields.length - 1),
+          };
+        default:
+          return;
       }
-    }
+    });
+    return parsedData;
   };
-
-  /*const readData = async () => {  
-  console.log("reading data connected", isConnected);
-  if(selectedDevice && isConnected){
-    try {
-      console.log("reading data from", selectedDevice.name);
-      //const available = await selectedDevice.available();
-      //if (available>1){
-        let message = await selectedDevice.read();
-        if(message){
-          message = message.trim();
-          if (message !== "" && message !== " "){
-            console.log("reading data from", selectedDevice.name);
-            //console.log(" available : ",  available);
-            //console.log("available", selectedDevice.available());
-            //console.log("read", selectedDevice.read());
-            setReceivedMessage(receivedMessage + message +"\n" );
-            console.log('message', message);
-            console.log('message', receivedMessage);
-            
-          }
-        }
-    //  }
-
-    } catch (error) {
-      //console.log("isConnected",isConnected);
-      //console.log("selectedDevice",selectedDevice);
-      console.error('Error reading message:', error);
-    }
-  }
-}*/
 
   const readData = async () => {
     if (selectedDevice && isConnected) {
@@ -148,7 +200,8 @@ const BluetoothClassicTerminal = () => {
         if (message) {
           message = message.trim();
           if (message !== '' && message !== ' ') {
-            console.log('Received:', message);
+            const parsedData = parseDataStream(message.toString());
+            console.log('Parsed Data:', parsedData);
           }
         }
       } catch (error) {
@@ -163,6 +216,7 @@ const BluetoothClassicTerminal = () => {
     let intervalId: string | number | NodeJS.Timer | undefined;
     if (selectedDevice && isConnected) {
       intervalId = setInterval(() => readData(), 100);
+      setIntervalId(intervalId);
     }
     return () => {
       clearInterval(intervalId);
@@ -170,98 +224,47 @@ const BluetoothClassicTerminal = () => {
   }, [isConnected, selectedDevice]);
 
   const disconnect = () => {
-    //need to reset esp32 at disconnect
     if (selectedDevice && isConnected) {
-      try {
-        clearInterval(intervalId);
-        setIntervalId(undefined);
-
-        selectedDevice.clear().then(() => {
-          console.log('BT buffer cleared');
-        });
-
-        selectedDevice.disconnect().then(() => {
-          setSelectedDevice(undefined);
-          setIsConnected(false);
-          setReceivedMessage('');
-          console.log('Disconnected from device');
-        });
-
-        /*RNBluetoothClassic.unpairDevice(uuid).then( () => {
-        console.log("Unpaired from device");
-      });
-      
-      RNBluetoothClassic.pairDevice(uuid).then( () => {
-        console.log("paired from device");
-      });*/
-      } catch (error) {
-        console.error('Error disconnecting:', error);
-      }
+      disconnectFromDevice(selectedDevice, () => clearInterval(intervalId));
+      setSelectedDevice(undefined);
+      setIsConnected(false);
+      setReceivedMessage('');
     }
   };
+
   useEffect(() => {
-    async function requestBluetoothPermission() {}
-
+    async function requestBluetoothPermission() {
+      const permissionsGranted = await requestBluetoothPermissions();
+      if (permissionsGranted) {
+        startDeviceDiscovery();
+      }
+    }
     checkBluetoothEnabled();
-
-    requestBluetoothPermission().then(() => {
-      startDeviceDiscovery();
-    });
+    requestBluetoothPermission();
   }, []);
 
   return (
-    <View>
-      <Text
-        style={{
-          fontSize: 30,
-          textAlign: 'center',
-          borderBottomWidth: 1,
-        }}>
-        Bluetooth Terminal
-      </Text>
+    <View style={styles.container}>
+      <Text style={styles.headerText}>Bluetooth Terminal</Text>
       <ScrollView>
         {!isConnected && (
           <>
             <TouchableOpacity
-              onPress={() => startDeviceDiscovery()}
-              style={[styles.deviceButton]}>
-              <Text style={[styles.scanButtonText]}>SCAN</Text>
+              onPress={startDeviceDiscovery}
+              style={styles.deviceButton}>
+              <Text style={styles.scanButtonText}>SCAN FOR PAIRED DEVICES</Text>
             </TouchableOpacity>
-            {/*
-          <Text>Available Devices:</Text>
-          {devices.map((device) => (
-            <Button
-              key={device.id}
-              title={device.name || 'Unnamed Device'}
-              onPress={() => this.connectToDevice(device)}
-            />
-          ))}
-          */}
             <Text>Paired Devices:</Text>
-            {paired.map((pair: BluetoothDevice, i) => (
-              <View
-                key={i}
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginBottom: 2,
-                }}>
+            {paired.map((device, i) => (
+              <View key={i} style={styles.deviceContainer}>
                 <View style={styles.deviceItem}>
-                  <Text style={styles.deviceName}>{pair.name}</Text>
-                  <Text style={styles.deviceInfo}>{pair.id}</Text>
+                  <Text style={styles.deviceName}>{device.name}</Text>
+                  <Text style={styles.deviceInfo}>{device.id}</Text>
                 </View>
                 <TouchableOpacity
-                  onPress={() =>
-                    isConnected ? disconnect() : connectToDevice(pair)
-                  }
+                  onPress={() => connectToDevice(device)}
                   style={styles.deviceButton}>
-                  <Text
-                    style={[
-                      styles.scanButtonText,
-                      {fontWeight: 'bold', fontSize: 12},
-                    ]}>
-                    {isConnected ? 'Disconnect' : 'Connect'}
-                  </Text>
+                  <Text style={styles.connectButtonText}>Connect</Text>
                 </TouchableOpacity>
               </View>
             ))}
@@ -269,31 +272,103 @@ const BluetoothClassicTerminal = () => {
         )}
         {selectedDevice && isConnected && (
           <>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                margin: 5,
-              }}>
+            <View style={styles.deviceContainer}>
               <View style={styles.deviceItem}>
                 <Text style={styles.deviceName}>{selectedDevice.name}</Text>
                 <Text style={styles.deviceInfo}>{selectedDevice.id}</Text>
               </View>
               <TouchableOpacity
-                onPress={() =>
-                  isConnected ? disconnect() : connectToDevice(selectedDevice)
-                }
+                onPress={disconnect}
                 style={styles.deviceButton}>
-                <Text style={styles.scanButtonText}>
-                  {isConnected ? 'Disconnect' : 'Connect'}
-                </Text>
+                <Text style={styles.connectButtonText}>Disconnect</Text>
               </TouchableOpacity>
+            </View>
+            <View style={styles.messageContainer}>
+              <TextInput
+                style={styles.messageInput}
+                value={messageToSend}
+                onChangeText={setMessageToSend}
+                placeholder="Type a message"
+              />
+            </View>
+            <View style={styles.receivedMessageContainer}>
+              <Text style={styles.receivedMessageText}>{receivedMessage}</Text>
             </View>
           </>
         )}
       </ScrollView>
     </View>
   );
-}; //end of component
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 10,
+  },
+  headerText: {
+    fontSize: 30,
+    textAlign: 'center',
+    borderBottomWidth: 1,
+  },
+  deviceButton: {
+    padding: 10,
+    backgroundColor: '#007AFF',
+    borderRadius: 5,
+    margin: 5,
+  },
+  scanButtonText: {
+    color: '#fff',
+    textAlign: 'center',
+  },
+  deviceContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 2,
+  },
+  deviceItem: {
+    flex: 1,
+  },
+  deviceName: {
+    fontSize: 18,
+  },
+  deviceInfo: {
+    fontSize: 12,
+    color: 'gray',
+  },
+  connectButtonText: {
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
+  messageContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 5,
+  },
+  messageInput: {
+    flex: 1,
+    borderWidth: 1,
+    padding: 5,
+  },
+  sendButton: {
+    padding: 10,
+    backgroundColor: '#007AFF',
+    borderRadius: 5,
+    marginLeft: 5,
+  },
+  sendButtonText: {
+    color: '#fff',
+    textAlign: 'center',
+  },
+  receivedMessageContainer: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: '#F0F0F0',
+    borderRadius: 5,
+  },
+  receivedMessageText: {
+    fontSize: 14,
+  },
+});
 
 export default BluetoothClassicTerminal;
