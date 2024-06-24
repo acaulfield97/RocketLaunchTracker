@@ -1,19 +1,20 @@
-import React, {useState, useEffect} from 'react';
+// bluetoothmanager.tsx
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   StyleSheet,
   View,
   ScrollView,
   Text,
   TouchableOpacity,
-  TextInput,
   PermissionsAndroid,
   Platform,
 } from 'react-native';
 import RNBluetoothClassic, {
   BluetoothDevice,
 } from 'react-native-bluetooth-classic';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
+import {RootStackParamList} from './types';
 
-// Utility Functions
 const checkBluetoothEnabled = async () => {
   try {
     const enabled = await RNBluetoothClassic.isBluetoothEnabled();
@@ -104,15 +105,15 @@ const disconnectFromDevice = async (
   }
 };
 
-// Component
 const BluetoothClassicTerminal = () => {
   const [devices, setDevices] = useState<any[]>([]);
   const [paired, setPaired] = useState<any[]>([]);
   const [selectedDevice, setSelectedDevice] = useState<BluetoothDevice>();
-  const [messageToSend, setMessageToSend] = useState('');
-  const [receivedMessage, setReceivedMessage] = useState('');
+  const [receivedData, setReceivedData] = useState<any[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [intervalId, setIntervalId] = useState<NodeJS.Timer>();
+
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const startDeviceDiscovery = async () => {
     console.log('searching for devices...');
@@ -133,7 +134,7 @@ const BluetoothClassicTerminal = () => {
     }
   };
 
-  const parseDataStream = (data: string) => {
+  const parseDataStream = useCallback((data: string) => {
     const lines = data.split('\n');
     const parsedData = lines.map(line => {
       const fields = line.split(',');
@@ -191,9 +192,9 @@ const BluetoothClassicTerminal = () => {
       }
     });
     return parsedData;
-  };
+  }, []);
 
-  const readData = async () => {
+  const readData = useCallback(async () => {
     if (selectedDevice && isConnected) {
       try {
         let message = await selectedDevice.read();
@@ -202,6 +203,7 @@ const BluetoothClassicTerminal = () => {
           if (message !== '' && message !== ' ') {
             const parsedData = parseDataStream(message.toString());
             console.log('Parsed Data:', parsedData);
+            setReceivedData(prevData => [...prevData, ...parsedData]);
           }
         }
       } catch (error) {
@@ -210,7 +212,7 @@ const BluetoothClassicTerminal = () => {
         console.error('Error reading message:', error);
       }
     }
-  };
+  }, [isConnected, selectedDevice, parseDataStream]);
 
   useEffect(() => {
     let intervalId: string | number | NodeJS.Timer | undefined;
@@ -221,14 +223,14 @@ const BluetoothClassicTerminal = () => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [isConnected, selectedDevice]);
+  }, [isConnected, selectedDevice, readData]);
 
   const disconnect = () => {
     if (selectedDevice && isConnected) {
       disconnectFromDevice(selectedDevice, () => clearInterval(intervalId));
       setSelectedDevice(undefined);
       setIsConnected(false);
-      setReceivedMessage('');
+      setReceivedData([]);
     }
   };
 
@@ -283,17 +285,14 @@ const BluetoothClassicTerminal = () => {
                 <Text style={styles.connectButtonText}>Disconnect</Text>
               </TouchableOpacity>
             </View>
-            <View style={styles.messageContainer}>
-              <TextInput
-                style={styles.messageInput}
-                value={messageToSend}
-                onChangeText={setMessageToSend}
-                placeholder="Type a message"
-              />
-            </View>
-            <View style={styles.receivedMessageContainer}>
-              <Text style={styles.receivedMessageText}>{receivedMessage}</Text>
-            </View>
+
+            <TouchableOpacity
+              style={styles.viewDataButton}
+              onPress={() =>
+                navigation.navigate('RawData', {parsedData: receivedData})
+              }>
+              <Text style={styles.viewDataButtonText}>View Data</Text>
+            </TouchableOpacity>
           </>
         )}
       </ScrollView>
@@ -340,34 +339,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 12,
   },
-  messageContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    margin: 5,
-  },
-  messageInput: {
-    flex: 1,
-    borderWidth: 1,
-    padding: 5,
-  },
-  sendButton: {
+  viewDataButton: {
     padding: 10,
     backgroundColor: '#007AFF',
     borderRadius: 5,
-    marginLeft: 5,
+    margin: 5,
   },
-  sendButtonText: {
+  viewDataButtonText: {
     color: '#fff',
     textAlign: 'center',
-  },
-  receivedMessageContainer: {
-    marginTop: 10,
-    padding: 10,
-    backgroundColor: '#F0F0F0',
-    borderRadius: 5,
-  },
-  receivedMessageText: {
-    fontSize: 14,
   },
 });
 

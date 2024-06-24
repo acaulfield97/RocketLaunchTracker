@@ -2,12 +2,25 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import HomeScreen from './screens/HomeScreen';
 import MapScreen from './screens/MapScreen';
 import BluetoothClassicTerminal from './BluetoothManager';
 import RawDataScreen from './screens/RawDataScreen';
+
+const Stack = createNativeStackNavigator();
+
+const BluetoothStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen
+      name="BluetoothTerminal"
+      component={BluetoothClassicTerminal}
+    />
+    <Stack.Screen name="RawData" component={RawDataScreen} />
+  </Stack.Navigator>
+);
 
 const Tab = createBottomTabNavigator();
 
@@ -29,7 +42,7 @@ export default function App() {
             } else if (route.name === 'Bluetooth') {
               iconName = focused ? 'bluetooth' : 'bluetooth-outline';
               IconComponent = Ionicons;
-            } else if (route.name === 'Raw data') {
+            } else if (route.name === 'RawData') {
               iconName = focused ? 'test-tube' : 'test-tube';
               IconComponent = Fontisto;
             }
@@ -41,8 +54,7 @@ export default function App() {
         })}>
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Map" component={MapScreen} />
-        <Tab.Screen name="Bluetooth" component={BluetoothClassicTerminal} />
-        <Tab.Screen name="Raw data" component={RawDataScreen} />
+        <Tab.Screen name="Bluetooth" component={BluetoothStack} />
       </Tab.Navigator>
     </NavigationContainer>
   );
