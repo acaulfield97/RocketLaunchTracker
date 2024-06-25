@@ -1,0 +1,12 @@
+[
+  { "id": 1, "longitude": -5.9344, "latitude": 54.5977 },
+  { "id": 2, "longitude": -5.9480, "latitude": 54.6111 },
+  { "id": 3, "longitude": -5.8775, "latitude": 54.5723 },
+  { "id": 4, "longitude": -5.9631, "latitude": 54.5817 },
+  { "id": 5, "longitude": -5.8889, "latitude": 54.6086 },
+  { "id": 6, "longitude": -5.9780, "latitude": 54.5905 },
+  { "id": 7, "longitude": -5.8430, "latitude": 54.5729 },
+  { "id": 8, "longitude": -5.9812, "latitude": 54.6324 },
+  { "id": 9, "longitude": -5.9045, "latitude": 54.5845 },
+  { "id": 10, "longitude": -5.9300, "latitude": 54.6333 }
+]
