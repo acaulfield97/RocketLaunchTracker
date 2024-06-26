@@ -13,7 +13,7 @@ import RNBluetoothClassic, {
   BluetoothDevice,
 } from 'react-native-bluetooth-classic';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
-import {RootStackParamList} from './types';
+import {RootStackParamList} from './types/types';
 
 const checkBluetoothEnabled = async () => {
   try {
