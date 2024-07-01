@@ -1,7 +1,6 @@
 // bluetoothmanager.tsx
 import React, {useState, useEffect, useCallback} from 'react';
 import {
-  StyleSheet,
   View,
   ScrollView,
   Text,
@@ -14,6 +13,7 @@ import RNBluetoothClassic, {
 } from 'react-native-bluetooth-classic';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {RootStackParamList} from './types/types';
+import styles from './styles';
 
 const checkBluetoothEnabled = async () => {
   try {
@@ -299,56 +299,5 @@ const BluetoothClassicTerminal = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-  },
-  headerText: {
-    fontSize: 30,
-    textAlign: 'center',
-    borderBottomWidth: 1,
-  },
-  deviceButton: {
-    padding: 10,
-    backgroundColor: '#007AFF',
-    borderRadius: 5,
-    margin: 5,
-  },
-  scanButtonText: {
-    color: '#fff',
-    textAlign: 'center',
-  },
-  deviceContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 2,
-  },
-  deviceItem: {
-    flex: 1,
-  },
-  deviceName: {
-    fontSize: 18,
-  },
-  deviceInfo: {
-    fontSize: 12,
-    color: 'gray',
-  },
-  connectButtonText: {
-    fontWeight: 'bold',
-    fontSize: 12,
-  },
-  viewDataButton: {
-    padding: 10,
-    backgroundColor: '#007AFF',
-    borderRadius: 5,
-    margin: 5,
-  },
-  viewDataButtonText: {
-    color: '#fff',
-    textAlign: 'center',
-  },
-});
 
 export default BluetoothClassicTerminal;

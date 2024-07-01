@@ -1,6 +1,7 @@
 // rawdatascreen.js
 import React, {useRef, useEffect, useState} from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, ScrollView} from 'react-native';
+import styles from '../../styles';
 
 const RawDataScreen = ({route}) => {
   const {parsedData} = route.params || {};
@@ -38,26 +39,5 @@ const RawDataScreen = ({route}) => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  dataContainer: {
-    marginBottom: 10,
-    padding: 10,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 5,
-  },
-  dataText: {
-    fontSize: 14,
-  },
-  noDataText: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: 20,
-  },
-});
 
 export default RawDataScreen;
