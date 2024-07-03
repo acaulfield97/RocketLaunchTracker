@@ -1,3 +1,5 @@
+// MapScreen.tsx
+
 import React from 'react';
 import {View} from 'react-native';
 import {MapView, LocationPuck, Camera} from '@rnmapbox/maps';

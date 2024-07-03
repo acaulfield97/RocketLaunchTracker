@@ -1,3 +1,5 @@
+// RocketContext.tsx
+
 import React, {
   createContext,
   useContext,
@@ -33,12 +35,12 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
     longitude: 0,
   });
 
-  // Fetch current position on component mount
   useEffect(() => {
     const fetchCurrentPosition = () => {
       Geolocation.getCurrentPosition(
         position => {
           const {latitude, longitude} = position.coords;
+          console.log('Current position:', {latitude, longitude});
           setPosition({latitude, longitude});
         },
         error => {
@@ -50,7 +52,6 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
     fetchCurrentPosition();
   }, []);
 
-  // Fetch directions when selectedRocket or position changes
   useEffect(() => {
     const fetchDirections = async () => {
       if (
@@ -59,10 +60,24 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
         position.longitude !== 0
       ) {
         try {
+          console.log('Fetching directions for:', selectedRocket);
+          console.log('Current position:', position);
+          const {latitude: rocketLat, longitude: rocketLon} = selectedRocket;
+
+          if (
+            rocketLat < -90 ||
+            rocketLat > 90 ||
+            rocketLon < -180 ||
+            rocketLon > 180
+          ) {
+            throw new Error('Invalid rocket coordinates');
+          }
+
           const newDirection = await getDirections(
             [position.longitude, position.latitude], // Starting point (current location)
-            [selectedRocket.longitude, selectedRocket.latitude], // Destination point (selected rocket)
+            [rocketLon, rocketLat], // Destination point (selected rocket)
           );
+          console.log('New direction:', newDirection);
           setDirection(newDirection);
         } catch (error) {
           console.error('Error fetching directions:', error);
@@ -82,8 +97,9 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
     routeDistance: direction?.routes?.[0]?.distance ?? 0,
   };
 
-  // console.log('Time: ', contextValue.routeTime);
-  // console.log('Dir Coords: ', contextValue.directionCoordinates);
+  console.log('Route Time:', contextValue.routeTime);
+  console.log('Route Distance:', contextValue.routeDistance);
+  console.log('Direction Coordinates:', contextValue.directionCoordinates);
 
   return (
     <RocketContext.Provider value={contextValue}>
@@ -92,5 +108,4 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
   );
 }
 
-// Custom hook to use RocketContext
 export const useRocket = () => useContext(RocketContext);

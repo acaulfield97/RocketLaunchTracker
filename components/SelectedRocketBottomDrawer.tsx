@@ -1,3 +1,5 @@
+// SelectedRocketBottomDrawer.tsx
+
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 import {Image, Text, View} from 'react-native';
 import {useRocket} from '../contexts/RocketContext';
@@ -13,6 +15,7 @@ export default function SelectedRocketBottomSheet() {
 
   useEffect(() => {
     if (selectedRocket) {
+      console.log('Selected rocket:', selectedRocket);
       bottomDrawerRef.current?.expand();
     }
   }, [selectedRocket]);

@@ -1,23 +1,36 @@
+// RocketMarkers.tsx
+
 import {Images, ShapeSource, SymbolLayer} from '@rnmapbox/maps';
 import {OnPressEvent} from '@rnmapbox/maps/lib/typescript/src/types/OnPressEvent';
 // @ts-ignore
 import {featureCollection} from '@turf/helpers';
 import {useRocket} from '../contexts/RocketContext';
 // @ts-ignore
-import rocket from '../assets/media/icons/rocket_icon.png';
-import rockets from '../data/mockData.json';
+import rocketIcon from '../assets/media/icons/rocket_icon.png';
+import {useBluetoothContext} from '../contexts/BluetoothContext';
 
 export default function RocketMarkers() {
   const {setSelectedRocket} = useRocket();
+  // const latestLocation = [-5.9353561, 54.5847267];
+  const {latestLocation} = useBluetoothContext();
 
-  const points = rockets.map(rocket => ({
-    type: 'Feature',
-    geometry: {
-      type: 'Point',
-      coordinates: [rocket.longitude, rocket.latitude],
-    },
-    properties: {rocket},
-  }));
+  const points = latestLocation
+    ? [
+        {
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            // coordinates: [-5.9353561, 54.5847267],
+            coordinates: [latestLocation.longitude, latestLocation.latitude],
+          },
+          // properties: {
+          //   id: 1,
+          //   rocket: {id: 1, latitude: 54.5847267, longitude: -5.9353561},
+          // },
+          properties: {id: 1},
+        },
+      ]
+    : [];
 
   const rocketsFeatures = featureCollection(points);
 
@@ -27,18 +40,20 @@ export default function RocketMarkers() {
     }
   };
 
+  console.log('Latest Location:', latestLocation);
+
   return (
     <ShapeSource id="rockets" shape={rocketsFeatures} onPress={onRocketPress}>
       <SymbolLayer
         id="rockets-icons"
         style={{
-          iconImage: 'rocket',
+          iconImage: 'rocketIcon',
           iconSize: 0.06,
           iconAllowOverlap: true,
           iconAnchor: 'center',
         }}
       />
-      <Images images={{rocket}} />
+      <Images images={{rocketIcon}} />
     </ShapeSource>
   );
 }
