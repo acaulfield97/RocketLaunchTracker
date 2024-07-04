@@ -1,5 +1,3 @@
-// RocketContext.tsx
-
 import React, {
   createContext,
   useContext,
@@ -8,6 +6,7 @@ import React, {
   PropsWithChildren,
 } from 'react';
 import Geolocation from '@react-native-community/geolocation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getDirectionsWalking} from '../services/directionsWalking';
 import {startCompass} from '../components/compass';
 
@@ -19,6 +18,12 @@ interface RocketContextType {
   routeTime: number;
   routeDistance: number;
   compassDirection: number;
+  lastKnownData: {
+    latitude: number;
+    longitude: number;
+    altitude?: number;
+    timestamp?: number;
+  } | null;
 }
 
 const RocketContext = createContext<RocketContextType>({
@@ -28,6 +33,7 @@ const RocketContext = createContext<RocketContextType>({
   routeTime: 0,
   routeDistance: 0,
   compassDirection: 0,
+  lastKnownData: null,
 });
 
 export default function RocketProvider({children}: PropsWithChildren<{}>) {
@@ -38,14 +44,29 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
     longitude: 0,
   });
   const [compassDirection, setCompassDirection] = useState<number>(0);
+  const [lastKnownData, setLastKnownData] = useState<{
+    latitude: number;
+    longitude: number;
+    altitude?: number;
+    timestamp?: number;
+  } | null>(null);
 
   useEffect(() => {
     const fetchCurrentPosition = () => {
       Geolocation.getCurrentPosition(
         position => {
-          const {latitude, longitude} = position.coords;
-          console.log('Current position:', {latitude, longitude});
+          const {latitude, longitude, altitude} = position.coords;
+          const timestamp = position.timestamp;
+          console.log('Current position:', {
+            latitude,
+            longitude,
+            altitude,
+            timestamp,
+          });
           setPosition({latitude, longitude});
+          const data = {latitude, longitude, altitude, timestamp};
+          setLastKnownData(data);
+          saveDataToStorage(data);
         },
         error => {
           console.error('Error getting current location:', error);
@@ -53,7 +74,27 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
       );
     };
 
+    const loadDataFromStorage = async () => {
+      try {
+        const data = await AsyncStorage.getItem('lastKnownData');
+        if (data) {
+          setLastKnownData(JSON.parse(data));
+        }
+      } catch (error) {
+        console.error('Error loading data from storage:', error);
+      }
+    };
+
+    const saveDataToStorage = async (data: any) => {
+      try {
+        await AsyncStorage.setItem('lastKnownData', JSON.stringify(data));
+      } catch (error) {
+        console.error('Error saving data to storage:', error);
+      }
+    };
+
     fetchCurrentPosition();
+    loadDataFromStorage();
   }, []);
 
   // WALKING
@@ -106,6 +147,7 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
     routeTime: direction?.routes?.[0]?.duration ?? 0,
     routeDistance: direction?.routes?.[0]?.distance ?? 0,
     compassDirection,
+    lastKnownData,
   };
 
   console.log('DIRECTION: ', direction);

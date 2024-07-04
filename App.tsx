@@ -13,6 +13,7 @@ import {StatusBar} from 'react-native';
 import RocketProvider from './contexts/RocketContext';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {BluetoothProvider} from './contexts/BluetoothContext';
+import LocationDataScreen from './components/screens/locationDataScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -42,7 +43,7 @@ export default function App() {
                   let IconComponent = Ionicons; // Default to Ionicons
 
                   if (route.name === 'Home') {
-                    iconName = focused ? 'rocket-sharp' : 'rocket-outline';
+                    iconName = focused ? 'home' : 'home-outline';
                     IconComponent = Ionicons;
                   } else if (route.name === 'Map') {
                     iconName = focused ? 'location' : 'location-outline';
@@ -53,6 +54,9 @@ export default function App() {
                   } else if (route.name === 'RawData') {
                     iconName = focused ? 'test-tube' : 'test-tube';
                     IconComponent = Fontisto;
+                  } else if (route.name === 'LocationData') {
+                    iconName = focused ? 'rocket' : 'rocket-outline';
+                    IconComponent = Ionicons;
                   }
 
                   return (
@@ -68,6 +72,12 @@ export default function App() {
                 name="Map"
                 component={MapScreen}
                 options={{headerShown: false}}
+              />
+
+              <Tab.Screen
+                name="LocationData"
+                component={LocationDataScreen}
+                options={{headerShown: true}}
               />
 
               <Tab.Screen
