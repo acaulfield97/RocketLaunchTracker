@@ -7,6 +7,7 @@ import {useEffect, useRef} from 'react';
 // @ts-ignore
 import rocketIcon from '../assets/media/icons/rocket_icon.png';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Button} from './Button';
 
 export default function SelectedRocketBottomSheet() {
@@ -48,16 +49,20 @@ export default function SelectedRocketBottomSheet() {
             <View style={{gap: 5}}>
               <View
                 style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
-                <Ionicons name="footsteps-sharp" size={24} color="black" />
+                <MaterialCommunityIcons
+                  name="map-marker-distance"
+                  size={24}
+                  color="black"
+                />
                 <Text style={{color: 'gray', fontWeight: 'bold', fontSize: 18}}>
                   {(routeDistance / 1000).toFixed(1)} km
                 </Text>
               </View>
               <View
                 style={{flexDirection: 'row', alignItems: 'center', gap: 5}}>
-                <Ionicons name="timer" size={24} color="black" />
+                <Ionicons name="footsteps-sharp" size={24} color="black" />
                 <Text style={{color: 'gray', fontWeight: 'bold', fontSize: 18}}>
-                  {(routeTime / 60).toFixed(1)} mins
+                  {(routeTime / 60).toFixed(0)} mins
                 </Text>
               </View>
             </View>

@@ -1,15 +1,17 @@
 // MapScreen.tsx
 
 import React from 'react';
-import {View} from 'react-native';
+import {View, Image} from 'react-native';
 import {MapView, LocationPuck, Camera} from '@rnmapbox/maps';
 import {useRocket} from '../../contexts/RocketContext';
 import LineRoute from '../LineRoute';
 import RocketMarkers from '../RocketMarkers';
-import SelectedRocketBottomSheet from '../SelectedRocketBottomDrawer';
+// @ts-ignore
+import compassIcon from '../../assets/media/icons/arrow_icon.png';
+import styles from '../../styles';
 
 export default function MapScreen() {
-  const {directionCoordinates} = useRocket();
+  const {directionCoordinates, compassDirection} = useRocket();
 
   return (
     <View style={{flex: 1}}>
@@ -27,7 +29,15 @@ export default function MapScreen() {
         )}
       </MapView>
 
-      <SelectedRocketBottomSheet />
+      <View style={styles.compassContainer}>
+        <Image
+          source={compassIcon}
+          style={[
+            styles.compassArrow,
+            {transform: [{rotate: `${compassDirection}deg`}]},
+          ]}
+        />
+      </View>
     </View>
   );
 }

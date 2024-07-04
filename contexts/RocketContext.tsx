@@ -8,7 +8,8 @@ import React, {
   PropsWithChildren,
 } from 'react';
 import Geolocation from '@react-native-community/geolocation';
-import {getDirections} from '../services/directions';
+import {getDirectionsWalking} from '../services/directionsWalking';
+import {startCompass} from '../components/compass';
 
 interface RocketContextType {
   selectedRocket: any;
@@ -17,6 +18,7 @@ interface RocketContextType {
   directionCoordinates?: number[][];
   routeTime: number;
   routeDistance: number;
+  compassDirection: number;
 }
 
 const RocketContext = createContext<RocketContextType>({
@@ -25,6 +27,7 @@ const RocketContext = createContext<RocketContextType>({
   direction: null,
   routeTime: 0,
   routeDistance: 0,
+  compassDirection: 0,
 });
 
 export default function RocketProvider({children}: PropsWithChildren<{}>) {
@@ -34,6 +37,7 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
     latitude: 0,
     longitude: 0,
   });
+  const [compassDirection, setCompassDirection] = useState<number>(0);
 
   useEffect(() => {
     const fetchCurrentPosition = () => {
@@ -52,8 +56,9 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
     fetchCurrentPosition();
   }, []);
 
+  // WALKING
   useEffect(() => {
-    const fetchDirections = async () => {
+    const fetchDirectionsWalking = async () => {
       if (
         selectedRocket &&
         position.latitude !== 0 &&
@@ -73,7 +78,7 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
             throw new Error('Invalid rocket coordinates');
           }
 
-          const newDirection = await getDirections(
+          const newDirection = await getDirectionsWalking(
             [position.longitude, position.latitude], // Starting point (current location)
             [rocketLon, rocketLat], // Destination point (selected rocket)
           );
@@ -84,8 +89,14 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
       }
     };
 
-    fetchDirections();
+    fetchDirectionsWalking();
   }, [selectedRocket, position]);
+
+  // compass
+  useEffect(() => {
+    const stopCompass = startCompass(setCompassDirection);
+    return stopCompass;
+  }, []);
 
   const contextValue: RocketContextType = {
     selectedRocket,
@@ -94,6 +105,7 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
     directionCoordinates: direction?.routes?.[0]?.geometry?.coordinates ?? [],
     routeTime: direction?.routes?.[0]?.duration ?? 0,
     routeDistance: direction?.routes?.[0]?.distance ?? 0,
+    compassDirection,
   };
 
   console.log('DIRECTION: ', direction);
