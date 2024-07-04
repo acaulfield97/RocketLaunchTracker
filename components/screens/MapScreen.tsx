@@ -9,7 +9,7 @@ import RocketMarkers from '../RocketMarkers';
 import SelectedRocketBottomSheet from '../SelectedRocketBottomDrawer';
 
 export default function MapScreen() {
-  const {direction} = useRocket();
+  const {directionCoordinates} = useRocket();
 
   return (
     <View style={{flex: 1}}>
@@ -22,7 +22,9 @@ export default function MapScreen() {
         />
         <RocketMarkers />
 
-        {direction && <LineRoute coordinates={direction} />}
+        {directionCoordinates && (
+          <LineRoute coordinates={directionCoordinates} />
+        )}
       </MapView>
 
       <SelectedRocketBottomSheet />

@@ -8,6 +8,6 @@ export async function getDirections(from: [number, number], to: [number, number]
 );
 const json = await response.json();
 console.log("Info: ",json);
-return json.routes[0].geometry.coordinates;
+return json;
 
 }

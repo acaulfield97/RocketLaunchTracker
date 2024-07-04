@@ -77,7 +77,6 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
             [position.longitude, position.latitude], // Starting point (current location)
             [rocketLon, rocketLat], // Destination point (selected rocket)
           );
-          console.log('New direction:', newDirection);
           setDirection(newDirection);
         } catch (error) {
           console.error('Error fetching directions:', error);
@@ -97,6 +96,7 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
     routeDistance: direction?.routes?.[0]?.distance ?? 0,
   };
 
+  console.log('DIRECTION: ', direction);
   console.log('Route Time:', contextValue.routeTime);
   console.log('Route Distance:', contextValue.routeDistance);
   console.log('Direction Coordinates:', contextValue.directionCoordinates);

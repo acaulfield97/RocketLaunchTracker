@@ -40,7 +40,8 @@ export default function SelectedRocketBottomSheet() {
             <View style={{flex: 1, gap: 5}}>
               <Text style={{color: 'black', fontSize: 20, fontWeight: '600'}}>
                 {/* dynamic names of rocket */}
-                ID-{selectedRocket.id}
+                {/* ID-{selectedRocket.id} */}
+                QUB3
               </Text>
               <Text style={{color: 'gray', fontSize: 18}}>Street name</Text>
             </View>
