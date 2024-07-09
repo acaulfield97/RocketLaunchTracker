@@ -1,7 +1,7 @@
 // rawdatascreen.js
 import React, {useRef, useEffect, useState} from 'react';
 import {View, Text, ScrollView} from 'react-native';
-import styles from '../../styles';
+import styles from '../styles/styles';
 
 const RawDataScreen = ({route}) => {
   const {parsedData} = route.params || {};

@@ -1,5 +1,6 @@
 // styles.ts
 import { StyleSheet, Dimensions } from 'react-native';
+import colors from './colors';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -10,32 +11,38 @@ const styles = StyleSheet.create({
     height: windowHeight,
   },
   scanButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 12,
+    color: colors.dark,
+    fontSize: 14,
     textAlign: 'center',
+    fontFamily: 'AstroSpace',
+    fontWeight: 'normal'
   },
   noDevicesText: {
     textAlign: 'center',
     marginTop: 10,
     fontStyle: 'italic',
+    color: colors.white
   },
   deviceItem: {
-    marginBottom: 2,
+    margin: 2,
+    justifyContent: 'center'
   },
   deviceName: {
     fontSize: 14,
-    fontWeight: 'bold',
+    color: colors.white,
+    fontFamily: 'AstroSpace'
   },
   deviceInfo: {
     fontSize: 8,
+    color: colors.white
   },
-  deviceButton: {
-    backgroundColor: '#2196F3',
+  connectToDeviceButton: {
+    backgroundColor: colors.accent,
     padding: 10,
     borderRadius: 10,
     margin: 2,
     paddingHorizontal: 20,
+    alignItems: 'center',
   },
   sendButton: {
     backgroundColor: '#2196F3',
@@ -58,15 +65,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: colors.dark
   },
   dataContainer: {
     marginBottom: 10,
     padding: 10,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.dark,
     borderRadius: 5,
   },
   dataText: {
     fontSize: 14,
+    color: colors.white
   },
   noDataText: {
     fontSize: 16,
@@ -77,29 +86,38 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'center',
     borderBottomWidth: 1,
+    color: colors.white
   },
   deviceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 2,
+   
   },
   connectButtonText: {
     fontWeight: 'bold',
     fontSize: 12,
+    color: colors.dark
+  },
+  exportButtonText: {
+    fontFamily: 'ZenDots-Regular',
+    fontSize: 12,
+    color: colors.dark,
+    
   },
   viewDataButton: {
     padding: 10,
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.accent,
     borderRadius: 5,
     margin: 5,
   },
   viewDataButtonText: {
-    color: '#fff',
+    color: colors.dark,
     textAlign: 'center',
   },
   button: {
     alignItems: 'center',
-    backgroundColor: 'limegreen',
+    backgroundColor: colors.dark,
     borderRadius: 10,
     elevation: 5,
     flexDirection: 'row',
@@ -114,11 +132,35 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: colors.white,
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: 'normal',
     textAlign: 'center',
+    fontFamily: 'ZenDots-Regular',
   },
+  retroButton: {
+    backgroundColor: colors.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: colors.white,
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 3,
+    elevation: 5,
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  retroButtonText: {
+    fontWeight: 'normal',
+    fontSize: 14,
+    color: colors.white,
+    textAlign: 'center',
+    fontFamily: 'AstroSpace', 
+  },
+
 });
 
 export default styles;

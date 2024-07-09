@@ -2,13 +2,13 @@
 
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 import {Image, Text, View} from 'react-native';
-import {useRocket} from '../contexts/RocketContext';
+import {useRocket} from '../../contexts/RocketContext';
 import {useEffect, useRef} from 'react';
 // @ts-ignore
 import rocketIcon from '../assets/media/icons/rocket_icon.png';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Button} from './Button';
+import {Button} from '../../components/Button';
 
 export default function SelectedRocketBottomSheet() {
   const {selectedRocket, routeDistance, routeTime} = useRocket();

@@ -1,9 +1,9 @@
 import React, {useCallback} from 'react';
 import {View, ScrollView, Text, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {useBluetoothContext} from '../../contexts/BluetoothContext';
-import {useBluetooth} from '../bluetooth/useBluetooth';
-import styles from '../../styles';
+import {useBluetoothContext} from '../contexts/BluetoothContext';
+import {useBluetooth} from '../../components/bluetooth/useBluetooth';
+import styles from '../styles/styles';
 
 const BluetoothClassicTerminal = () => {
   const {
@@ -30,20 +30,19 @@ const BluetoothClassicTerminal = () => {
           <>
             <TouchableOpacity
               onPress={startDeviceDiscovery}
-              style={styles.deviceButton}>
+              style={styles.connectToDeviceButton}>
               <Text style={styles.scanButtonText}>SCAN FOR PAIRED DEVICES</Text>
             </TouchableOpacity>
-            <Text>Paired Devices:</Text>
+            <Text style={styles.deviceInfo}>Paired Devices:</Text>
             {pairedDevices.map((device, index) => (
               <View key={index} style={styles.deviceContainer}>
                 <View style={styles.deviceItem}>
                   <Text style={styles.deviceName}>{device.name}</Text>
-                  <Text style={styles.deviceInfo}>{device.id}</Text>
                 </View>
                 <TouchableOpacity
                   onPress={() => connectToDevice(device)}
-                  style={styles.deviceButton}>
-                  <Text style={styles.connectButtonText}>Connect</Text>
+                  style={styles.connectToDeviceButton}>
+                  <Text style={styles.exportButtonText}>Connect</Text>
                 </TouchableOpacity>
               </View>
             ))}

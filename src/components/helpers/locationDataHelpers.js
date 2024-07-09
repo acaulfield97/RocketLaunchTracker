@@ -19,17 +19,40 @@ export const exportToText = async lastKnownData => {
   try {
     await writeFile(path, textData, 'utf8');
     console.log('Text file created at:', path);
-    shareText(path);
+    shareFile(path);
   } catch (error) {
     console.error('Error writing text file:', error);
   }
 };
 
-const shareText = filePath => {
+export const exportToCSV = async lastKnownData => {
+  if (!lastKnownData) {
+    console.log('No data to export');
+    return;
+  }
+
+  const csvData = `Latitude,Longitude,Altitude,Timestamp\n${
+    lastKnownData.latitude
+  },${lastKnownData.longitude},${lastKnownData.altitude ?? 'N/A'},${new Date(
+    lastKnownData.timestamp,
+  ).toLocaleString()}\n`;
+
+  const path = `${DownloadDirectoryPath}/rocket_data.csv`;
+
+  try {
+    await writeFile(path, csvData, 'utf8');
+    console.log('CSV file created at:', path);
+    shareFile(path, 'rocket_data', 'text/csv');
+  } catch (error) {
+    console.error('Error writing CSV file:', error);
+  }
+};
+
+const shareFile = (filePath, filename, type) => {
   const options = {
     url: `file://${filePath}`,
-    type: 'text/plain',
-    filename: 'rocket_data',
+    type: type,
+    filename: filename,
   };
 
   Share.open(options)
