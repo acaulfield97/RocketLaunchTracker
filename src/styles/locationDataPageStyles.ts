@@ -13,7 +13,8 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   sectionContainer: {
-    margin: 20,
+    marginTop: 10,
+    marginHorizontal: 10,
     padding: 8,
     borderRadius: 5,
     borderWidth: 2,

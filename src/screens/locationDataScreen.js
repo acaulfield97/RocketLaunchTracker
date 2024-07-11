@@ -1,11 +1,5 @@
 import React, {useEffect} from 'react';
-import {
-  View,
-  Text,
-  Button,
-  TouchableOpacity,
-  ImageBackground,
-} from 'react-native';
+import {View, Text, TouchableOpacity, ImageBackground} from 'react-native';
 import {useRocket} from '../contexts/RocketContext';
 import {
   exportToText,
@@ -14,6 +8,7 @@ import {
 } from '../components/helpers/locationDataHelpers';
 import styles from '../styles/locationDataPageStyles';
 import backgroundImage from '../assets/media/images/background_space.jpg';
+import AltitudeGraph from '../components/helpers/AltitudeGraph';
 
 export default function LocationDataScreen() {
   const {lastKnownData} = useRocket();
@@ -25,12 +20,13 @@ export default function LocationDataScreen() {
   return (
     <View style={styles.container}>
       <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
-        <View style={styles.sectionContainer}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>Last Known Rocket Data</Text>
-          </View>
-          {lastKnownData ? (
-            <>
+        {lastKnownData ? (
+          <View>
+            <View style={styles.sectionContainer}>
+              <View style={styles.titleContainer}>
+                <Text style={styles.titleText}>Last Known Rocket Data</Text>
+              </View>
+
               <View style={styles.bodyContainer}>
                 <Text style={styles.subTitleText}>Latitude: </Text>
                 <Text style={styles.bodyText}>{lastKnownData.latitude}</Text>
@@ -63,11 +59,17 @@ export default function LocationDataScreen() {
                   <Text style={styles.exportButtonText}>Export to CSV</Text>
                 </TouchableOpacity>
               </View>
-            </>
-          ) : (
-            <Text style={styles.bodyText}>No data available</Text>
-          )}
-        </View>
+            </View>
+            <View style={styles.sectionContainer}>
+              <View style={styles.titleContainer}>
+                <Text style={styles.titleText}>Altitude Graph</Text>
+              </View>
+              <AltitudeGraph />
+            </View>
+          </View>
+        ) : (
+          <Text style={styles.bodyText}>No data available</Text>
+        )}
       </ImageBackground>
     </View>
   );

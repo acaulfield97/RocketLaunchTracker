@@ -6,7 +6,7 @@ import {OnPressEvent} from '@rnmapbox/maps/lib/typescript/src/types/OnPressEvent
 import {featureCollection} from '@turf/helpers';
 import {useRocket} from '../contexts/RocketContext';
 // @ts-ignore
-import rocketIcon from '../assets/media/icons/rocket_icon.png';
+import rocketIcon from '../assets/media/icons/rocket_icon_purple.png';
 import {useBluetoothContext} from '../contexts/BluetoothContext';
 
 export default function RocketMarkers() {
@@ -48,7 +48,7 @@ export default function RocketMarkers() {
         id="rockets-icons"
         style={{
           iconImage: 'rocketIcon',
-          iconSize: 0.06,
+          iconSize: 0.2,
           iconAllowOverlap: true,
           iconAnchor: 'center',
         }}
