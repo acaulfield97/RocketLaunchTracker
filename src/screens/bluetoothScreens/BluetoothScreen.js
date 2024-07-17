@@ -1,9 +1,13 @@
 import React, {useCallback} from 'react';
 import {View, ScrollView, Text, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {useBluetoothContext} from '../contexts/BluetoothContext';
+import {useBluetoothContext} from '../../contexts/BluetoothContext';
 import {useBluetooth} from '../../components/bluetooth/useBluetooth';
-import styles from '../styles/styles';
+import styles from '../../styles/styles';
+import {
+  exportAllDataToCSV,
+  exportAllDataToText,
+} from '../../components/helpers/locationDataHelpers';
 
 const BluetoothClassicTerminal = () => {
   const {
@@ -66,6 +70,20 @@ const BluetoothClassicTerminal = () => {
               style={styles.viewDataButton}
               onPress={navigateToRawData}>
               <Text style={styles.viewDataButtonText}>View Raw Data</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.exportButton}
+              onPress={() => exportAllDataToText(receivedData)}>
+              <Text style={styles.exportButtonText}>
+                Export All Data as Text
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.exportButton}
+              onPress={() => exportAllDataToCSV(receivedData)}>
+              <Text style={styles.exportButtonText}>
+                Export All Data as CSV
+              </Text>
             </TouchableOpacity>
           </>
         )}

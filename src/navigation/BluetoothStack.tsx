@@ -1,8 +1,8 @@
 // BluetoothStack.tsx
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import BluetoothClassicTerminal from '../screens/BluetoothScreen';
-import RawDataScreen from '../screens/RawDataScreen';
+import BluetoothClassicTerminal from '../screens/bluetoothScreens/BluetoothScreen';
+import RawDataScreen from '../screens/bluetoothScreens/RawDataScreen';
 
 const Stack = createNativeStackNavigator();
 

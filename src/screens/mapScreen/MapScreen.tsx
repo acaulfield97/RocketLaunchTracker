@@ -4,11 +4,12 @@ import React from 'react';
 import {View, Image} from 'react-native';
 import {MapView, LocationPuck, Camera} from '@rnmapbox/maps';
 import {useRocket} from '../../contexts/RocketContext';
-import LineRoute from '../../components/LineRoute';
-import RocketMarkers from '../../components/RocketMarkers';
+import LineRoute from './LineRoute';
+import RocketMarkers from './RocketMarkers';
 // @ts-ignore
 import compassIcon from '../../assets/media/icons/arrow_icon.png';
 import styles from '../../styles/styles';
+import SelectedRocketBottomSheet from './SelectedRocketBottomDrawer';
 
 export default function MapScreen() {
   const {directionCoordinates, compassDirection} = useRocket();
@@ -28,6 +29,8 @@ export default function MapScreen() {
           <LineRoute coordinates={directionCoordinates} />
         )}
       </MapView>
+
+      <SelectedRocketBottomSheet />
 
       <View style={styles.compassContainer}>
         <Image

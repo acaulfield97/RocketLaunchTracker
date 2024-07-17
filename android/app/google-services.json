@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "561432325554",
+    "project_id": "rocket-launch-tracker-c490b",
+    "storage_bucket": "rocket-launch-tracker-c490b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:561432325554:android:a346b5771c70e5acf908ab",
+        "android_client_info": {
+          "package_name": "com.nativereactapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQ2SLGUAqskVa-MJT07IYRT9GjM2NeEXk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

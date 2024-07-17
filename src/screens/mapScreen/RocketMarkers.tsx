@@ -4,10 +4,10 @@ import {Images, ShapeSource, SymbolLayer} from '@rnmapbox/maps';
 import {OnPressEvent} from '@rnmapbox/maps/lib/typescript/src/types/OnPressEvent';
 // @ts-ignore
 import {featureCollection} from '@turf/helpers';
-import {useRocket} from '../contexts/RocketContext';
+import {useRocket} from '../../contexts/RocketContext';
 // @ts-ignore
-import rocketIcon from '../assets/media/icons/rocket_icon_purple.png';
-import {useBluetoothContext} from '../contexts/BluetoothContext';
+import rocketIcon from '../../assets/media/icons/rocket_icon_purple.png';
+import {useBluetoothContext} from '../../contexts/BluetoothContext';
 
 export default function RocketMarkers() {
   const {setSelectedRocket} = useRocket();

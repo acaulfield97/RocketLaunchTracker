@@ -1,14 +1,14 @@
 // SelectedRocketBottomDrawer.tsx
 
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
-import {Image, Text, View} from 'react-native';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {useRocket} from '../../contexts/RocketContext';
 import {useEffect, useRef} from 'react';
 // @ts-ignore
-import rocketIcon from '../assets/media/icons/rocket_icon.png';
+import rocketIcon from '../../assets/media/icons/rocket_icon_purple.png';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Button} from '../../components/Button';
+import styles from '../../styles/mapPageStyles';
 
 export default function SelectedRocketBottomSheet() {
   const {selectedRocket, routeDistance, routeTime} = useRocket();
@@ -69,7 +69,11 @@ export default function SelectedRocketBottomSheet() {
           </View>
           {/* Bottom View */}
           <View>
-            <Button title="Find Rocket" />
+            <View style={styles.showCompassButtonContainer}>
+              <TouchableOpacity style={styles.showCompassButton}>
+                <Text style={styles.showCompassButtonText}>Show direction</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </BottomSheetView>
       )}

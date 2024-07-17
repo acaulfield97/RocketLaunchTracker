@@ -6,6 +6,7 @@ import HomeScreen from '../screens/HomeScreen';
 import MapScreen from '../screens/mapScreen/MapScreen';
 import LocationDataScreen from '../screens/locationDataScreen';
 import BluetoothStack from './BluetoothStack';
+import AccountStack from './AccountStack';
 import getIcon from '../assets/icons';
 import colors from '../styles/colors';
 
@@ -24,7 +25,11 @@ const AppNavigator = () => {
             backgroundColor: colors.accent,
           },
         })}>
-        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen
+          name="Account"
+          component={AccountStack}
+          options={{headerShown: false}}
+        />
         <Tab.Screen
           name="Map"
           component={MapScreen}

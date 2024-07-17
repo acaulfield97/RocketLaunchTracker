@@ -34,7 +34,7 @@ export const startCompass = callback => {
   const magnetometerObservable = magnetometer.pipe(
     map(({x, y, z}) => Math.atan2(y, x) * (180 / Math.PI)),
     map(degree => (degree < 0 ? 360 + degree : degree)),
-    map(degree => (degree + 180) % 360), // Reverse the angle - arrow was backwards
+    // map(degree => (degree + 180) % 360), // Reverse the angle - arrow was backwards
     filter(degree => !isNaN(degree)),
   );
 

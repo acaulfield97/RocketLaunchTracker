@@ -87,3 +87,59 @@ export const requestWritePermission = async () => {
     }
   }
 };
+
+export const exportAllDataToText = async allData => {
+  if (!allData || allData.length === 0) {
+    console.log('No data to export');
+    return;
+  }
+
+  const textData = allData
+    .map(
+      (data, index) =>
+        `Data ${index + 1}:\nLatitude: ${data.latitude}\nLongitude: ${
+          data.longitude
+        }\nAltitude: ${data.altitude ?? 'N/A'}\nTimestamp: ${new Date(
+          data.timestamp,
+        ).toLocaleString()}\n`,
+    )
+    .join('\n');
+
+  const path = `${DownloadDirectoryPath}/all_rocket_data.txt`;
+
+  try {
+    await writeFile(path, textData, 'utf8');
+    console.log('Text file created at:', path);
+    shareFile(path);
+  } catch (error) {
+    console.error('Error writing text file:', error);
+  }
+};
+
+export const exportAllDataToCSV = async allData => {
+  if (!allData || allData.length === 0) {
+    console.log('No data to export');
+    return;
+  }
+
+  const csvData =
+    'Latitude,Longitude,Altitude,Timestamp\n' +
+    allData
+      .map(
+        data =>
+          `${data.latitude},${data.longitude},${
+            data.altitude ?? 'N/A'
+          },${new Date(data.timestamp).toLocaleString()}`,
+      )
+      .join('\n');
+
+  const path = `${DownloadDirectoryPath}/all_rocket_data.csv`;
+
+  try {
+    await writeFile(path, csvData, 'utf8');
+    console.log('CSV file created at:', path);
+    shareFile(path, 'all_rocket_data', 'text/csv');
+  } catch (error) {
+    console.error('Error writing CSV file:', error);
+  }
+};
