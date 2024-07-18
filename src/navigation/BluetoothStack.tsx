@@ -7,7 +7,7 @@ import RawDataScreen from '../screens/bluetoothScreens/RawDataScreen';
 const Stack = createNativeStackNavigator();
 
 const BluetoothStack = () => (
-  <Stack.Navigator>
+  <Stack.Navigator screenOptions={{headerShown: false}}>
     <Stack.Screen
       name="BluetoothTerminal"
       component={BluetoothClassicTerminal}

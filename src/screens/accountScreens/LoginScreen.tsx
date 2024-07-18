@@ -1,25 +1,34 @@
-import React, {useCallback} from 'react';
-import {View, Text, ImageBackground, TouchableOpacity} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {
+  View,
+  Text,
+  ImageBackground,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import styles from '../../styles/loginPageStyles';
 // @ts-ignore
 import backgroundImage from '../../assets/media/images/background_space.jpg';
 import MyTextInput from '../../components/MyTextInput';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../../../types/types';
+import auth from '@react-native-firebase/auth';
 
-// Define a type for the navigation prop
-type LoginScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  'Login'
->;
+export default function LoginScreen({navigation}) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-export default function LoginScreen() {
-  const navigation = useNavigation<LoginScreenNavigationProp>();
-
-  const navigateToCreateAccount = useCallback(() => {
-    navigation.navigate('CreateAccount');
-  }, [navigation]);
+  const loginWithEmailAndPass = () => {
+    auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(res => {
+        console.log(res);
+        Alert.alert('Logged in');
+        navigation.navigate('Dashboard');
+      })
+      .catch(err => {
+        console.log(err);
+        Alert.alert(err.nativeErrorMessage);
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -28,15 +37,28 @@ export default function LoginScreen() {
           <Text style={styles.titleText}>Login</Text>
         </View>
         <View style={styles.inputsContainer}>
-          <MyTextInput placeholder="Enter email or username" />
-          <MyTextInput placeholder="Enter password" secureTextEntry />
-          <TouchableOpacity style={styles.loginButton}>
+          <MyTextInput
+            value={email}
+            onChangeText={text => setEmail(text)}
+            placeholder="Enter email or username"
+          />
+          <MyTextInput
+            value={password}
+            onChangeText={text => setPassword(text)}
+            placeholder="Enter password"
+            secureTextEntry
+          />
+          <TouchableOpacity
+            style={styles.loginButton}
+            onPress={loginWithEmailAndPass}>
             <Text style={styles.loginButtonText}>Login</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.noAccountButton}
-            onPress={navigateToCreateAccount}>
-            <Text style={styles.textDontHave}>Don't have an account?</Text>
+            onPress={() => navigation.navigate('CreateAccount')}>
+            <Text style={styles.textDontHave}>
+              Don't have an account? Sign up
+            </Text>
           </TouchableOpacity>
         </View>
       </ImageBackground>
