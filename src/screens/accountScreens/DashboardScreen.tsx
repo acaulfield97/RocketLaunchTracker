@@ -1,10 +1,23 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Button, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {LaunchData} from '../../../types/types';
 
 const DashboardScreen = () => {
   const [launch, setLaunch] = useState<LaunchData | null>(null);
+
+  const addLaunch = () => {
+    firestore()
+      .collection('launch_data')
+      .add({
+        location: new firestore.GeoPoint(54.5973, -5.9301),
+        altitude: 78,
+        time: '142345.123',
+      })
+      .then(() => {
+        console.log('Launch added!');
+      });
+  };
 
   const getData = async () => {
     const launchDataCollection = await firestore()
@@ -26,9 +39,8 @@ const DashboardScreen = () => {
           <Text>Latitude: {launch.location.latitude}</Text>
           <Text>Longitude: {launch.location.longitude}</Text>
           <Text>Altitude: {launch.altitude}</Text>
-          <Text>
-            Time: {new Date(launch.time.seconds * 1000).toLocaleString()}
-          </Text>
+          <Text>Time: {launch.time}</Text>
+          <Button title="Add" onPress={addLaunch} />
         </>
       ) : (
         <Text>Loading...</Text>

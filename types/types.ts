@@ -10,5 +10,5 @@ export type RootStackParamList = {
 export type LaunchData = {
   location: GeoPoint,
   altitude: number,
-  time: Timestamp
+  time: string
 }
