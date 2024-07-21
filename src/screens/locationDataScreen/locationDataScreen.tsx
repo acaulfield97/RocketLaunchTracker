@@ -1,8 +1,11 @@
 import React, {useEffect} from 'react';
 import {View, Text, TouchableOpacity, ImageBackground} from 'react-native';
 import {useRocket} from '../../contexts/RocketContext';
-import {exportToText, exportToCSV} from '../../components/helpers/ExportData';
-import {requestWritePermission} from '../../components/helpers/permissions';
+import {
+  exportToText,
+  exportToCSV,
+  requestWritePermission,
+} from '../../components/helpers/ExportData';
 import styles from '../../styles/locationDataPageStyles';
 // @ts-ignore
 import backgroundImage from '../../assets/media/images/background_space.jpg';
