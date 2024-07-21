@@ -2,6 +2,7 @@ import {Button, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {LaunchData} from '../../../types/types';
+import {useBluetoothContext} from '../../contexts/BluetoothContext';
 
 const DashboardScreen = () => {
   const [launch, setLaunch] = useState<LaunchData | null>(null);
@@ -38,7 +39,7 @@ const DashboardScreen = () => {
         <>
           <Text>Latitude: {launch.location.latitude}</Text>
           <Text>Longitude: {launch.location.longitude}</Text>
-          <Text>Altitude: {launch.altitude}</Text>
+          <Text>Altitude: {launch.altitude}m</Text>
           <Text>Time: {launch.time}</Text>
           <Button title="Add" onPress={addLaunch} />
         </>

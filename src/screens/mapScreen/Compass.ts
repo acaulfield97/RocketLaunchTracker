@@ -1,5 +1,4 @@
 // compass.js
-
 import {
   magnetometer,
   setUpdateIntervalForType,

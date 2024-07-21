@@ -3,11 +3,13 @@ import {View, ScrollView, Text, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useBluetoothContext} from '../../contexts/BluetoothContext';
 import {useBluetooth} from '../../components/bluetooth/useBluetooth';
-import styles from '../../styles/styles';
+import styles from '../../styles/commonStyles';
+import bluetoothPageStyles from '../../styles/bluetoothPageStyles';
 import {
   exportAllDataToCSV,
   exportAllDataToText,
-} from '../../components/helpers/locationDataHelpers';
+} from '../../components/helpers/ExportData';
+import {blue} from 'react-native-reanimated/lib/typescript/Colors';
 
 const BluetoothClassicTerminal = () => {
   const {
@@ -28,25 +30,32 @@ const BluetoothClassicTerminal = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>Bluetooth Terminal</Text>
+      <View style={bluetoothPageStyles.titleContainer}>
+        <Text style={styles.titleText}>Paired devices</Text>
+      </View>
       <ScrollView>
         {!isConnected && (
           <>
             <TouchableOpacity
               onPress={startDeviceDiscovery}
-              style={styles.connectToDeviceButton}>
-              <Text style={styles.scanButtonText}>SCAN FOR PAIRED DEVICES</Text>
+              style={bluetoothPageStyles.scanButton}>
+              <Text style={bluetoothPageStyles.scanButtonText}>
+                SCAN FOR PAIRED DEVICES
+              </Text>
             </TouchableOpacity>
-            <Text style={styles.deviceInfo}>Paired Devices:</Text>
             {pairedDevices.map((device, index) => (
               <View key={index} style={styles.deviceContainer}>
-                <View style={styles.deviceItem}>
-                  <Text style={styles.deviceName}>{device.name}</Text>
+                <View style={bluetoothPageStyles.deviceItem}>
+                  <Text style={bluetoothPageStyles.deviceName}>
+                    {device.name}
+                  </Text>
                 </View>
                 <TouchableOpacity
                   onPress={() => connectToDevice(device)}
-                  style={styles.connectToDeviceButton}>
-                  <Text style={styles.exportButtonText}>Connect</Text>
+                  style={bluetoothPageStyles.connectToDeviceButton}>
+                  <Text style={bluetoothPageStyles.connectToDeviceButtonText}>
+                    Connect
+                  </Text>
                 </TouchableOpacity>
               </View>
             ))}

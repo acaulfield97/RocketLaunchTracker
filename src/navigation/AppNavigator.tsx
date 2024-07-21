@@ -4,7 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
 import MapScreen from '../screens/mapScreen/MapScreen';
-import LocationDataScreen from '../screens/locationDataScreen';
+import LocationDataScreen from '../screens/locationDataScreen/locationDataScreen';
 import BluetoothStack from './BluetoothStack';
 import AccountStack from './AccountStack';
 import getIcon from '../assets/icons';
@@ -38,7 +38,7 @@ const AppNavigator = () => {
         <Tab.Screen
           name="LocationData"
           component={LocationDataScreen}
-          options={{headerShown: true}}
+          options={{headerShown: false}}
         />
         <Tab.Screen
           name="Bluetooth"

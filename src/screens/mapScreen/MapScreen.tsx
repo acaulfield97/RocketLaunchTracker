@@ -8,7 +8,7 @@ import LineRoute from './LineRoute';
 import RocketMarkers from './RocketMarkers';
 // @ts-ignore
 import compassIcon from '../../assets/media/icons/arrow_icon.png';
-import styles from '../../styles/styles';
+import styles from '../../styles/commonStyles';
 import SelectedRocketBottomSheet from './SelectedRocketBottomDrawer';
 
 export default function MapScreen() {

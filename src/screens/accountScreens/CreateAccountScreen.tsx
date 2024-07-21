@@ -4,7 +4,7 @@ import styles from '../../styles/loginPageStyles';
 // @ts-ignore
 import backgroundImage from '../../assets/media/images/background_space.jpg';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import MyTextInput from '../../components/MyTextInput';
+import MyTextInput from '../../components/fragments/MyTextInput';
 import auth from '@react-native-firebase/auth';
 
 export default function CreateAccountScreen({navigation}) {

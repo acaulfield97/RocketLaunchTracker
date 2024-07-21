@@ -17,10 +17,11 @@ const AltitudeGraphView: React.FC<AltitudeGraphViewProps> = ({
 
   const data = {
     labels: altitudeData.map(dataPoint =>
-      new Date(dataPoint.time).toLocaleTimeString('en-US', {
+      new Date(dataPoint.time).toLocaleTimeString('en-GB', {
         hour12: false,
         hour: '2-digit',
         minute: '2-digit',
+        second: '2-digit',
       }),
     ),
     datasets: [

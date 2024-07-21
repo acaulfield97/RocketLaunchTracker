@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.accent,
     position: 'relative',
-    backgroundColor: 'rgba(0, 43, 76, 0.4)',
+    backgroundColor: 'rgba(150, 202, 231, 0.3)',
   },
   contentContainer: {
     position: 'relative',

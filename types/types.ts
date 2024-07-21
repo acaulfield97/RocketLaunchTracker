@@ -1,4 +1,4 @@
-import { GeoPoint, Timestamp } from "@react-native-firebase/firestore";
+import { GeoPoint } from "@react-native-firebase/firestore";
 
 export type RootStackParamList = {
   BluetoothTerminal: undefined;

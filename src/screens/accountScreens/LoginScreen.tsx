@@ -9,7 +9,7 @@ import {
 import styles from '../../styles/loginPageStyles';
 // @ts-ignore
 import backgroundImage from '../../assets/media/images/background_space.jpg';
-import MyTextInput from '../../components/MyTextInput';
+import MyTextInput from '../../components/fragments/MyTextInput';
 import auth from '@react-native-firebase/auth';
 
 export default function LoginScreen({navigation}) {

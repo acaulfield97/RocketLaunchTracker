@@ -10,40 +10,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: windowHeight,
   },
-  scanButtonText: {
-    color: colors.dark,
-    fontSize: 14,
-    textAlign: 'center',
-    fontFamily: 'AstroSpace',
-    fontWeight: 'normal'
-  },
-  noDevicesText: {
-    textAlign: 'center',
-    marginTop: 10,
-    fontStyle: 'italic',
-    color: colors.white
-  },
-  deviceItem: {
-    margin: 2,
-    justifyContent: 'center'
-  },
-  deviceName: {
-    fontSize: 14,
-    color: colors.white,
-    fontFamily: 'AstroSpace'
-  },
-  deviceInfo: {
-    fontSize: 8,
-    color: colors.white
-  },
-  connectToDeviceButton: {
-    backgroundColor: colors.accent,
-    padding: 10,
-    borderRadius: 10,
-    margin: 2,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
   sendButton: {
     backgroundColor: '#2196F3',
     padding: 15,
@@ -83,6 +49,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   headerText: {
+    fontFamily: 'AstroSpace',
     fontSize: 30,
     textAlign: 'center',
     borderBottomWidth: 1,
@@ -159,6 +126,17 @@ const styles = StyleSheet.create({
     color: colors.white,
     textAlign: 'center',
     fontFamily: 'AstroSpace', 
+  },
+  titleContainer: {
+    marginTop: 90,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  titleText: {
+    fontFamily: 'AstroSpace',
+    fontSize: 30,
+    color: colors.white,
   },
 
 });

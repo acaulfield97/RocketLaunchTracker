@@ -8,7 +8,7 @@ import React, {
 import Geolocation from '@react-native-community/geolocation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getDirectionsWalking} from '../services/directionsWalking';
-import {startCompass} from '../components/compass';
+import {startCompass} from '../screens/mapScreen/Compass';
 
 interface RocketContextType {
   selectedRocket: any;
@@ -64,7 +64,12 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
             timestamp,
           });
           setPosition({latitude, longitude});
-          const data = {latitude, longitude, altitude, timestamp};
+          const data = {
+            latitude,
+            longitude,
+            altitude: altitude ?? undefined, // Ensure altitude is undefined if null
+            timestamp,
+          };
           setLastKnownData(data);
           saveDataToStorage(data);
         },
