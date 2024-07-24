@@ -28,7 +28,7 @@ export default function LocationDataScreen() {
           </View>
           <AltitudeGraph />
         </View>
-        {lastKnownRocketPosition ? (
+        {/* {lastKnownRocketPosition ? (
           <ScrollView>
             <ConnectionStatusView />
             <LastKnownLocationView />
@@ -37,7 +37,7 @@ export default function LocationDataScreen() {
           </ScrollView>
         ) : (
           <Text style={styles.bodyText}>No data available</Text>
-        )}
+        )} */}
       </ImageBackground>
     </View>
   );

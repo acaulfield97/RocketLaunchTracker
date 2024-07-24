@@ -7,7 +7,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import MyTextInput from '../../components/fragments/MyTextInput';
 import auth from '@react-native-firebase/auth';
 
-export default function CreateAccountScreen({navigation}) {
+export default function CreateAccountScreen({navigation}: {navigation: any}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -33,18 +33,18 @@ export default function CreateAccountScreen({navigation}) {
         <View style={styles.inputsContainer}>
           <MyTextInput
             value={email}
-            onChangeText={text => setEmail(text)}
+            onChangeText={setEmail}
             placeholder="Enter email or username"
           />
           <MyTextInput
             value={password}
-            onChangeText={text => setPassword(text)}
+            onChangeText={setPassword}
             placeholder="Enter password"
             secureTextEntry
           />
           <MyTextInput
             value={confirmPassword}
-            onChangeText={text => setConfirmPassword(text)}
+            onChangeText={setConfirmPassword}
             placeholder="Confirm password"
             secureTextEntry
           />

@@ -3,8 +3,8 @@ import {View, Text} from 'react-native';
 import {useBluetoothContext} from '../../contexts/BluetoothContext';
 import styles from '../../styles/locationDataPageStyles';
 
-export default function StatsView() {
-  const {latestSpeed} = useBluetoothContext();
+const StatsView = () => {
+  const {latestRocketData} = useBluetoothContext();
 
   return (
     <View style={styles.bottomSectionContainer}>
@@ -14,9 +14,13 @@ export default function StatsView() {
       <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Speed: </Text>
         <Text style={styles.bodyText}>
-          {latestSpeed ? `${latestSpeed.speedKmph} km/h` : 'N/A'}
+          {latestRocketData && latestRocketData.speed
+            ? `${latestRocketData.speed} km/h`
+            : 'N/A'}
         </Text>
       </View>
     </View>
   );
-}
+};
+
+export default StatsView;

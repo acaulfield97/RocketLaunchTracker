@@ -9,6 +9,7 @@ import Geolocation from '@react-native-community/geolocation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getDirectionsWalking} from '../services/directionsWalking';
 import {startCompass} from '../screens/mapScreen/Compass';
+import {UserLocationType} from '../types/types';
 
 interface RocketContextType {
   selectedRocket: any;
@@ -24,16 +25,11 @@ interface RocketContextType {
     altitude?: number;
     timestamp?: number;
   } | null;
-  userPosition: {
-    latitude: number;
-    longitude: number;
-    altitude?: number;
-    timestamp?: number;
-  } | null;
+  userPosition: UserLocationType;
   saveRocketPosition: (position: {
     latitude: number;
     longitude: number;
-    altitude?: number;
+    altitude: number;
     timestamp?: number;
   }) => void;
   loadLastKnownRocketPosition: () => void;
@@ -47,7 +43,11 @@ const RocketContext = createContext<RocketContextType>({
   routeDistance: 0,
   compassDirection: 0,
   lastKnownRocketPosition: null,
-  userPosition: null,
+  userPosition: {
+    latitude: 0,
+    longitude: 0,
+    timestamp: 0,
+  },
   saveRocketPosition: () => {},
   loadLastKnownRocketPosition: () => {},
 });
@@ -58,7 +58,6 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
   const [userPosition, setUserPosition] = useState({
     latitude: 0,
     longitude: 0,
-    altitude: 0,
     timestamp: 0,
   });
   const [compassDirection, setCompassDirection] = useState<number>(0);
@@ -73,15 +72,14 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
     const fetchUserCurrentPosition = () => {
       Geolocation.getCurrentPosition(
         position => {
-          const {latitude, longitude, altitude} = position.coords;
+          const {latitude, longitude} = position.coords;
           const timestamp = position.timestamp;
           console.log('RocketContext.tsx: Current position:', {
             latitude,
             longitude,
-            altitude,
             timestamp,
           });
-          setUserPosition({latitude, longitude, altitude, timestamp});
+          setUserPosition({latitude, longitude, timestamp});
         },
         error => {
           console.error('Error getting current location:', error);

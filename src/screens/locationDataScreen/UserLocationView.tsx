@@ -21,10 +21,6 @@ export default function UserLocationView() {
         <Text style={styles.bodyText}>{userPosition.longitude}</Text>
       </View>
       <View style={styles.bodyContainer}>
-        <Text style={styles.subTitleText}>Altitude: </Text>
-        <Text style={styles.bodyText}>{userPosition.altitude} m</Text>
-      </View>
-      <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Time: </Text>
         <Text style={styles.bodyText}>
           {new Date(userPosition.timestamp).toLocaleString('en-GB', {

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, FC} from 'react';
 import {View, Dimensions, Text, ScrollView} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import colors from '../../styles/colors';
@@ -8,9 +8,7 @@ interface AltitudeGraphViewProps {
   altitudeData: AltitudeData[];
 }
 
-const AltitudeGraphView: React.FC<AltitudeGraphViewProps> = ({
-  altitudeData = [],
-}) => {
+const AltitudeGraphView: FC<AltitudeGraphViewProps> = ({altitudeData = []}) => {
   const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {

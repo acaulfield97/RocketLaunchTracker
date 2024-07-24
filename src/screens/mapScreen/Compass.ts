@@ -9,7 +9,7 @@ import {map, filter} from 'rxjs/operators';
 // Set the update interval for the sensors (100 ms is standard rate)
 setUpdateIntervalForType(SensorTypes.magnetometer, 5000); // 5s update interval
 
-const degreeToDirection = degree => {
+const degreeToDirection = (degree:number) => {
   if (degree >= 337.5 || degree < 22.5) {
     return 'N';
   } else if (degree >= 22.5 && degree < 67.5) {
@@ -29,7 +29,7 @@ const degreeToDirection = degree => {
   }
 };
 
-export const startCompass = callback => {
+export const startCompass = (callback:any) => {
   const magnetometerObservable = magnetometer.pipe(
     map(({x, y, z}) => Math.atan2(y, x) * (180 / Math.PI)),
     map(degree => (degree < 0 ? 360 + degree : degree)),

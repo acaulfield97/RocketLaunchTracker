@@ -1,19 +1,31 @@
-// useBluetooth.ts
-// Defines a custom hook called useBluetooth which manages bluetooth connections and data processing
+import {useEffect, useState, useCallback} from 'react';
+import RNBluetoothClassic, {
+  BluetoothDevice,
+} from 'react-native-bluetooth-classic';
+import {
+  checkBluetoothEnabled,
+  requestBluetoothPermissions,
+  connectToDeviceUtil,
+  disconnectFromDevice,
+} from './BluetoothUtils';
+import {parseDataStream} from './DataParserNMEA';
+import {RocketLocation, BluetoothContextType} from '../../types/types';
 
-import { useEffect, useState, useCallback } from 'react';
-import RNBluetoothClassic, { BluetoothDevice } from 'react-native-bluetooth-classic';
-import { checkBluetoothEnabled, requestBluetoothPermissions, connectToDeviceUtil, disconnectFromDevice } from './BluetoothUtils';
-import { parseDataStream } from './DataParserNMEA';
-
-export const useBluetooth = () => {
+export const useBluetooth = (): BluetoothContextType => {
   const [paired, setPaired] = useState<any[]>([]);
-  const [selectedDevice, setSelectedDevice] = useState<BluetoothDevice>();
+  const [selectedDevice, setSelectedDevice] = useState<
+    BluetoothDevice | undefined
+  >(undefined);
   const [rocketDataStream, setRocketDataStream] = useState<any[]>([]);
   const [isConnected, setIsConnected] = useState(false);
-  const [intervalId, setIntervalId] = useState<NodeJS.Timer>();
-  const [latestRocketLocation, setLatestRocketLocation] = useState<{latitude: number, longitude: number, altitude: number, time: number} | null>(null);
-  const [latestSpeed, setLatestSpeed] = useState<{ speedKmph: number } | null>(null);
+  const [latestRocketData, setLatestRocketData] = useState<RocketLocation>({
+    latitude: 0,
+    longitude: 0,
+    altitude: 0,
+    speed: 0,
+    time: 0,
+  });
+  // const [latestSpeed, setLatestSpeed] = useState<SpeedData | null>(null);
 
   useEffect(() => {
     async function setupBluetooth() {
@@ -29,11 +41,12 @@ export const useBluetooth = () => {
   useEffect(() => {
     let intervalId: NodeJS.Timer | undefined;
     if (selectedDevice && isConnected) {
-      intervalId = setInterval(readData, 100);
-      setIntervalId(intervalId);
+      intervalId = setInterval(() => readData(), 300);
     }
     return () => {
-      clearInterval(intervalId);
+      if (intervalId) {
+        clearInterval(intervalId as any);
+      }
     };
   }, [isConnected, selectedDevice]);
 
@@ -56,14 +69,21 @@ export const useBluetooth = () => {
     }
   }, []);
 
-  const disconnect = useCallback(() => {
+  const disconnect = () => {
     if (selectedDevice && isConnected) {
-      disconnectFromDevice(selectedDevice, () => clearInterval(intervalId));
-      setSelectedDevice(undefined);
-      setIsConnected(false);
-      setRocketDataStream([]);
+      try {
+        selectedDevice.clear().then(() => {});
+
+        selectedDevice.disconnect().then(() => {
+          setSelectedDevice(undefined);
+          setIsConnected(false);
+          console.log('Disconnected from device');
+        });
+      } catch (error) {
+        console.error('Error disconnecting:', error);
+      }
     }
-  }, [selectedDevice, isConnected, intervalId]);
+  };
 
   const readData = useCallback(async () => {
     if (selectedDevice && isConnected) {
@@ -74,37 +94,68 @@ export const useBluetooth = () => {
           if (message !== '' && message !== ' ') {
             const parsedData = parseDataStream(message.toString());
             console.log('Parsed Data:', parsedData);
-            setRocketDataStream(prevData => [...prevData, ...parsedData]);
-            
-            // Extract and set the latest location from the GPGGA data
-            const gpggaData = parsedData.find(data => data.type === 'GPGGA');
-            if (gpggaData) {
-              const { latitude, longitude, altitude, time } = gpggaData;
-              const [lat, latDir] = latitude.split(' ');
-              const [lon, lonDir] = longitude.split(' ');
-              const latDecimal = convertToDecimal(lat, latDir);
-              const lonDecimal = convertToDecimal(lon, lonDir);
-              // parse altitude from string to number
-              const altitudeNum = parseFloat(altitude);
-              const timeNum = parseFloat(time);
 
-              setLatestRocketLocation({ latitude: latDecimal, longitude: lonDecimal, altitude: altitudeNum, time: timeNum});
-
-              console.log("useBluetooth.ts: LATITUDE:", latestRocketLocation?.latitude);
-              console.log("useBluetooth.ts: LONGITUDE:", latestRocketLocation?.longitude);
-              console.log("useBluetooth.ts: ALTITUDE:", latestRocketLocation?.altitude);
-              console.log("useBluetooth.ts: TIME:", latestRocketLocation?.time);
+            if (!parsedData) {
+              return;
             }
 
-             // Extract and set the latest speed from the GPVTG data
-             const gpvtgData = parsedData.find(data => data.type === 'GPVTG');
-             if (gpvtgData) {
-               const speedKmph = parseFloat(gpvtgData.speed);
-               setLatestSpeed({ speedKmph });
-          }
-
-          console.log("useBluetooth.ts: SPEED:", latestSpeed);
-  
+            switch (parsedData.type) {
+              case 'GPGGA':
+                setRocketDataStream(prevData => ({
+                  ...prevData,
+                  GPGGA: parsedData,
+                }));
+                setLatestRocketData(prevData => ({
+                  ...prevData,
+                  latitude: convertToDecimal(
+                    parsedData.latitude.split(' ')[0],
+                    parsedData.latitude.split(' ')[1],
+                  ),
+                  longitude: convertToDecimal(
+                    parsedData.longitude.split(' ')[0],
+                    parsedData.longitude.split(' ')[1],
+                  ),
+                  altitude: parseFloat(parsedData.altitude),
+                  time: parseFloat(parsedData.time),
+                }));
+                break;
+              case 'GPGSV':
+                setRocketDataStream(prevData => ({
+                  ...prevData,
+                  GPGSV: [parsedData],
+                }));
+                break;
+              case 'GPRMC':
+                setRocketDataStream(prevData => ({
+                  ...prevData,
+                  GPRMC: parsedData,
+                }));
+                break;
+              case 'GPVTG':
+                setRocketDataStream(prevData => ({
+                  ...prevData,
+                  GPVTG: parsedData,
+                }));
+                setLatestRocketData(prevData => ({
+                  ...prevData,
+                  speed: parseFloat(parsedData.speed),
+                }));
+                break;
+              case 'GPGLL':
+                setRocketDataStream(prevData => ({
+                  ...prevData,
+                  GPGLL: parsedData,
+                }));
+                break;
+              case 'GPGSA':
+                setRocketDataStream(prevData => ({
+                  ...prevData,
+                  GPGSA: parsedData,
+                }));
+                break;
+              default:
+                break;
+            }
           }
         }
       } catch (error) {
@@ -112,11 +163,15 @@ export const useBluetooth = () => {
       }
     }
   }, [selectedDevice, isConnected]);
-  
+
   // Convert NMEA coordinates to decimal
   const convertToDecimal = (coordinate: string, direction: string) => {
-    let degrees, minutes;
-    
+    if (!coordinate || !direction) {
+      return 0;
+    }
+    let degrees: number;
+    let minutes: number;
+
     if (direction === 'N' || direction === 'S') {
       // Latitude has 2 degrees digits
       degrees = parseFloat(coordinate.slice(0, 2));
@@ -125,8 +180,10 @@ export const useBluetooth = () => {
       // Longitude has 3 degrees digits
       degrees = parseFloat(coordinate.slice(0, 3));
       minutes = parseFloat(coordinate.slice(3));
+    } else {
+      return 0;
     }
-  
+
     let decimal = degrees + minutes / 60;
     if (direction === 'S' || direction === 'W') {
       decimal = -decimal;
@@ -139,8 +196,7 @@ export const useBluetooth = () => {
     selectedDevice,
     isConnected,
     receivedData: rocketDataStream,
-    latestRocketLocation,
-    latestSpeed,
+    latestRocketData,
     startDeviceDiscovery,
     connectToDevice,
     disconnect,

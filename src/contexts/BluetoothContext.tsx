@@ -1,9 +1,12 @@
 //  BluetoothContext.tsx
 
-import React, {createContext, useContext} from 'react';
+import React, {createContext, useContext, ReactNode, FC} from 'react';
 import {useBluetooth} from '../components/bluetooth/useBluetooth';
+import {BluetoothContextType} from '../types/types';
 
-const BluetoothContext = createContext(undefined);
+const BluetoothContext = createContext<BluetoothContextType | undefined>(
+  undefined,
+);
 
 export const useBluetoothContext = () => {
   const context = useContext(BluetoothContext);
@@ -13,7 +16,7 @@ export const useBluetoothContext = () => {
   return context;
 };
 
-export const BluetoothProvider = ({children}) => {
+export const BluetoothProvider: FC<{children: ReactNode}> = ({children}) => {
   const bluetoothService = useBluetooth();
   return (
     <BluetoothContext.Provider value={bluetoothService}>

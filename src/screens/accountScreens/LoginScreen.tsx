@@ -12,7 +12,7 @@ import backgroundImage from '../../assets/media/images/background_space.jpg';
 import MyTextInput from '../../components/fragments/MyTextInput';
 import auth from '@react-native-firebase/auth';
 
-export default function LoginScreen({navigation}) {
+export default function LoginScreen({navigation}: {navigation: any}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -39,12 +39,12 @@ export default function LoginScreen({navigation}) {
         <View style={styles.inputsContainer}>
           <MyTextInput
             value={email}
-            onChangeText={text => setEmail(text)}
+            onChangeText={setEmail}
             placeholder="Enter email or username"
           />
           <MyTextInput
             value={password}
-            onChangeText={text => setPassword(text)}
+            onChangeText={setPassword}
             placeholder="Enter password"
             secureTextEntry
           />
