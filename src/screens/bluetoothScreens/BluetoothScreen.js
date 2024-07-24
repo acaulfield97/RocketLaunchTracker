@@ -9,7 +9,6 @@ import {
   exportAllDataToCSV,
   exportAllDataToText,
 } from '../../components/helpers/ExportData';
-import {blue} from 'react-native-reanimated/lib/typescript/Colors';
 
 const BluetoothClassicTerminal = () => {
   const {
@@ -70,7 +69,7 @@ const BluetoothClassicTerminal = () => {
               </View>
               <TouchableOpacity
                 onPress={disconnect}
-                style={styles.deviceButton}>
+                style={styles.viewDataButton}>
                 <Text style={styles.connectButtonText}>Disconnect</Text>
               </TouchableOpacity>
             </View>
@@ -81,14 +80,14 @@ const BluetoothClassicTerminal = () => {
               <Text style={styles.viewDataButtonText}>View Raw Data</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.exportButton}
+              style={styles.viewDataButton}
               onPress={() => exportAllDataToText(receivedData)}>
               <Text style={styles.exportButtonText}>
                 Export All Data as Text
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.exportButton}
+              style={styles.viewDataButton}
               onPress={() => exportAllDataToCSV(receivedData)}>
               <Text style={styles.exportButtonText}>
                 Export All Data as CSV

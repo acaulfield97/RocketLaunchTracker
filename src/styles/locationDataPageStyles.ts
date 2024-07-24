@@ -22,6 +22,16 @@ const styles = StyleSheet.create({
     position: 'relative',
     backgroundColor: 'rgba(150, 202, 231, 0.3)',
   },
+  bottomSectionContainer: {
+    marginVertical: 10,
+    marginHorizontal: 10,
+    padding: 8,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: colors.accent,
+    position: 'relative',
+    backgroundColor: 'rgba(150, 202, 231, 0.3)',
+  },
   contentContainer: {
     position: 'relative',
     zIndex: 1,

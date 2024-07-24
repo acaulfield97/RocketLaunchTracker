@@ -11,17 +11,20 @@ import {useBluetoothContext} from '../../contexts/BluetoothContext';
 
 export default function RocketMarkers() {
   const {setSelectedRocket} = useRocket();
-  const latestLocation = [-5.9353561, 54.5847267];
-  // const {latestLocation} = useBluetoothContext();
+  const latestRocketLocation = [-5.93, 54.58];
+  // const {latestRocketLocation} = useBluetoothContext();
 
-  const points = latestLocation
+  const points = latestRocketLocation
     ? [
         {
           type: 'Feature',
           geometry: {
             type: 'Point',
             coordinates: [-5.9353561, 54.5847267],
-            // coordinates: [latestLocation.longitude, latestLocation.latitude],
+            // coordinates: [
+            // latestRocketLocation.longitude,
+            // latestRocketLocation.latitude,
+            // ],
           },
           properties: {
             id: 1,
@@ -40,7 +43,10 @@ export default function RocketMarkers() {
     }
   };
 
-  console.log('Latest Location:', latestLocation);
+  console.log(
+    'RocketMarkers.tsx ---- Latest Rocket Location:',
+    latestRocketLocation,
+  );
 
   return (
     <ShapeSource id="rockets" shape={rocketsFeatures} onPress={onRocketPress}>

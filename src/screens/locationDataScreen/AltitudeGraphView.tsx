@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {View, Dimensions, Text, ScrollView} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import colors from '../../styles/colors';
@@ -11,6 +11,14 @@ interface AltitudeGraphViewProps {
 const AltitudeGraphView: React.FC<AltitudeGraphViewProps> = ({
   altitudeData = [],
 }) => {
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({animated: true});
+    }
+  }, [altitudeData]);
+
   if (altitudeData.length === 0) {
     return <Text>No altitude data available</Text>;
   }
@@ -36,8 +44,8 @@ const AltitudeGraphView: React.FC<AltitudeGraphViewProps> = ({
   const chartWidth = Math.max(screenWidth, altitudeData.length * intervalWidth);
 
   return (
-    <ScrollView horizontal>
-      <View>
+    <ScrollView horizontal ref={scrollViewRef}>
+      <View style={{paddingLeft: 5}}>
         <LineChart
           data={data}
           width={chartWidth}

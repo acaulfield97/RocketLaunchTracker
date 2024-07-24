@@ -1,7 +1,7 @@
 import {Button, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
-import {LaunchData} from '../../../types/types';
+import {LaunchData} from '../../types/types';
 import {useBluetoothContext} from '../../contexts/BluetoothContext';
 
 const DashboardScreen = () => {

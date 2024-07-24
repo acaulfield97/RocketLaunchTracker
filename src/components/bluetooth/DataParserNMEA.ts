@@ -20,7 +20,7 @@ export const parseDataStream = (data: string) => {
           return {
             type: 'GPVTG',
             course: fields[1],
-            speed: fields[7],
+            speed: fields[7], // km/h
           };
         case '$GPGGA':
           return {
@@ -29,7 +29,7 @@ export const parseDataStream = (data: string) => {
             latitude: `${fields[2]} ${fields[3]}`,
             longitude: `${fields[4]} ${fields[5]}`,
             fixQuality: fields[6],
-            altitude: `${fields[9]} ${fields[10]}`,
+            altitude: `${fields[9]} ${fields[10]}`, // field[9] = value, field[10] = meters
           };
         case '$GPGLL':
           return {
