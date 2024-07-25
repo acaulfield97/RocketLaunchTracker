@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 import colors from './colors';
 
 const windowHeight = Dimensions.get('window').height;
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     gap: 8,
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
   },
   exportButton: {
     width: '50%',
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.white,
     shadowColor: '#000',
-    shadowOffset: { width: 2, height: 2 },
+    shadowOffset: {width: 2, height: 2},
     shadowOpacity: 0.8,
     shadowRadius: 3,
     elevation: 5,
@@ -91,7 +91,18 @@ const styles = StyleSheet.create({
     fontFamily: 'ZenDots-Regular',
     fontSize: 10,
     color: colors.white,
-  }
+  },
+  connectionStatusContainer: {
+    marginBottom: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
+  connectionStatusText: {
+    fontFamily: 'AstroSpace',
+    fontSize: 16,
+    color: colors.light,
+  },
 });
 
 export default styles;

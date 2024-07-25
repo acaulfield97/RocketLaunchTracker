@@ -24,6 +24,9 @@ export const useBluetooth = (): BluetoothContextType => {
     altitude: 0,
     speed: 0,
     time: 0,
+    numberOfSatellitesBeingTracked: 0,
+    satellitesInView: 0,
+    fixQuality: 0,
   });
   // const [latestSpeed, setLatestSpeed] = useState<SpeedData | null>(null);
 
@@ -117,12 +120,20 @@ export const useBluetooth = (): BluetoothContextType => {
                   ),
                   altitude: parseFloat(parsedData.altitude),
                   time: parseFloat(parsedData.time),
+                  numberOfSatellitesBeingTracked: parseFloat(
+                    parsedData.numberOfSatellitesBeingTracked,
+                  ),
+                  fixQuality: parseFloat(parsedData.fixQuality),
                 }));
                 break;
               case 'GPGSV':
                 setRocketDataStream(prevData => ({
                   ...prevData,
                   GPGSV: [parsedData],
+                }));
+                setLatestRocketData(prevData => ({
+                  ...prevData,
+                  satellitesInView: parseFloat(parsedData.satellitesInView),
                 }));
                 break;
               case 'GPRMC':
@@ -152,6 +163,7 @@ export const useBluetooth = (): BluetoothContextType => {
                   ...prevData,
                   GPGSA: parsedData,
                 }));
+
                 break;
               default:
                 break;

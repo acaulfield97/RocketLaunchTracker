@@ -20,30 +20,35 @@ export default function LastKnownLocationView() {
       <View style={styles.titleContainer}>
         <Text style={styles.titleText}>Last Known Location</Text>
       </View>
-      {lastKnownRocketPosition ? (
-        <>
-          <View style={styles.bodyContainer}>
-            <Text style={styles.subTitleText}>Latitude: </Text>
-            <Text style={styles.bodyText}>
-              {lastKnownRocketPosition.latitude}
-            </Text>
-          </View>
-          <View style={styles.bodyContainer}>
-            <Text style={styles.subTitleText}>Longitude: </Text>
-            <Text style={styles.bodyText}>
-              {lastKnownRocketPosition.longitude}
-            </Text>
-          </View>
-          <View style={styles.bodyContainer}>
-            <Text style={styles.subTitleText}>Altitude: </Text>
-            <Text style={styles.bodyText}>
-              {lastKnownRocketPosition.altitude} m
-            </Text>
-          </View>
-          <View style={styles.bodyContainer}>
-            <Text style={styles.subTitleText}>Time: </Text>
-            <Text style={styles.bodyText}>
-              {new Date(lastKnownRocketPosition.timestamp).toLocaleString(
+      <View style={styles.bodyContainer}>
+        <Text style={styles.subTitleText}>Latitude: </Text>
+        <Text style={styles.bodyText}>
+          {lastKnownRocketPosition && lastKnownRocketPosition.latitude
+            ? lastKnownRocketPosition.latitude
+            : 'Not available'}
+        </Text>
+      </View>
+      <View style={styles.bodyContainer}>
+        <Text style={styles.subTitleText}>Longitude: </Text>
+        <Text style={styles.bodyText}>
+          {lastKnownRocketPosition && lastKnownRocketPosition.longitude
+            ? lastKnownRocketPosition.longitude
+            : 'Not available'}
+        </Text>
+      </View>
+      <View style={styles.bodyContainer}>
+        <Text style={styles.subTitleText}>Altitude: </Text>
+        <Text style={styles.bodyText}>
+          {lastKnownRocketPosition && lastKnownRocketPosition.altitude
+            ? lastKnownRocketPosition.altitude + 'm'
+            : 'Not available'}
+        </Text>
+      </View>
+      <View style={styles.bodyContainer}>
+        <Text style={styles.subTitleText}>Time: </Text>
+        <Text style={styles.bodyText}>
+          {lastKnownRocketPosition && lastKnownRocketPosition.timestamp
+            ? new Date(lastKnownRocketPosition.timestamp).toLocaleString(
                 'en-GB',
                 {
                   hour12: true,
@@ -54,25 +59,22 @@ export default function LastKnownLocationView() {
                   month: '2-digit',
                   year: 'numeric',
                 },
-              )}
-            </Text>
-          </View>
-          <View style={styles.exportButtonContainer}>
-            <TouchableOpacity
-              onPress={() => exportToText(lastKnownRocketPosition)}
-              style={styles.exportButton}>
-              <Text style={styles.exportButtonText}>Export to Plain Text</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => exportToCSV(lastKnownRocketPosition)}
-              style={styles.exportButton}>
-              <Text style={styles.exportButtonText}>Export to CSV</Text>
-            </TouchableOpacity>
-          </View>
-        </>
-      ) : (
-        <Text style={styles.bodyText}>No data available</Text>
-      )}
+              )
+            : 'Not available'}
+        </Text>
+      </View>
+      <View style={styles.exportButtonContainer}>
+        <TouchableOpacity
+          onPress={() => exportToText(lastKnownRocketPosition)}
+          style={styles.exportButton}>
+          <Text style={styles.exportButtonText}>Export to Plain Text</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => exportToCSV(lastKnownRocketPosition)}
+          style={styles.exportButton}>
+          <Text style={styles.exportButtonText}>Export to CSV</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }

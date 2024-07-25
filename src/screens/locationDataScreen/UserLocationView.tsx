@@ -1,11 +1,12 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {View, Text} from 'react-native';
 import {useRocket} from '../../contexts/RocketContext';
-import {requestWritePermission} from '../../components/helpers/ExportData';
 import styles from '../../styles/locationDataPageStyles';
 
 export default function UserLocationView() {
   const {userPosition} = useRocket();
+
+  console.log('UserLocationView: Rendering with userPosition', userPosition);
 
   return (
     <View style={styles.sectionContainer}>
@@ -23,15 +24,17 @@ export default function UserLocationView() {
       <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Time: </Text>
         <Text style={styles.bodyText}>
-          {new Date(userPosition.timestamp).toLocaleString('en-GB', {
-            hour12: true,
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          })}
+          {userPosition.timestamp !== 0
+            ? new Date(userPosition.timestamp).toLocaleString('en-GB', {
+                hour12: true,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+              })
+            : 'Fetching...'}
         </Text>
       </View>
     </View>

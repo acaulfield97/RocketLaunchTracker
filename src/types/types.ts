@@ -28,6 +28,9 @@ export type RocketLocation = {
   altitude: number;
   time: number;
   speed: number;
+  numberOfSatellitesBeingTracked: number;
+  satellitesInView: number;
+  fixQuality: number;
 };
 
 export type UserLocationType = {

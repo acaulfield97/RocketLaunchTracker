@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import {useEffect, useState, useMemo} from 'react';
 // import { useBluetoothContext } from '../../contexts/BluetoothContext';
 
 interface LatestRocketLocation {
@@ -15,15 +15,19 @@ interface AltitudeGraphData {
 
 const useAltitudeData = () => {
   // const { latestRocketLocation } = useBluetoothContext();
-  const initialLocation: LatestRocketLocation = useMemo(() => ({
-    latitude: -5.93,
-    longitude: 54.58,
-    altitude: 101,
-    timestamp: Date.now()
-  }), []);
+  const initialLocation: LatestRocketLocation = useMemo(
+    () => ({
+      latitude: -5.93,
+      longitude: 54.58,
+      altitude: 101,
+      timestamp: Date.now(),
+    }),
+    [],
+  );
 
   const [altitudeData, setAltitudeData] = useState<AltitudeGraphData[]>([]);
-  const [latestRocketLocation, setLatestRocketLocation] = useState<LatestRocketLocation>(initialLocation);
+  const [latestRocketLocation, setLatestRocketLocation] =
+    useState<LatestRocketLocation>(initialLocation);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -45,7 +49,10 @@ const useAltitudeData = () => {
     if (isLastKnownDataValid(latestRocketLocation)) {
       setAltitudeData(prevData => [
         ...prevData,
-        { time: latestRocketLocation.timestamp, altitude: latestRocketLocation.altitude },
+        {
+          time: latestRocketLocation.timestamp,
+          altitude: latestRocketLocation.altitude,
+        },
       ]);
     }
   }, [latestRocketLocation]);
@@ -61,10 +68,8 @@ const useAltitudeData = () => {
     );
   };
 
-  console.log('Current altitude data:', altitudeData); // Debugging line
-
   return altitudeData;
 };
 
 export default useAltitudeData;
-export type { AltitudeGraphData as AltitudeData };
+export type {AltitudeGraphData as AltitudeData};
