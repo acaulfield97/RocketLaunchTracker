@@ -28,11 +28,11 @@ const RawDataScreen = ({route}) => {
       onScroll={handleScroll}
       scrollEventThrottle={16}>
       {parsedData ? (
-        parsedData.map((data, index) => (
-          <View key={index} style={styles.dataContainer}>
-            <Text style={styles.dataText}>{JSON.stringify(data, null, 2)}</Text>
-          </View>
-        ))
+        <View style={styles.dataContainer}>
+          <Text style={styles.dataText}>
+            {JSON.stringify(parsedData, null, 2)}
+          </Text>
+        </View>
       ) : (
         <Text style={styles.noDataText}>No data available</Text>
       )}

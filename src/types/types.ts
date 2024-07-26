@@ -44,7 +44,7 @@ export type BluetoothContextType = {
   selectedDevice?: BluetoothDevice;
   isConnected: boolean;
   receivedData: any[];
-  latestRocketData: RocketLocation;
+  rocketData: RocketLocation;
   startDeviceDiscovery: () => void;
   connectToDevice: (device: BluetoothDevice) => void;
   disconnect: () => void;

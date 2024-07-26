@@ -1,4 +1,4 @@
-import {PermissionsAndroid, Platform} from 'react-native';
+import {Alert, PermissionsAndroid, Platform} from 'react-native';
 import {writeFile, DownloadDirectoryPath} from 'react-native-fs';
 import Share from 'react-native-share';
 
@@ -28,7 +28,7 @@ export const requestWritePermission = async () => {
 
 export const exportToText = async lastKnownData => {
   if (!lastKnownData) {
-    console.log('No data to export');
+    Alert.alert('No data to export');
     return;
   }
 
@@ -51,7 +51,7 @@ export const exportToText = async lastKnownData => {
 
 export const exportToCSV = async lastKnownData => {
   if (!lastKnownData) {
-    console.log('No data to export');
+    Alert.alert('No data to export');
     return;
   }
 

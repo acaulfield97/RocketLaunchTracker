@@ -18,7 +18,7 @@ export const useBluetooth = (): BluetoothContextType => {
   >(undefined);
   const [rocketDataStream, setRocketDataStream] = useState<any[]>([]);
   const [isConnected, setIsConnected] = useState(false);
-  const [latestRocketData, setLatestRocketData] = useState<RocketLocation>({
+  const [rocketData, setRocketData] = useState<RocketLocation>({
     latitude: 0,
     longitude: 0,
     altitude: 0,
@@ -28,7 +28,6 @@ export const useBluetooth = (): BluetoothContextType => {
     satellitesInView: 0,
     fixQuality: 0,
   });
-  // const [latestSpeed, setLatestSpeed] = useState<SpeedData | null>(null);
 
   useEffect(() => {
     async function setupBluetooth() {
@@ -108,7 +107,7 @@ export const useBluetooth = (): BluetoothContextType => {
                   ...prevData,
                   GPGGA: parsedData,
                 }));
-                setLatestRocketData(prevData => ({
+                setRocketData(prevData => ({
                   ...prevData,
                   latitude: convertToDecimal(
                     parsedData.latitude.split(' ')[0],
@@ -131,7 +130,7 @@ export const useBluetooth = (): BluetoothContextType => {
                   ...prevData,
                   GPGSV: [parsedData],
                 }));
-                setLatestRocketData(prevData => ({
+                setRocketData(prevData => ({
                   ...prevData,
                   satellitesInView: parseFloat(parsedData.satellitesInView),
                 }));
@@ -147,7 +146,7 @@ export const useBluetooth = (): BluetoothContextType => {
                   ...prevData,
                   GPVTG: parsedData,
                 }));
-                setLatestRocketData(prevData => ({
+                setRocketData(prevData => ({
                   ...prevData,
                   speed: parseFloat(parsedData.speed),
                 }));
@@ -175,6 +174,17 @@ export const useBluetooth = (): BluetoothContextType => {
       }
     }
   }, [selectedDevice, isConnected]);
+
+  console.log('useBluetooth.ts LONGITUDE: ', rocketData.longitude);
+  console.log('useBluetooth.ts LATITUDE: ', rocketData.latitude);
+  console.log('useBluetooth.ts ALTITUDE: ', rocketData.altitude);
+  console.log('useBluetooth.ts SPEED: ', rocketData.speed);
+  console.log('useBluetooth.ts FIX: ', rocketData.fixQuality);
+  console.log('useBluetooth.ts SAT IN VIEW: ', rocketData.satellitesInView);
+  console.log(
+    'useBluetooth.ts SAT IN USE: ',
+    rocketData.numberOfSatellitesBeingTracked,
+  );
 
   // Convert NMEA coordinates to decimal
   const convertToDecimal = (coordinate: string, direction: string) => {
@@ -208,7 +218,7 @@ export const useBluetooth = (): BluetoothContextType => {
     selectedDevice,
     isConnected,
     receivedData: rocketDataStream,
-    latestRocketData,
+    rocketData,
     startDeviceDiscovery,
     connectToDevice,
     disconnect,

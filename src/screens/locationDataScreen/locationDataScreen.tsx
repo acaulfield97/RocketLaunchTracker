@@ -9,6 +9,7 @@ import LastKnownLocationView from './LastKnownLocationView';
 import StatsView from './StatsView';
 import ConnectionStatusView from './ConnectionStatusView';
 import UserLocationView from './UserLocationView';
+import StartRecordingView from './StartRecordingView';
 
 export default function LocationDataScreen() {
   useEffect(() => {
@@ -19,6 +20,7 @@ export default function LocationDataScreen() {
     <View style={styles.container}>
       <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
         <ScrollView>
+          <StartRecordingView />
           <UserLocationView />
           <View style={styles.sectionContainer}>
             <View style={styles.titleContainer}>
