@@ -2,7 +2,6 @@ import React, {useCallback} from 'react';
 import {View, ScrollView, Text, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useBluetoothContext} from '../../contexts/BluetoothContext';
-import {useBluetooth} from '../../components/bluetooth/useBluetooth';
 import styles from '../../styles/commonStyles';
 import bluetoothPageStyles from '../../styles/bluetoothPageStyles';
 import {
@@ -10,7 +9,7 @@ import {
   exportAllDataToText,
 } from '../../components/helpers/ExportData';
 
-const BluetoothClassicTerminal = () => {
+const BluetoothScreen = () => {
   const {
     pairedDevices,
     selectedDevice,
@@ -18,6 +17,7 @@ const BluetoothClassicTerminal = () => {
     receivedData,
     startDeviceDiscovery,
     connectToDevice,
+    connectingDeviceId,
     disconnect,
   } = useBluetoothContext();
 
@@ -53,7 +53,9 @@ const BluetoothClassicTerminal = () => {
                   onPress={() => connectToDevice(device)}
                   style={bluetoothPageStyles.connectToDeviceButton}>
                   <Text style={bluetoothPageStyles.connectToDeviceButtonText}>
-                    Connect
+                    {connectingDeviceId === device.id
+                      ? 'Connecting...'
+                      : 'Connect'}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -100,4 +102,4 @@ const BluetoothClassicTerminal = () => {
   );
 };
 
-export default BluetoothClassicTerminal;
+export default BluetoothScreen;

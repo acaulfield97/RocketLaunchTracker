@@ -1,6 +1,6 @@
 // Provides utility functions for managing bluetooth oerations
 
-import {PermissionsAndroid, Platform} from 'react-native';
+import {Alert, PermissionsAndroid, Platform} from 'react-native';
 import RNBluetoothClassic, {
   BluetoothDevice,
 } from 'react-native-bluetooth-classic';
@@ -76,8 +76,10 @@ export const connectToDeviceUtil = async (device: BluetoothDevice) => {
         DEVICE_CHARSET: Platform.OS === 'ios' ? 1536 : 'utf-8',
       });
     }
+
     return true;
   } catch (error) {
+    Alert.alert('Could not connect to device.');
     console.error('Error connecting to device:', error);
     return false;
   }

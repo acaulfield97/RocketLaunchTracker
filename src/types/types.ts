@@ -47,6 +47,7 @@ export type BluetoothContextType = {
   rocketData: RocketLocation;
   startDeviceDiscovery: () => void;
   connectToDevice: (device: BluetoothDevice) => void;
+  connectingDeviceId: string | null;
   disconnect: () => void;
 };
 

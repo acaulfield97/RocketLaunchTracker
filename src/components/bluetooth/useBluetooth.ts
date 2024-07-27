@@ -18,6 +18,9 @@ export const useBluetooth = (): BluetoothContextType => {
   >(undefined);
   const [rocketDataStream, setRocketDataStream] = useState<any[]>([]);
   const [isConnected, setIsConnected] = useState(false);
+  const [connectingDeviceId, setConnectingDeviceId] = useState<string | null>(
+    null,
+  );
   const [rocketData, setRocketData] = useState<RocketLocation>({
     latitude: 0,
     longitude: 0,
@@ -63,13 +66,18 @@ export const useBluetooth = (): BluetoothContextType => {
     }
   }, []);
 
-  const connectToDevice = useCallback(async (device: BluetoothDevice) => {
-    const connectionSuccess = await connectToDeviceUtil(device);
-    if (connectionSuccess) {
-      setSelectedDevice(device);
-      setIsConnected(true);
-    }
-  }, []);
+  const connectToDevice = useCallback(
+    async (device: BluetoothDevice, setButtonText: (text: string) => void) => {
+      setConnectingDeviceId(device.id);
+      const connectionSuccess = await connectToDeviceUtil(device);
+      if (connectionSuccess) {
+        setSelectedDevice(device);
+        setIsConnected(true);
+      }
+      setConnectingDeviceId(null);
+    },
+    [],
+  );
 
   const disconnect = () => {
     if (selectedDevice && isConnected) {
@@ -224,6 +232,7 @@ export const useBluetooth = (): BluetoothContextType => {
     rocketData,
     startDeviceDiscovery,
     connectToDevice,
+    connectingDeviceId,
     disconnect,
   };
 };
