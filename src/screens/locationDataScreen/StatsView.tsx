@@ -4,7 +4,7 @@ import {useBluetoothContext} from '../../contexts/BluetoothContext';
 import styles from '../../styles/locationDataPageStyles';
 
 const StatsView = () => {
-  const {latestRocketData} = useBluetoothContext();
+  const {rocketData} = useBluetoothContext();
 
   return (
     <View style={styles.bottomSectionContainer}>
@@ -14,9 +14,7 @@ const StatsView = () => {
       <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Speed (kmph): </Text>
         <Text style={styles.bodyText}>
-          {latestRocketData && latestRocketData.speed
-            ? latestRocketData.speed
-            : 'Not available'}
+          {rocketData && rocketData.speed ? rocketData.speed : 'Not available'}
         </Text>
       </View>
     </View>

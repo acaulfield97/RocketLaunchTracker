@@ -18,9 +18,9 @@ export type LaunchData = {
   time: string;
 };
 
-export type SpeedData = {
-  speedKmph: number | null | undefined;
-};
+// export type SpeedData = {
+//   speedKmph: number | null | undefined;
+// };
 
 export type RocketLocation = {
   latitude: number;

@@ -92,9 +92,11 @@ export const useBluetooth = (): BluetoothContextType => {
       try {
         let message = await selectedDevice.read();
         if (message) {
+          console.log('message here jasojasdoas : ', message);
           message = message.trim();
           if (message !== '' && message !== ' ') {
             const parsedData = parseDataStream(message.toString());
+
             console.log('Parsed Data:', parsedData);
 
             if (!parsedData) {
@@ -178,6 +180,7 @@ export const useBluetooth = (): BluetoothContextType => {
   console.log('useBluetooth.ts LONGITUDE: ', rocketData.longitude);
   console.log('useBluetooth.ts LATITUDE: ', rocketData.latitude);
   console.log('useBluetooth.ts ALTITUDE: ', rocketData.altitude);
+
   console.log('useBluetooth.ts SPEED: ', rocketData.speed);
   console.log('useBluetooth.ts FIX: ', rocketData.fixQuality);
   console.log('useBluetooth.ts SAT IN VIEW: ', rocketData.satellitesInView);
