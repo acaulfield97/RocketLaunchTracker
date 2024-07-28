@@ -37,7 +37,7 @@ export const parseDataStream = (data: string): NMEASentence => {
         longitude: `${fields[4]} ${fields[5]}`,
         fixQuality: fields[6],
         numberOfSatellitesBeingTracked: fields[7],
-        altitude: `${fields[9]}`, // ${fields[10]}`, // field[9] = value, field[10] = meters
+        altitude: `${fields[9]}`,
       } as GPGGA;
     case '$GPGLL':
       return {

@@ -10,6 +10,7 @@ import RocketMarkers from './RocketMarkers';
 import compassIcon from '../../assets/media/icons/arrow_icon.png';
 import styles from '../../styles/commonStyles';
 import SelectedRocketBottomSheet from './SelectedRocketBottomDrawer';
+import NorthCompass from './NorthCompass';
 
 export default function MapScreen() {
   const {directionCoordinates, compassDirection} = useRocket();
@@ -17,7 +18,7 @@ export default function MapScreen() {
   return (
     <View style={{flex: 1}}>
       <MapView style={{flex: 1}}>
-        <Camera followUserLocation followZoomLevel={12} />
+        <Camera followUserLocation followZoomLevel={12} heading={100} />
         <LocationPuck
           puckBearingEnabled
           puckBearing="heading"
@@ -32,7 +33,9 @@ export default function MapScreen() {
 
       <SelectedRocketBottomSheet />
 
-      <View style={styles.compassContainer}>
+      <NorthCompass />
+
+      {/* <View style={styles.compassContainer}>
         <Image
           source={compassIcon}
           style={[
@@ -40,7 +43,7 @@ export default function MapScreen() {
             {transform: [{rotate: `${compassDirection}deg`}]},
           ]}
         />
-      </View>
+      </View> */}
     </View>
   );
 }

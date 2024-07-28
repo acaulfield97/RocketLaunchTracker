@@ -66,18 +66,15 @@ export const useBluetooth = (): BluetoothContextType => {
     }
   }, []);
 
-  const connectToDevice = useCallback(
-    async (device: BluetoothDevice, setButtonText: (text: string) => void) => {
-      setConnectingDeviceId(device.id);
-      const connectionSuccess = await connectToDeviceUtil(device);
-      if (connectionSuccess) {
-        setSelectedDevice(device);
-        setIsConnected(true);
-      }
-      setConnectingDeviceId(null);
-    },
-    [],
-  );
+  const connectToDevice = useCallback(async (device: BluetoothDevice) => {
+    setConnectingDeviceId(device.id);
+    const connectionSuccess = await connectToDeviceUtil(device);
+    if (connectionSuccess) {
+      setSelectedDevice(device);
+      setIsConnected(true);
+    }
+    setConnectingDeviceId(null);
+  }, []);
 
   const disconnect = () => {
     if (selectedDevice && isConnected) {
@@ -127,7 +124,9 @@ export const useBluetooth = (): BluetoothContextType => {
                     parsedData.longitude.split(' ')[0],
                     parsedData.longitude.split(' ')[1],
                   ),
-                  altitude: parseFloat(parsedData.altitude),
+                  altitude: isNaN(parseFloat(parsedData.altitude)) // if altitude is NaN return 0
+                    ? 0
+                    : parseFloat(parsedData.altitude),
                   time: parseFloat(parsedData.time),
                   numberOfSatellitesBeingTracked: parseFloat(
                     parsedData.numberOfSatellitesBeingTracked,
