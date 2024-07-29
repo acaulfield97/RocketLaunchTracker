@@ -23,16 +23,24 @@ import DropdownMenu from '../../components/fragments/DropdownMenu';
 
 export default function MapScreen() {
   const {directionCoordinates, compassDirection} = useRocket();
+  const [touchCoordinates, setTouchCoordinates] = useState<
+    [number, number] | null
+  >(null);
 
   const CENTER_COORD: [number, number] = [-73.970895, 40.723279];
   const MAPBOX_VECTOR_TILE_SIZE = 512;
-  console.log('=> Mapbox[0]:', Mapbox);
-  console.log('=> Mapbox.StyleURL[1]:', Mapbox.StyleURL);
-  console.log('=> StyleURL[2]:', StyleURL);
+
   const STYLE_URL = Mapbox.StyleURL.Satellite;
 
   const [packName, setPackName] = useState('pack-1');
   const [showEditTitle, setShowEditTitle] = useState(false);
+
+  const handleMapPress = (event: any) => {
+    const {geometry} = event;
+    const coords: [number, number] = geometry.coordinates;
+    setTouchCoordinates(coords);
+    console.log('User touched coordinates:', coords);
+  };
 
   const menuOptions = [
     {
@@ -128,7 +136,7 @@ export default function MapScreen() {
   return (
     <View style={{flex: 1}}>
       <DropdownMenu options={menuOptions} />
-      <MapView style={{flex: 1}}>
+      <MapView style={{flex: 1}} onPress={handleMapPress}>
         <Camera followUserLocation followZoomLevel={12} heading={100} />
         <LocationPuck
           puckBearingEnabled
