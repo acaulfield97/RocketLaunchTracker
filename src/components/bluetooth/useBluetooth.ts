@@ -92,8 +92,15 @@ export const useBluetooth = (): BluetoothContextType => {
     }
   };
 
+  let stillReading = false;
+
   const readData = useCallback(async () => {
+    if (stillReading) {
+      return;
+    }
+
     if (selectedDevice && isConnected) {
+      stillReading = true;
       try {
         let message = await selectedDevice.read();
         if (message) {
@@ -174,27 +181,28 @@ export const useBluetooth = (): BluetoothContextType => {
 
                 break;
               default:
-                break;
             }
           }
         }
       } catch (error) {
         console.error('Error reading message:', error);
+        stillReading = false;
       }
+      stillReading = false;
     }
   }, [selectedDevice, isConnected]);
 
-  console.log('useBluetooth.ts LONGITUDE: ', rocketData.longitude);
-  console.log('useBluetooth.ts LATITUDE: ', rocketData.latitude);
-  console.log('useBluetooth.ts ALTITUDE: ', rocketData.altitude);
+  // console.log('useBluetooth.ts LONGITUDE: ', rocketData.longitude);
+  // console.log('useBluetooth.ts LATITUDE: ', rocketData.latitude);
+  // console.log('useBluetooth.ts ALTITUDE: ', rocketData.altitude);
 
-  console.log('useBluetooth.ts SPEED: ', rocketData.speed);
-  console.log('useBluetooth.ts FIX: ', rocketData.fixQuality);
-  console.log('useBluetooth.ts SAT IN VIEW: ', rocketData.satellitesInView);
-  console.log(
-    'useBluetooth.ts SAT IN USE: ',
-    rocketData.numberOfSatellitesBeingTracked,
-  );
+  // console.log('useBluetooth.ts SPEED: ', rocketData.speed);
+  // console.log('useBluetooth.ts FIX: ', rocketData.fixQuality);
+  // console.log('useBluetooth.ts SAT IN VIEW: ', rocketData.satellitesInView);
+  // console.log(
+  //   'useBluetooth.ts SAT IN USE: ',
+  //   rocketData.numberOfSatellitesBeingTracked,
+  // );
 
   // Convert NMEA coordinates to decimal
   const convertToDecimal = (coordinate: string, direction: string) => {
