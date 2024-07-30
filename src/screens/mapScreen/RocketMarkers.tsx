@@ -40,7 +40,7 @@ export default function RocketMarkers() {
     }
   };
 
-  console.log('RocketMarkers.tsx ---- Latest Rocket Location:', rocketData);
+  // console.log('RocketMarkers.tsx ---- Latest Rocket Location:', rocketData);
 
   return (
     <ShapeSource id="rockets" shape={rocketsFeatures} onPress={onRocketPress}>

@@ -1,10 +1,10 @@
 // styles.ts
-import { StyleSheet, Dimensions } from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 import colors from './colors';
 
 const windowHeight = Dimensions.get('window').height;
 
-const styles = StyleSheet.create({
+const commonStyles = StyleSheet.create({
   mainBody: {
     flex: 1,
     justifyContent: 'center',
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: colors.dark
+    backgroundColor: colors.dark,
   },
   dataContainer: {
     marginBottom: 10,
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   },
   dataText: {
     fontSize: 14,
-    color: colors.white
+    color: colors.white,
   },
   noDataText: {
     fontSize: 16,
@@ -53,24 +53,22 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'center',
     borderBottomWidth: 1,
-    color: colors.white
+    color: colors.white,
   },
   deviceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 2,
-   
   },
   connectButtonText: {
     fontWeight: 'bold',
     fontSize: 12,
-    color: colors.dark
+    color: colors.dark,
   },
   exportButtonText: {
     fontFamily: 'ZenDots-Regular',
     fontSize: 12,
     color: colors.dark,
-    
   },
   viewDataButton: {
     padding: 10,
@@ -113,7 +111,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.white,
     shadowColor: '#000',
-    shadowOffset: { width: 2, height: 2 },
+    shadowOffset: {width: 2, height: 2},
     shadowOpacity: 0.8,
     shadowRadius: 3,
     elevation: 5,
@@ -125,7 +123,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.white,
     textAlign: 'center',
-    fontFamily: 'AstroSpace', 
+    fontFamily: 'AstroSpace',
   },
   titleContainer: {
     marginTop: 90,
@@ -138,7 +136,81 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: colors.white,
   },
-
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalView: {
+    width: '80%',
+    backgroundColor: colors.white,
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalInput: {
+    width: '100%',
+    padding: 10,
+    borderBottomWidth: 1,
+    marginBottom: 20,
+  },
+  modalSubmitButton: {
+    width: '100%',
+    backgroundColor: colors.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: colors.white,
+    shadowColor: '#000',
+    shadowOffset: {width: 2, height: 2},
+    shadowOpacity: 0.8,
+    shadowRadius: 3,
+    elevation: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dropownMenuContainer: {
+    position: 'absolute',
+    top: 80,
+    left: 10,
+    backgroundColor: colors.white,
+    borderColor: colors.accent,
+    borderWidth: 1,
+    borderRadius: 5,
+    width: 150,
+    zIndex: 1,
+  },
+  dropdownMenuOption: {
+    padding: 10,
+  },
+  dropdownOptionText: {
+    fontFamily: 'ZenDots-Regular',
+    fontSize: 12,
+    color: colors.dark,
+  },
+  burgerMenuIconButton: {
+    padding: 10,
+    backgroundColor: colors.dark,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 40,
+    height: 40,
+    position: 'absolute',
+    zIndex: 1,
+    top: 40,
+    left: 10,
+  },
 });
 
-export default styles;
+export default commonStyles;

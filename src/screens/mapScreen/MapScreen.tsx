@@ -1,25 +1,34 @@
 // MapScreen.tsx
 
 import React, {useState} from 'react';
-import {View, Image, Dimensions} from 'react-native';
+import {
+  View,
+  Dimensions,
+  TextInput,
+  Modal,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import Mapbox, {
   MapView,
   LocationPuck,
   Camera,
-  StyleURL,
   offlineManager,
+  Images,
 } from '@rnmapbox/maps';
 import {useRocket} from '../../contexts/RocketContext';
 import LineRoute from './LineRoute';
 import RocketMarkers from './RocketMarkers';
 // @ts-ignore
 import compassIcon from '../../assets/media/icons/arrow_icon.png';
-import styles from '../../styles/commonStyles';
+// import styles from '../../styles/commonStyles';
 import SelectedRocketBottomSheet from './SelectedRocketBottomDrawer';
-import NorthCompass from './NorthCompass';
 // @ts-ignore
 import geoViewport from '@mapbox/geo-viewport';
 import DropdownMenu from '../../components/fragments/DropdownMenu';
+// @ts-ignore
+import puckArrow from '../../assets/media/icons/puck_arrow.webp';
+import commonStyles from '../../styles/commonStyles';
 
 export default function MapScreen() {
   const {directionCoordinates, compassDirection} = useRocket();
@@ -30,7 +39,7 @@ export default function MapScreen() {
   const CENTER_COORD: [number, number] = [-73.970895, 40.723279];
   const MAPBOX_VECTOR_TILE_SIZE = 512;
 
-  const STYLE_URL = Mapbox.StyleURL.Satellite;
+  const STYLE_URL = Mapbox.StyleURL.Outdoors;
 
   const [packName, setPackName] = useState('pack-1');
   const [showEditTitle, setShowEditTitle] = useState(false);
@@ -40,6 +49,39 @@ export default function MapScreen() {
     const coords: [number, number] = geometry.coordinates;
     setTouchCoordinates(coords);
     console.log('User touched coordinates:', coords);
+  };
+
+  const submitCreatePack = () => {
+    setPackName(packName);
+    setShowEditTitle(false);
+
+    const {width, height} = Dimensions.get('window');
+    const bounds: [number, number, number, number] = geoViewport.bounds(
+      CENTER_COORD,
+      12,
+      [width, height],
+      MAPBOX_VECTOR_TILE_SIZE,
+    );
+
+    const options = {
+      name: packName,
+      styleURL: STYLE_URL,
+      bounds: [
+        [bounds[0], bounds[1]],
+        [bounds[2], bounds[3]],
+      ] as [[number, number], [number, number]],
+      minZoom: 10,
+      maxZoom: 20,
+      metadata: {
+        whatIsThat: 'foo',
+      },
+    };
+
+    offlineManager.createPack(options, (region, status) =>
+      console.log('=> progress callback region:', 'status: ', status),
+    );
+
+    console.log('Pack name submitted:', packName);
   };
 
   const menuOptions = [
@@ -82,7 +124,7 @@ export default function MapScreen() {
             pack?.metadata,
           );
 
-          console.log('=> status', await pack?.status());
+          // console.log('=> status', await pack?.status());
         }
       },
     },
@@ -99,36 +141,7 @@ export default function MapScreen() {
       title: 'Remove packs',
       onPress: async () => {
         const result = await offlineManager.resetDatabase();
-        console.log('Reset DB done:', result);
-      },
-    },
-    {
-      title: 'Create Pack',
-      onPress: () => {
-        const {width, height} = Dimensions.get('window');
-        const bounds: [number, number, number, number] = geoViewport.bounds(
-          CENTER_COORD,
-          12,
-          [width, height],
-          MAPBOX_VECTOR_TILE_SIZE,
-        );
-
-        const options = {
-          name: packName,
-          styleURL: STYLE_URL,
-          bounds: [
-            [bounds[0], bounds[1]],
-            [bounds[2], bounds[3]],
-          ] as [[number, number], [number, number]],
-          minZoom: 10,
-          maxZoom: 20,
-          metadata: {
-            whatIsThat: 'foo',
-          },
-        };
-        offlineManager.createPack(options, (region, status) =>
-          console.log('=> progress callback region:', 'status: ', status),
-        );
+        // console.log('Reset DB done:', result);
       },
     },
   ];
@@ -136,12 +149,36 @@ export default function MapScreen() {
   return (
     <View style={{flex: 1}}>
       <DropdownMenu options={menuOptions} />
-      <MapView style={{flex: 1}} onPress={handleMapPress}>
-        <Camera followUserLocation followZoomLevel={12} heading={100} />
+      <Modal
+        visible={showEditTitle}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowEditTitle(false)}>
+        <View style={commonStyles.modalContainer}>
+          <View style={commonStyles.modalView}>
+            <TextInput
+              value={packName}
+              autoFocus={true}
+              onChangeText={text => setPackName(text)}
+              style={commonStyles.modalInput}
+            />
+            <TouchableOpacity
+              style={commonStyles.modalSubmitButton}
+              onPress={submitCreatePack}>
+              <Text style={commonStyles.buttonText}> Create Pack</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <MapView style={{flex: 1}} onPress={handleMapPress} compassEnabled={true}>
+        <Camera followUserLocation followZoomLevel={12} heading={90} />
+        <Images images={{puckArrow: puckArrow}} />
         <LocationPuck
           puckBearingEnabled
           puckBearing="heading"
-          bearingImage="compass"
+          bearingImage="puckArrow"
+          scale={0.2}
         />
         <RocketMarkers />
 
@@ -151,8 +188,6 @@ export default function MapScreen() {
       </MapView>
 
       <SelectedRocketBottomSheet />
-
-      <NorthCompass />
 
       {/* <View style={styles.compassContainer}>
         <Image

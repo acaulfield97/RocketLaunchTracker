@@ -1,6 +1,9 @@
 // DropdownMenu.tsx
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import colors from '../../styles/colors';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import commonStyles from '../../styles/commonStyles';
 
 interface DropdownMenuProps {
   options: {title: string; onPress: () => void}[];
@@ -10,20 +13,26 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({options}) => {
   const [visible, setVisible] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <View>
       <TouchableOpacity
-        style={styles.button}
+        style={commonStyles.burgerMenuIconButton}
         onPress={() => setVisible(!visible)}>
-        <Text style={styles.buttonText}>Menu</Text>
+        <Icon
+          name={visible ? 'times' : 'bars'}
+          size={20}
+          color={colors.white}
+        />
       </TouchableOpacity>
       {visible && (
-        <View style={styles.dropdown}>
+        <View style={commonStyles.dropownMenuContainer}>
           {options.map((option, index) => (
             <TouchableOpacity
               key={index}
-              style={styles.option}
+              style={commonStyles.dropdownMenuOption}
               onPress={option.onPress}>
-              <Text style={styles.optionText}>{option.title}</Text>
+              <Text style={commonStyles.dropdownOptionText}>
+                {option.title}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -31,37 +40,5 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({options}) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-  },
-  button: {
-    padding: 10,
-    backgroundColor: '#007bff',
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    textAlign: 'center',
-  },
-  dropdown: {
-    position: 'absolute',
-    top: 40,
-    left: 0,
-    backgroundColor: '#fff',
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    width: 150,
-    zIndex: 1,
-  },
-  option: {
-    padding: 10,
-  },
-  optionText: {
-    color: '#333',
-  },
-});
 
 export default DropdownMenu;
