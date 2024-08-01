@@ -89,21 +89,29 @@ const shareFile = (filePath, filename, type) => {
 };
 
 export const exportAllDataToText = async allData => {
-  if (!allData || allData.length === 0) {
+  if (!allData) {
     console.log('No data to export');
     return;
   }
 
-  const textData = allData
-    .map(
-      (data, index) =>
-        `Data ${index + 1}:\nLatitude: ${data.latitude}\nLongitude: ${
-          data.longitude
-        }\nAltitude: ${data.altitude ?? 'N/A'}\nTimestamp: ${new Date(
-          data.timestamp,
-        ).toLocaleString()}\n`,
-    )
-    .join('\n');
+  let textData = '';
+
+  const addDataToText = (type, data, index) => {
+    if (data) {
+      const {latitude, longitude, altitude, time: timestamp} = data;
+      textData += `Data ${index + 1} (${type}):\nLatitude: ${
+        latitude ?? 'N/A'
+      }\nLongitude: ${longitude ?? 'N/A'}\nAltitude: ${
+        altitude ?? 'N/A'
+      }\nTimestamp: ${new Date(timestamp).toLocaleString()}\n\n`;
+    }
+  };
+
+  let index = 0;
+  // Add data from each NMEA message type
+  for (const [type, data] of Object.entries(allData)) {
+    addDataToText(type, data, index++);
+  }
 
   const path = `${DownloadDirectoryPath}/all_rocket_data.txt`;
 
@@ -117,21 +125,35 @@ export const exportAllDataToText = async allData => {
 };
 
 export const exportAllDataToCSV = async allData => {
-  if (!allData || allData.length === 0) {
+  if (!allData) {
     console.log('No data to export');
     return;
   }
 
-  const csvData =
-    'Latitude,Longitude,Altitude,Timestamp\n' +
-    allData
-      .map(
-        data =>
-          `${data.latitude},${data.longitude},${
-            data.altitude ?? 'N/A'
-          },${new Date(data.timestamp).toLocaleString()}`,
-      )
-      .join('\n');
+  const csvHeaders = 'Type,Latitude,Longitude,Altitude,Timestamp\n';
+  let csvRows = [];
+
+  const addDataToCsv = (type, data) => {
+    if (data) {
+      const {latitude, longitude, altitude, time: timestamp} = data;
+      csvRows.push(
+        `${type},${latitude ?? 'N/A'},${longitude ?? 'N/A'},${
+          altitude ?? 'N/A'
+        },${new Date(timestamp).toLocaleString()}`,
+      );
+    }
+  };
+
+  // Add data from each NMEA message type
+  addDataToCsv('GPGGA', allData.GPGGA);
+  addDataToCsv('GPRMC', allData.GPRMC);
+  addDataToCsv('GPGLL', allData.GPGLL);
+  addDataToCsv('GPVTG', allData.GPVTG);
+  addDataToCsv('GPGSA', allData.GPGSA);
+  addDataToCsv('GPGSV', allData.GPGSV);
+
+  // Combine headers and rows
+  const csvData = csvHeaders + csvRows.join('\n');
 
   const path = `${DownloadDirectoryPath}/all_rocket_data.csv`;
 
