@@ -20,7 +20,7 @@ const AltitudeGraphView: FC<AltitudeGraphViewProps> = ({rocketData}) => {
   // Type guard to ensure LatestRocketLocation is valid
   const isLastKnownDataValid = useCallback(
     (data: any): data is RocketLocation => {
-      console.log('DATA GO HERE', data);
+      // console.log('DATA GO HERE', data);
       return (
         data &&
         typeof data.latitude === 'number' &&

@@ -1,7 +1,13 @@
 import React, {useState} from 'react';
-import {View, Text, Modal, TextInput, Button} from 'react-native';
+import {
+  View,
+  Text,
+  Modal,
+  TextInput,
+  Button,
+  TouchableOpacity,
+} from 'react-native';
 import styles from '../../styles/locationDataPageStyles';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import useFirebaseDataService from '../../services/useDatabase';
 
 export default function StartRecordingView() {
@@ -12,9 +18,12 @@ export default function StartRecordingView() {
 
   const handleStartRecording = () => {
     setModalVisible(true);
+    console.log('Start Recording button pressed');
   };
 
   const handleSetFlightName = () => {
+    console.log('Submit & Start Recording button pressed');
+    console.log('Flight Name:', inputFlightName);
     setFlightName(inputFlightName);
     setIsRecording(true);
     setModalVisible(false);
@@ -47,7 +56,6 @@ export default function StartRecordingView() {
               style={styles.submitButton}
               onPress={handleSetFlightName}>
               <Text style={styles.recordButtonText}>
-                {' '}
                 Submit & Start Recording
               </Text>
             </TouchableOpacity>

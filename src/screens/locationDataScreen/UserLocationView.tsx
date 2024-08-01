@@ -6,7 +6,7 @@ import styles from '../../styles/locationDataPageStyles';
 export default function UserLocationView() {
   const {userPosition} = useRocket();
 
-  console.log('UserLocationView: Rendering with userPosition', userPosition);
+  // console.log('UserLocationView: Rendering with userPosition', userPosition);
 
   return (
     <View style={styles.sectionContainer}>

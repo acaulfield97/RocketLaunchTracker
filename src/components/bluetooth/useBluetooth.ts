@@ -10,6 +10,7 @@ import {
 } from './BluetoothUtils';
 import {parseDataStream} from './DataParserNMEA';
 import {RocketLocation, BluetoothContextType} from '../../types/types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const useBluetooth = (): BluetoothContextType => {
   const [paired, setPaired] = useState<any[]>([]);
@@ -31,6 +32,7 @@ export const useBluetooth = (): BluetoothContextType => {
     satellitesInView: 0,
     fixQuality: 0,
   });
+  const LAST_KNOWN_LOCATION_KEY = 'LAST_KNOWN_LOCATION';
 
   useEffect(() => {
     async function setupBluetooth() {
@@ -55,11 +57,14 @@ export const useBluetooth = (): BluetoothContextType => {
     };
   }, [isConnected, selectedDevice]);
 
+  useEffect(() => {
+    retrieveLastKnownLocation();
+  }, []);
+
   const startDeviceDiscovery = useCallback(async () => {
     console.log('Searching for devices...');
     try {
       const pairedDevices = await RNBluetoothClassic.getBondedDevices();
-      console.log('Bonded peripherals: ' + pairedDevices.length);
       setPaired(pairedDevices);
     } catch (error) {
       console.error('Error fetching bonded devices:', error);
@@ -92,6 +97,37 @@ export const useBluetooth = (): BluetoothContextType => {
     }
   };
 
+  const saveLastKnownLocation = async (location: RocketLocation) => {
+    try {
+      const {latitude, longitude, altitude, time} = location;
+      const lastKnownLocation = {latitude, longitude, altitude, time};
+      await AsyncStorage.setItem(
+        LAST_KNOWN_LOCATION_KEY,
+        JSON.stringify(lastKnownLocation),
+      );
+    } catch (error) {
+      console.error('Error saving last known location:', error);
+    }
+  };
+
+  const retrieveLastKnownLocation = async () => {
+    try {
+      const location = await AsyncStorage.getItem(LAST_KNOWN_LOCATION_KEY);
+      if (location) {
+        const {latitude, longitude, altitude, time} = JSON.parse(location);
+        setRocketData(prevData => ({
+          ...prevData,
+          latitude,
+          longitude,
+          altitude,
+          time,
+        }));
+      }
+    } catch (error) {
+      console.error('Error retrieving last known location:', error);
+    }
+  };
+
   let stillReading = false;
 
   const readData = useCallback(async () => {
@@ -104,12 +140,11 @@ export const useBluetooth = (): BluetoothContextType => {
       try {
         let message = await selectedDevice.read();
         if (message) {
-          console.log('message here jasojasdoas : ', message);
           message = message.trim();
           if (message !== '' && message !== ' ') {
             const parsedData = parseDataStream(message.toString());
 
-            console.log('Parsed Data:', parsedData);
+            // console.log('Parsed Data:', parsedData);
 
             if (!parsedData) {
               return;
@@ -121,25 +156,29 @@ export const useBluetooth = (): BluetoothContextType => {
                   ...prevData,
                   GPGGA: parsedData,
                 }));
-                setRocketData(prevData => ({
-                  ...prevData,
-                  latitude: convertToDecimal(
-                    parsedData.latitude.split(' ')[0],
-                    parsedData.latitude.split(' ')[1],
-                  ),
-                  longitude: convertToDecimal(
-                    parsedData.longitude.split(' ')[0],
-                    parsedData.longitude.split(' ')[1],
-                  ),
-                  altitude: isNaN(parseFloat(parsedData.altitude)) // if altitude is NaN return 0
-                    ? 0
-                    : parseFloat(parsedData.altitude),
-                  time: parseFloat(parsedData.time),
-                  numberOfSatellitesBeingTracked: parseFloat(
-                    parsedData.numberOfSatellitesBeingTracked,
-                  ),
-                  fixQuality: parseFloat(parsedData.fixQuality),
-                }));
+                setRocketData(prevData => {
+                  const newRocketData = {
+                    ...prevData,
+                    latitude: convertToDecimal(
+                      parsedData.latitude.split(' ')[0],
+                      parsedData.latitude.split(' ')[1],
+                    ),
+                    longitude: convertToDecimal(
+                      parsedData.longitude.split(' ')[0],
+                      parsedData.longitude.split(' ')[1],
+                    ),
+                    altitude: isNaN(parseFloat(parsedData.altitude)) // if altitude is NaN return 0
+                      ? 0
+                      : parseFloat(parsedData.altitude),
+                    time: parseFloat(parsedData.time),
+                    numberOfSatellitesBeingTracked: parseFloat(
+                      parsedData.numberOfSatellitesBeingTracked,
+                    ),
+                    fixQuality: parseFloat(parsedData.fixQuality),
+                  };
+                  saveLastKnownLocation(newRocketData);
+                  return newRocketData;
+                });
                 break;
               case 'GPGSV':
                 setRocketDataStream(prevData => ({
