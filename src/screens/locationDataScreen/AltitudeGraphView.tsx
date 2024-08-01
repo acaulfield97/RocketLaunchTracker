@@ -42,11 +42,11 @@ const AltitudeGraphView: FC<AltitudeGraphViewProps> = ({rocketData}) => {
     }
   }, [rocketData, isLastKnownDataValid]);
 
-  useEffect(() => {
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollToEnd({animated: true});
-    }
-  }, [altitudeData]);
+  // useEffect(() => {
+  //   if (scrollViewRef.current) {
+  //     scrollViewRef.current.scrollToEnd({animated: true});
+  //   }
+  // }, [altitudeData]);
 
   if (altitudeData.length === 0) {
     console.error('altitudeData is empty');

@@ -24,10 +24,7 @@ const useFirebaseDataService = (): FirebaseDataServiceProps => {
    */
   const addFlightEntry = async (flightName: string, rocketData: RocketData) => {
     try {
-      const customFlightNameDocID = flightName + '_' + generateRandomString(5);
-      const flight = firestore()
-        .collection('launch_data')
-        .doc(customFlightNameDocID);
+      const flight = firestore().collection('launch_data').doc(flightName);
       const customDocumentID = 'data_point_' + generateRandomString(10); // 10 is the length of the random string
       const sanitisedRocketData = Object.fromEntries(
         Object.entries(rocketData).map(([key, value]) => [
