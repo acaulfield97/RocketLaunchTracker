@@ -22,7 +22,7 @@ export type LaunchData = {
 //   speedKmph: number | null | undefined;
 // };
 
-export type RocketLocation = {
+export type RocketData = {
   latitude: number;
   longitude: number;
   altitude: number;
@@ -31,6 +31,13 @@ export type RocketLocation = {
   numberOfSatellitesBeingTracked: number;
   satellitesInView: number;
   fixQuality: number;
+};
+
+export type RocketPosition = {
+  latitude: number;
+  longitude: number;
+  altitude: number;
+  time: number;
 };
 
 export type UserLocationType = {
@@ -44,7 +51,7 @@ export type BluetoothContextType = {
   selectedDevice?: BluetoothDevice;
   isConnected: boolean;
   receivedData: any[];
-  rocketData: RocketLocation;
+  rocketData: RocketData;
   startDeviceDiscovery: () => void;
   connectToDevice: (device: BluetoothDevice) => void;
   connectingDeviceId: string | null;

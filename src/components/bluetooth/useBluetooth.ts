@@ -9,7 +9,7 @@ import {
   disconnectFromDevice,
 } from './BluetoothUtils';
 import {parseDataStream} from './DataParserNMEA';
-import {RocketLocation, BluetoothContextType} from '../../types/types';
+import {RocketData, BluetoothContextType} from '../../types/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const useBluetooth = (): BluetoothContextType => {
@@ -22,7 +22,7 @@ export const useBluetooth = (): BluetoothContextType => {
   const [connectingDeviceId, setConnectingDeviceId] = useState<string | null>(
     null,
   );
-  const [rocketData, setRocketData] = useState<RocketLocation>({
+  const [rocketData, setRocketData] = useState<RocketData>({
     latitude: 0,
     longitude: 0,
     altitude: 0,
@@ -97,7 +97,7 @@ export const useBluetooth = (): BluetoothContextType => {
     }
   };
 
-  const saveLastKnownLocation = async (location: RocketLocation) => {
+  const saveLastKnownLocation = async (location: RocketData) => {
     try {
       const {latitude, longitude, altitude, time} = location;
       const lastKnownLocation = {latitude, longitude, altitude, time};

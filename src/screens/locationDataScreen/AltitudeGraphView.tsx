@@ -2,10 +2,10 @@ import React, {useEffect, useRef, FC, useState, useCallback} from 'react';
 import {View, Dimensions, Text, ScrollView} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import colors from '../../styles/colors';
-import {RocketLocation} from '../../types/types';
+import {RocketData} from '../../types/types';
 
 interface AltitudeGraphViewProps {
-  rocketData: RocketLocation[];
+  rocketData: RocketData[];
 }
 
 interface AltitudeGraphData {
@@ -18,19 +18,16 @@ const AltitudeGraphView: FC<AltitudeGraphViewProps> = ({rocketData}) => {
   const scrollViewRef = useRef<ScrollView>(null);
 
   // Type guard to ensure LatestRocketLocation is valid
-  const isLastKnownDataValid = useCallback(
-    (data: any): data is RocketLocation => {
-      // console.log('DATA GO HERE', data);
-      return (
-        data &&
-        typeof data.latitude === 'number' &&
-        typeof data.longitude === 'number' &&
-        typeof data.altitude === 'number' &&
-        typeof data.time === 'number'
-      );
-    },
-    [],
-  );
+  const isLastKnownDataValid = useCallback((data: any): data is RocketData => {
+    // console.log('DATA GO HERE', data);
+    return (
+      data &&
+      typeof data.latitude === 'number' &&
+      typeof data.longitude === 'number' &&
+      typeof data.altitude === 'number' &&
+      typeof data.time === 'number'
+    );
+  }, []);
 
   // Updating altitude data from rocketData if valid
   useEffect(() => {

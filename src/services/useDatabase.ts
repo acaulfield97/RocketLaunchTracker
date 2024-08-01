@@ -1,5 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
-import {RocketLocation} from '../types/types';
+import {RocketData} from '../types/types';
 import {useEffect, useRef, useState} from 'react';
 import {useBluetoothContext} from '../contexts/BluetoothContext';
 
@@ -22,10 +22,7 @@ const useFirebaseDataService = (): FirebaseDataServiceProps => {
    * @param flightName - name of the flight to be added to
    * @param rocketData - data to be added to the flight
    */
-  const addFlightEntry = async (
-    flightName: string,
-    rocketData: RocketLocation,
-  ) => {
+  const addFlightEntry = async (flightName: string, rocketData: RocketData) => {
     try {
       const customFlightNameDocID = flightName + '_' + generateRandomString(5);
       const flight = firestore()

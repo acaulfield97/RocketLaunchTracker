@@ -1,15 +1,33 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import {useRocket} from '../../contexts/RocketContext';
+import {useBluetoothContext} from '../../contexts/BluetoothContext';
 import {
   exportToText,
   exportToCSV,
   requestWritePermission,
 } from '../../components/helpers/ExportData';
 import styles from '../../styles/locationDataPageStyles';
+import {RocketPosition} from '../../types/types';
 
 export default function LastKnownLocationView() {
-  const {lastKnownRocketPosition} = useRocket();
+  const {rocketData} = useBluetoothContext();
+
+  const [lastKnownRocketPosition, setLastKnownRocketPosition] =
+    useState<RocketPosition>({
+      latitude: 0,
+      longitude: 0,
+      altitude: 0,
+      time: 0,
+    });
+
+  useEffect(() => {
+    setLastKnownRocketPosition({
+      latitude: rocketData.latitude,
+      longitude: rocketData.longitude,
+      altitude: rocketData.altitude,
+      time: rocketData.time,
+    });
+  }, [rocketData]);
 
   useEffect(() => {
     requestWritePermission();
@@ -23,43 +41,40 @@ export default function LastKnownLocationView() {
       <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Latitude: </Text>
         <Text style={styles.bodyText}>
-          {lastKnownRocketPosition && lastKnownRocketPosition.latitude
-            ? lastKnownRocketPosition.latitude
+          {rocketData && rocketData.latitude
+            ? rocketData.latitude
             : 'Not available'}
         </Text>
       </View>
       <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Longitude: </Text>
         <Text style={styles.bodyText}>
-          {lastKnownRocketPosition && lastKnownRocketPosition.longitude
-            ? lastKnownRocketPosition.longitude
+          {rocketData && rocketData.longitude
+            ? rocketData.longitude
             : 'Not available'}
         </Text>
       </View>
       <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Altitude: </Text>
         <Text style={styles.bodyText}>
-          {lastKnownRocketPosition && lastKnownRocketPosition.altitude
-            ? lastKnownRocketPosition.altitude + 'm'
+          {rocketData && rocketData.altitude
+            ? rocketData.altitude + 'm'
             : 'Not available'}
         </Text>
       </View>
       <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Time: </Text>
         <Text style={styles.bodyText}>
-          {lastKnownRocketPosition && lastKnownRocketPosition.timestamp
-            ? new Date(lastKnownRocketPosition.timestamp).toLocaleString(
-                'en-GB',
-                {
-                  hour12: true,
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric',
-                },
-              )
+          {rocketData && rocketData.time
+            ? new Date(rocketData.time).toLocaleString('en-GB', {
+                hour12: true,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+              })
             : 'Not available'}
         </Text>
       </View>
