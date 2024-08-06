@@ -35,8 +35,9 @@ export default function RocketMarkers() {
   const rocketsFeatures = featureCollection(points);
 
   const onRocketPress = async (event: OnPressEvent) => {
-    if (event.features[0]?.properties?.rocket) {
-      setSelectedRocket(event.features[0].properties.rocket);
+    console.log('rocket seelcted ', event.coordinates);
+    if (event.coordinates) {
+      setSelectedRocket(event.coordinates);
     }
   };
 

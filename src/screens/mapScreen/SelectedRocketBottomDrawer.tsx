@@ -16,7 +16,7 @@ export default function SelectedRocketBottomSheet() {
 
   useEffect(() => {
     if (selectedRocket) {
-      // console.log('Selected rocket:', selectedRocket);
+      console.log('Selected rocket:', selectedRocket);
       bottomDrawerRef.current?.expand();
     }
   }, [selectedRocket]);
@@ -40,8 +40,6 @@ export default function SelectedRocketBottomSheet() {
             <Image source={rocketIcon} style={{width: 40, height: 40}} />
             <View style={{flex: 1, gap: 5}}>
               <Text style={{color: 'black', fontSize: 20, fontWeight: '600'}}>
-                {/* dynamic names of rocket */}
-                {/* ID-{selectedRocket.id} */}
                 QUB3
               </Text>
               <Text style={{color: 'gray', fontSize: 18}}>Street name</Text>
