@@ -17,17 +17,6 @@ const commonStyles = StyleSheet.create({
     margin: 2,
     paddingHorizontal: 20,
   },
-  compassContainer: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    width: 80,
-    height: 80,
-  },
-  compassArrow: {
-    width: '100%',
-    height: '100%',
-  },
   container: {
     flex: 1,
     padding: 16,

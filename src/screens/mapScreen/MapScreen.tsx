@@ -19,8 +19,6 @@ import Mapbox, {
 import {useRocket} from '../../contexts/RocketContext';
 import LineRoute from './LineRoute';
 import RocketMarkers from './RocketMarkers';
-// @ts-ignore
-import compassIcon from '../../assets/media/icons/arrow_icon.png';
 // import styles from '../../styles/commonStyles';
 import SelectedRocketBottomSheet from './SelectedRocketBottomDrawer';
 // @ts-ignore
@@ -29,17 +27,19 @@ import DropdownMenu from '../../components/fragments/DropdownMenu';
 // @ts-ignore
 import puckArrow from '../../assets/media/icons/puck_arrow.webp';
 import commonStyles from '../../styles/commonStyles';
+import {useBluetooth} from '../../components/bluetooth/useBluetooth';
 
 export default function MapScreen() {
-  const {directionCoordinates, compassDirection} = useRocket();
+  const {directionCoordinates} = useRocket();
   const [touchCoordinates, setTouchCoordinates] = useState<
     [number, number] | null
   >(null);
-
+  const {rocketData} = useBluetooth();
   const CENTER_COORD: [number, number] = [-73.970895, 40.723279];
   const MAPBOX_VECTOR_TILE_SIZE = 512;
+  const ZOOM_LEVEL = 12;
 
-  const STYLE_URL = Mapbox.StyleURL.Outdoors;
+  const MAP_STYLE = Mapbox.StyleURL.Outdoors;
 
   const [packName, setPackName] = useState('pack-1');
   const [showEditTitle, setShowEditTitle] = useState(false);
@@ -58,14 +58,14 @@ export default function MapScreen() {
     const {width, height} = Dimensions.get('window');
     const bounds: [number, number, number, number] = geoViewport.bounds(
       CENTER_COORD,
-      12,
+      ZOOM_LEVEL,
       [width, height],
       MAPBOX_VECTOR_TILE_SIZE,
     );
 
     const options = {
       name: packName,
-      styleURL: STYLE_URL,
+      styleURL: MAP_STYLE,
       bounds: [
         [bounds[0], bounds[1]],
         [bounds[2], bounds[3]],
@@ -73,7 +73,7 @@ export default function MapScreen() {
       minZoom: 10,
       maxZoom: 20,
       metadata: {
-        whatIsThat: 'foo',
+        creationDate: new Date().toISOString(),
       },
     };
 
@@ -128,15 +128,15 @@ export default function MapScreen() {
         }
       },
     },
-    {
-      title: 'Resume pack',
-      onPress: async () => {
-        const pack = await offlineManager.getPack(packName);
-        if (pack) {
-          await pack.resume();
-        }
-      },
-    },
+    // {
+    //   title: 'Resume pack',
+    //   onPress: async () => {
+    //     const pack = await offlineManager.getPack(packName);
+    //     if (pack) {
+    //       await pack.resume();
+    //     }
+    //   },
+    // },
     {
       title: 'Remove packs',
       onPress: async () => {
@@ -171,7 +171,11 @@ export default function MapScreen() {
         </View>
       </Modal>
 
-      <MapView style={{flex: 1}} onPress={handleMapPress} compassEnabled={true}>
+      <MapView
+        style={{flex: 1}}
+        styleURL={MAP_STYLE}
+        onPress={handleMapPress}
+        compassEnabled={true}>
         <Camera followUserLocation followZoomLevel={12} heading={90} />
         <Images images={{puckArrow: puckArrow}} />
         <LocationPuck
@@ -180,7 +184,9 @@ export default function MapScreen() {
           bearingImage="puckArrow"
           scale={0.2}
         />
-        <RocketMarkers />
+        {rocketData.latitude !== 0 && rocketData.longitude !== 0 && (
+          <RocketMarkers />
+        )}
 
         {directionCoordinates && (
           <LineRoute coordinates={directionCoordinates} />
@@ -188,16 +194,6 @@ export default function MapScreen() {
       </MapView>
 
       <SelectedRocketBottomSheet />
-
-      {/* <View style={styles.compassContainer}>
-        <Image
-          source={compassIcon}
-          style={[
-            styles.compassArrow,
-            {transform: [{rotate: `${compassDirection}deg`}]},
-          ]}
-        />
-      </View> */}
     </View>
   );
 }

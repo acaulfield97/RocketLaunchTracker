@@ -8,7 +8,6 @@ import React, {
 import Geolocation from '@react-native-community/geolocation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getDirectionsWalking} from '../services/directionsWalking';
-import {startCompass} from '../screens/mapScreen/Compass';
 import {UserLocationType} from '../types/types';
 
 interface RocketContextType {
@@ -18,7 +17,6 @@ interface RocketContextType {
   directionCoordinates?: number[][];
   routeTime: number;
   routeDistance: number;
-  compassDirection: number;
   lastKnownRocketPosition: {
     latitude: number;
     longitude: number;
@@ -41,7 +39,6 @@ const RocketContext = createContext<RocketContextType>({
   direction: null,
   routeTime: 0,
   routeDistance: 0,
-  compassDirection: 0,
   lastKnownRocketPosition: null,
   userPosition: {
     latitude: 0,
@@ -60,7 +57,6 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
     longitude: 0,
     timestamp: 0,
   });
-  const [compassDirection, setCompassDirection] = useState<number>(0);
   const [lastKnownRocketPosition, setLastKnownRocketPosition] = useState<{
     latitude: number;
     longitude: number;
@@ -166,12 +162,6 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
     fetchDirectionsWalking();
   }, [selectedRocket, userPosition]);
 
-  // Start and stop compass updates
-  useEffect(() => {
-    const stopCompass = startCompass(setCompassDirection);
-    return stopCompass;
-  }, []);
-
   const contextValue: RocketContextType = {
     selectedRocket,
     setSelectedRocket,
@@ -179,7 +169,6 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
     directionCoordinates: direction?.routes?.[0]?.geometry?.coordinates ?? [],
     routeTime: direction?.routes?.[0]?.duration ?? 0,
     routeDistance: direction?.routes?.[0]?.distance ?? 0,
-    compassDirection,
     lastKnownRocketPosition,
     userPosition,
     saveRocketPosition,
