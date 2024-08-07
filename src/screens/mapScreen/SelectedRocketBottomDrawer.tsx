@@ -16,7 +16,7 @@ export default function SelectedRocketBottomSheet() {
 
   useEffect(() => {
     if (selectedRocket) {
-      console.log('Selected rocket:', selectedRocket);
+      // console.log('Selected rocket:', selectedRocket);
       bottomDrawerRef.current?.expand();
     }
   }, [selectedRocket]);

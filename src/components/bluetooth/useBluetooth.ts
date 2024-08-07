@@ -10,7 +10,9 @@ import {
 } from './BluetoothUtils';
 import {parseDataStream} from './DataParserNMEA';
 import {RocketData, BluetoothContextType} from '../../types/types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+import {debounce} from 'lodash';
+import {Alert} from 'react-native';
 
 export const useBluetooth = (): BluetoothContextType => {
   const [paired, setPaired] = useState<any[]>([]);
@@ -28,11 +30,19 @@ export const useBluetooth = (): BluetoothContextType => {
     altitude: 0,
     speed: 0,
     time: 0,
+    date: '',
     numberOfSatellitesBeingTracked: 0,
     satellitesInView: 0,
     fixQuality: 0,
   });
   const LAST_KNOWN_LOCATION_KEY = 'LAST_KNOWN_LOCATION';
+
+  const debouncedSetRocketData = useCallback(
+    debounce(newRocketData => {
+      setRocketData(newRocketData);
+    }, 500),
+    [],
+  );
 
   useEffect(() => {
     async function setupBluetooth() {
@@ -48,7 +58,7 @@ export const useBluetooth = (): BluetoothContextType => {
   useEffect(() => {
     let intervalId: NodeJS.Timer | undefined;
     if (selectedDevice && isConnected) {
-      intervalId = setInterval(() => readData(), 300);
+      intervalId = setInterval(() => readData(), 500);
     }
     return () => {
       if (intervalId) {
@@ -57,9 +67,9 @@ export const useBluetooth = (): BluetoothContextType => {
     };
   }, [isConnected, selectedDevice]);
 
-  useEffect(() => {
-    retrieveLastKnownLocation();
-  }, []);
+  // useEffect(() => {
+  //   retrieveLastKnownLocation();
+  // }, []);
 
   const startDeviceDiscovery = useCallback(async () => {
     console.log('Searching for devices...');
@@ -82,7 +92,7 @@ export const useBluetooth = (): BluetoothContextType => {
   }, []);
 
   const disconnect = () => {
-    if (selectedDevice && isConnected) {
+    if (selectedDevice) {
       try {
         selectedDevice.clear().then(() => {});
 
@@ -97,36 +107,36 @@ export const useBluetooth = (): BluetoothContextType => {
     }
   };
 
-  const saveLastKnownLocation = async (location: RocketData) => {
-    try {
-      const {latitude, longitude, altitude, time} = location;
-      const lastKnownLocation = {latitude, longitude, altitude, time};
-      await AsyncStorage.setItem(
-        LAST_KNOWN_LOCATION_KEY,
-        JSON.stringify(lastKnownLocation),
-      );
-    } catch (error) {
-      console.error('Error saving last known location:', error);
-    }
-  };
+  // const saveLastKnownLocation = async (location: RocketData) => {
+  //   try {
+  //     const {latitude, longitude, altitude, time} = location;
+  //     const lastKnownLocation = {latitude, longitude, altitude, time};
+  //     await AsyncStorage.setItem(
+  //       LAST_KNOWN_LOCATION_KEY,
+  //       JSON.stringify(lastKnownLocation),
+  //     );
+  //   } catch (error) {
+  //     console.error('Error saving last known location:', error);
+  //   }
+  // };
 
-  const retrieveLastKnownLocation = async () => {
-    try {
-      const location = await AsyncStorage.getItem(LAST_KNOWN_LOCATION_KEY);
-      if (location) {
-        const {latitude, longitude, altitude, time} = JSON.parse(location);
-        setRocketData(prevData => ({
-          ...prevData,
-          latitude,
-          longitude,
-          altitude,
-          time,
-        }));
-      }
-    } catch (error) {
-      console.error('Error retrieving last known location:', error);
-    }
-  };
+  // const retrieveLastKnownLocation = async () => {
+  //   try {
+  //     const location = await AsyncStorage.getItem(LAST_KNOWN_LOCATION_KEY);
+  //     if (location) {
+  //       const {latitude, longitude, altitude, time} = JSON.parse(location);
+  //       setRocketData(prevData => ({
+  //         ...prevData,
+  //         latitude,
+  //         longitude,
+  //         altitude,
+  //         time,
+  //       }));
+  //     }
+  //   } catch (error) {
+  //     console.error('Error retrieving last known location:', error);
+  //   }
+  // };
 
   let stillReading = false;
 
@@ -144,19 +154,21 @@ export const useBluetooth = (): BluetoothContextType => {
           if (message !== '' && message !== ' ') {
             const parsedData = parseDataStream(message.toString());
 
-            // console.log('Parsed Data:', parsedData);
+            console.log('Parsed Data:', parsedData);
 
             if (!parsedData) {
               return;
             }
 
+            setRocketDataStream(prevData => [...prevData, parsedData]);
+
             switch (parsedData.type) {
               case 'GPGGA':
-                setRocketDataStream(prevData => ({
-                  ...prevData,
-                  GPGGA: parsedData,
-                }));
-                setRocketData(prevData => {
+                // setRocketDataStream(prevData => ({
+                //   ...prevData,
+                //   GPGGA: parsedData,
+                // }));
+                debouncedSetRocketData((prevData: RocketData) => {
                   const newRocketData = {
                     ...prevData,
                     latitude: convertToDecimal(
@@ -170,78 +182,76 @@ export const useBluetooth = (): BluetoothContextType => {
                     altitude: isNaN(parseFloat(parsedData.altitude)) // if altitude is NaN return 0
                       ? 0
                       : parseFloat(parsedData.altitude),
-                    time: parseFloat(parsedData.time),
+                    time: getDateFromFields(
+                      prevData.date,
+                      parsedData.time,
+                    ).getTime(), // Combine date and time
                     numberOfSatellitesBeingTracked: parseFloat(
                       parsedData.numberOfSatellitesBeingTracked,
                     ),
                     fixQuality: parseFloat(parsedData.fixQuality),
                   };
-                  saveLastKnownLocation(newRocketData);
+                  // saveLastKnownLocation(newRocketData);
                   return newRocketData;
                 });
                 break;
               case 'GPGSV':
-                setRocketDataStream(prevData => ({
-                  ...prevData,
-                  GPGSV: [parsedData],
-                }));
-                setRocketData(prevData => ({
+                // setRocketDataStream(prevData => ({
+                //   ...prevData,
+                //   GPGSV: [parsedData],
+                // }));
+                debouncedSetRocketData((prevData: RocketData) => ({
                   ...prevData,
                   satellitesInView: parseFloat(parsedData.satellitesInView),
                 }));
                 break;
               case 'GPRMC':
-                setRocketDataStream(prevData => ({
+                // setRocketDataStream(prevData => ({
+                //   ...prevData,
+                //   GPRMC: parsedData,
+                // }));
+                debouncedSetRocketData((prevData: RocketData) => ({
                   ...prevData,
-                  GPRMC: parsedData,
+                  date: parsedData.date,
                 }));
                 break;
               case 'GPVTG':
-                setRocketDataStream(prevData => ({
-                  ...prevData,
-                  GPVTG: parsedData,
-                }));
-                setRocketData(prevData => ({
+                // setRocketDataStream(prevData => ({
+                //   ...prevData,
+                //   GPVTG: parsedData,
+                // }));
+                debouncedSetRocketData((prevData: RocketData) => ({
                   ...prevData,
                   speed: parseFloat(parsedData.speed),
                 }));
                 break;
               case 'GPGLL':
-                setRocketDataStream(prevData => ({
-                  ...prevData,
-                  GPGLL: parsedData,
-                }));
+                // setRocketDataStream(prevData => ({
+                //   ...prevData,
+                //   GPGLL: parsedData,
+                // }));
                 break;
               case 'GPGSA':
-                setRocketDataStream(prevData => ({
-                  ...prevData,
-                  GPGSA: parsedData,
-                }));
-
+                // setRocketDataStream(prevData => ({
+                //   ...prevData,
+                //   GPGSA: parsedData,
+                // }));
                 break;
               default:
+                break;
             }
           }
         }
       } catch (error) {
-        console.error('Error reading message:', error);
+        Alert.alert('Bluetooth disrupted. Please reconnect.');
+        setIsConnected(false);
+        disconnect();
+        stillReading = false;
+      } finally {
         stillReading = false;
       }
-      stillReading = false;
     }
   }, [selectedDevice, isConnected]);
-
-  // console.log('useBluetooth.ts LONGITUDE: ', rocketData.longitude);
-  // console.log('useBluetooth.ts LATITUDE: ', rocketData.latitude);
-  // console.log('useBluetooth.ts ALTITUDE: ', rocketData.altitude);
-
-  // console.log('useBluetooth.ts SPEED: ', rocketData.speed);
-  // console.log('useBluetooth.ts FIX: ', rocketData.fixQuality);
-  // console.log('useBluetooth.ts SAT IN VIEW: ', rocketData.satellitesInView);
-  // console.log(
-  //   'useBluetooth.ts SAT IN USE: ',
-  //   rocketData.numberOfSatellitesBeingTracked,
-  // );
 
   // Convert NMEA coordinates to decimal
   const convertToDecimal = (coordinate: string, direction: string) => {
@@ -268,6 +278,17 @@ export const useBluetooth = (): BluetoothContextType => {
       decimal = -decimal;
     }
     return decimal;
+  };
+
+  const getDateFromFields = (dateField: string, timeField: string) => {
+    const day = parseInt(dateField.slice(0, 2));
+    const month = parseInt(dateField.slice(2, 4)) - 1; // Month is 0-based in JS Date
+    const year = 2000 + parseInt(dateField.slice(4, 6));
+    const hours = parseInt(timeField.slice(0, 2));
+    const minutes = parseInt(timeField.slice(2, 4));
+    const seconds = parseInt(timeField.slice(4, 6));
+
+    return new Date(Date.UTC(year, month, day, hours, minutes, seconds));
   };
 
   return {

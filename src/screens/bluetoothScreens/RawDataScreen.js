@@ -27,11 +27,13 @@ const RawDataScreen = ({route}) => {
       ref={scrollViewRef}
       onScroll={handleScroll}
       scrollEventThrottle={16}>
-      {parsedData ? (
+      {parsedData && parsedData.length > 0 ? (
         <View style={styles.dataContainer}>
-          <Text style={styles.dataText}>
-            {JSON.stringify(parsedData, null, 2)}
-          </Text>
+          {parsedData.map((data, index) => (
+            <Text key={index} style={styles.dataText}>
+              {JSON.stringify(data, null, 2)}
+            </Text>
+          ))}
         </View>
       ) : (
         <Text style={styles.noDataText}>No data available</Text>

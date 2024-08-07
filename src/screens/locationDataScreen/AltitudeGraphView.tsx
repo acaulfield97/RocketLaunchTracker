@@ -1,4 +1,11 @@
-import React, {useEffect, useRef, FC, useState, useCallback} from 'react';
+import React, {
+  useEffect,
+  useRef,
+  FC,
+  useState,
+  useCallback,
+  useMemo,
+} from 'react';
 import {View, Dimensions, Text, ScrollView} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import colors from '../../styles/colors';
@@ -32,49 +39,54 @@ const AltitudeGraphView: FC<AltitudeGraphViewProps> = ({rocketData}) => {
   // Updating altitude data from rocketData if valid
   useEffect(() => {
     if (isLastKnownDataValid(rocketData)) {
-      setAltitudeData(prevData => [
-        ...prevData,
-        {
-          time: rocketData.time,
-          altitude: rocketData.altitude,
-        },
-      ]);
+      setAltitudeData(prevData => {
+        // Only add new data if it's different from the last entry to avoid redundant updates
+        if (
+          prevData.length === 0 ||
+          prevData[prevData.length - 1].time !== rocketData.time
+        ) {
+          return [
+            ...prevData,
+            {
+              time: rocketData.time,
+              altitude: rocketData.altitude,
+            },
+          ];
+        }
+        return prevData;
+      });
     }
   }, [rocketData, isLastKnownDataValid]);
 
-  // useEffect(() => {
-  //   if (scrollViewRef.current) {
-  //     scrollViewRef.current.scrollToEnd({animated: true});
-  //   }
-  // }, [altitudeData]);
+  // if (altitudeData.length === 0) {
+  //   return <Text>No altitude data available</Text>;
+  // }
 
-  if (altitudeData.length === 0) {
-    console.error('altitudeData is empty');
-    return <Text>No altitude data available</Text>;
-  }
-
-  const data = {
-    labels: altitudeData.map(dataPoint =>
-      new Date(dataPoint.time).toLocaleTimeString('en-GB', {
-        hour12: false,
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-      }),
-    ),
-    datasets: [
-      {
-        data: altitudeData.map(dataPoint => dataPoint.altitude),
-      },
-    ],
-  };
+  // useMemo hook is used to memoize the data object. This prevents unnecessary recalculations of the data object unless altitudeData changes.
+  const data = useMemo(() => {
+    return {
+      labels: altitudeData.map(dataPoint =>
+        new Date(dataPoint.time).toLocaleTimeString('en-GB', {
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        }),
+      ),
+      datasets: [
+        {
+          data: altitudeData.map(dataPoint => dataPoint.altitude),
+        },
+      ],
+    };
+  }, [altitudeData]);
 
   const screenWidth = Dimensions.get('window').width;
   const intervalWidth = 75; // Width of each interval in pixels
   const chartWidth = Math.max(screenWidth, altitudeData.length * intervalWidth);
   return (
     <>
-      {!rocketData || rocketData.length === 0 ? (
+      {altitudeData.length === 0 ? (
         <Text>No altitude data available</Text>
       ) : (
         <ScrollView horizontal ref={scrollViewRef}>

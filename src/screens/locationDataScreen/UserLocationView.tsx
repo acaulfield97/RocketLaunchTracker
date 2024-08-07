@@ -9,7 +9,7 @@ export default function UserLocationView() {
   // console.log('UserLocationView: Rendering with userPosition', userPosition);
 
   return (
-    <View style={styles.sectionContainer}>
+    <View style={styles.bottomSectionContainer}>
       <View style={styles.titleContainer}>
         <Text style={styles.titleText}>User Location</Text>
       </View>

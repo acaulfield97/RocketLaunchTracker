@@ -33,6 +33,19 @@ export default function LastKnownLocationView() {
     requestWritePermission();
   }, []);
 
+  const formatDateToUKTime = (timestamp: number) => {
+    return new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/London',
+      hour12: true,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(new Date(timestamp));
+  };
+
   return (
     <View style={styles.sectionContainer}>
       <View style={styles.titleContainer}>
@@ -66,15 +79,7 @@ export default function LastKnownLocationView() {
         <Text style={styles.subTitleText}>Time: </Text>
         <Text style={styles.bodyText}>
           {rocketData && rocketData.time
-            ? new Date(rocketData.time).toLocaleString('en-GB', {
-                hour12: true,
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-              })
+            ? formatDateToUKTime(rocketData.time)
             : 'Not available'}
         </Text>
       </View>

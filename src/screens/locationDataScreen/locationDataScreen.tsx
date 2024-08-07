@@ -5,7 +5,7 @@ import styles from '../../styles/locationDataPageStyles';
 import backgroundImage from '../../assets/media/images/background_space.jpg';
 import AltitudeGraphView from './AltitudeGraphView';
 import LastKnownLocationView from './LastKnownLocationView';
-import StatsView from './StatsView';
+import SpeedView from './SpeedView';
 import ConnectionStatusView from './ConnectionStatusView';
 import UserLocationView from './UserLocationView';
 import StartRecordingView from './StartRecordingView';
@@ -22,16 +22,16 @@ export default function LocationDataScreen() {
       <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
         <ScrollView>
           <StartRecordingView />
-          <UserLocationView />
+          <ConnectionStatusView />
+          <LastKnownLocationView />
+          <SpeedView />
           <View style={styles.sectionContainer}>
             <View style={styles.titleContainer}>
               <Text style={styles.titleText}>Altitude</Text>
             </View>
             <AltitudeGraphView rocketData={rocketData} />
           </View>
-          <ConnectionStatusView />
-          <LastKnownLocationView />
-          <StatsView />
+          <UserLocationView />
         </ScrollView>
       </ImageBackground>
     </View>

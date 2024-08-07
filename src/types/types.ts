@@ -18,15 +18,12 @@ export type LaunchData = {
   time: string;
 };
 
-// export type SpeedData = {
-//   speedKmph: number | null | undefined;
-// };
-
 export type RocketData = {
   latitude: number;
   longitude: number;
   altitude: number;
   time: number;
+  date: string;
   speed: number;
   numberOfSatellitesBeingTracked: number;
   satellitesInView: number;

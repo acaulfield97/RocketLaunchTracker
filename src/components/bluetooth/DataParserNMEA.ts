@@ -47,12 +47,12 @@ export const parseDataStream = (data: string): NMEASentence => {
         time: fields[5],
       } as GPGLL;
     case '$GPGSA':
-      return {
-        type: 'GPGSA',
-        mode: fields[1],
-        fixType: fields[2],
-        satellitesUsed: fields.slice(3, 15).filter(sat => sat !== ''),
-      } as GPGSA;
+      return undefined;
+    //   type: 'GPGSA',
+    //   mode: fields[1],
+    //   fixType: fields[2],
+    //   satellitesUsed: fields.slice(3, 15).filter(sat => sat !== ''),
+    // } as GPGSA;
     case '$GPGSV':
       return {
         type: 'GPGSV',
