@@ -11,7 +11,7 @@ import {useBluetoothContext} from '../../contexts/BluetoothContext';
 
 export default function RocketMarkers() {
   const {setSelectedRocket} = useRocket();
-  // const latestRocketLocation = [-5.93, 54.58];
+  // const rocketData = [-5.93, 54.58];
   const {rocketData} = useBluetoothContext();
 
   const points = rocketData

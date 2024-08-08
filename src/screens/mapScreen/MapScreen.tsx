@@ -184,11 +184,11 @@ export default function MapScreen() {
           bearingImage="puckArrow"
           scale={0.2}
         />
-        {rocketData.latitude !== 0 &&
+        {/* {rocketData.latitude !== 0 &&
           rocketData.longitude !== 0 &&
           rocketData.latitude !== undefined &&
-          rocketData.longitude !== undefined && <RocketMarkers />}
-
+          rocketData.longitude !== undefined && <RocketMarkers />} */}
+        <RocketMarkers />
         {directionCoordinates && (
           <LineRoute coordinates={directionCoordinates} />
         )}

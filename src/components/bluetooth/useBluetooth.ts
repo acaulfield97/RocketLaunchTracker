@@ -40,7 +40,7 @@ export const useBluetooth = (): BluetoothContextType => {
   const debouncedSetRocketData = useCallback(
     debounce(newRocketData => {
       setRocketData(newRocketData);
-    }, 500),
+    }, 1000),
     [],
   );
 
@@ -58,7 +58,7 @@ export const useBluetooth = (): BluetoothContextType => {
   useEffect(() => {
     let intervalId: NodeJS.Timer | undefined;
     if (selectedDevice && isConnected) {
-      intervalId = setInterval(() => readData(), 500);
+      intervalId = setInterval(() => readData(), 100);
     }
     return () => {
       if (intervalId) {
@@ -141,115 +141,80 @@ export const useBluetooth = (): BluetoothContextType => {
   let stillReading = false;
 
   const readData = useCallback(async () => {
-    if (stillReading) {
+    if (stillReading || !selectedDevice || !isConnected) {
       return;
     }
 
-    if (selectedDevice && isConnected) {
-      stillReading = true;
-      try {
-        let message = await selectedDevice.read();
-        if (message) {
-          message = message.trim();
-          if (message !== '' && message !== ' ') {
-            const parsedData = parseDataStream(message.toString());
+    stillReading = true;
+    try {
+      let message = await selectedDevice.read();
+      if (message) {
+        message = message.trim();
+        if (message !== '' && message !== ' ') {
+          const parsedData = parseDataStream(message.toString());
 
-            console.log('Parsed Data:', parsedData);
+          console.log('Parsed Data:', parsedData);
 
-            if (!parsedData) {
-              return;
-            }
+          if (!parsedData) {
+            return;
+          }
 
-            setRocketDataStream(prevData => [...prevData, parsedData]);
+          setRocketDataStream(prevData => [...prevData, parsedData]);
 
+          debouncedSetRocketData((prevData: RocketData) => {
             switch (parsedData.type) {
               case 'GPGGA':
-                // setRocketDataStream(prevData => ({
-                //   ...prevData,
-                //   GPGGA: parsedData,
-                // }));
-                debouncedSetRocketData((prevData: RocketData) => {
-                  const newRocketData = {
-                    ...prevData,
-                    latitude: convertToDecimal(
-                      parsedData.latitude.split(' ')[0],
-                      parsedData.latitude.split(' ')[1],
-                    ),
-                    longitude: convertToDecimal(
-                      parsedData.longitude.split(' ')[0],
-                      parsedData.longitude.split(' ')[1],
-                    ),
-                    altitude: isNaN(parseFloat(parsedData.altitude)) // if altitude is NaN return 0
-                      ? 0
-                      : parseFloat(parsedData.altitude),
-                    time: getDateFromFields(
-                      prevData.date,
-                      parsedData.time,
-                    ).getTime(), // Combine date and time
-                    numberOfSatellitesBeingTracked: parseFloat(
-                      parsedData.numberOfSatellitesBeingTracked,
-                    ),
-                    fixQuality: parseFloat(parsedData.fixQuality),
-                  };
-                  // saveLastKnownLocation(newRocketData);
-                  return newRocketData;
-                });
-                break;
+                return {
+                  ...prevData,
+                  latitude: convertToDecimal(
+                    parsedData.latitude.split(' ')[0],
+                    parsedData.latitude.split(' ')[1],
+                  ),
+                  longitude: convertToDecimal(
+                    parsedData.longitude.split(' ')[0],
+                    parsedData.longitude.split(' ')[1],
+                  ),
+                  altitude: isNaN(parseFloat(parsedData.altitude))
+                    ? 0
+                    : parseFloat(parsedData.altitude),
+                  time: getDateFromFields(
+                    prevData.date,
+                    parsedData.time,
+                  ).getTime(),
+                  numberOfSatellitesBeingTracked: parseFloat(
+                    parsedData.numberOfSatellitesBeingTracked,
+                  ),
+                  fixQuality: parseFloat(parsedData.fixQuality),
+                };
               case 'GPGSV':
-                // setRocketDataStream(prevData => ({
-                //   ...prevData,
-                //   GPGSV: [parsedData],
-                // }));
-                debouncedSetRocketData((prevData: RocketData) => ({
+                return {
                   ...prevData,
                   satellitesInView: parseFloat(parsedData.satellitesInView),
-                }));
-                break;
+                };
               case 'GPRMC':
-                // setRocketDataStream(prevData => ({
-                //   ...prevData,
-                //   GPRMC: parsedData,
-                // }));
-                debouncedSetRocketData((prevData: RocketData) => ({
+                return {
                   ...prevData,
                   date: parsedData.date,
-                }));
-                break;
+                };
               case 'GPVTG':
-                // setRocketDataStream(prevData => ({
-                //   ...prevData,
-                //   GPVTG: parsedData,
-                // }));
-                debouncedSetRocketData((prevData: RocketData) => ({
+                return {
                   ...prevData,
                   speed: parseFloat(parsedData.speed),
-                }));
-                break;
-              case 'GPGLL':
-                // setRocketDataStream(prevData => ({
-                //   ...prevData,
-                //   GPGLL: parsedData,
-                // }));
-                break;
-              case 'GPGSA':
-                // setRocketDataStream(prevData => ({
-                //   ...prevData,
-                //   GPGSA: parsedData,
-                // }));
-                break;
+                };
+              // case 'GPGLL':
+              // case 'GPGSA':
               default:
-                break;
+                return prevData;
             }
-          }
+          });
         }
-      } catch (error) {
-        Alert.alert('Bluetooth disrupted. Please reconnect.');
-        setIsConnected(false);
-        disconnect();
-        stillReading = false;
-      } finally {
-        stillReading = false;
       }
+    } catch (error) {
+      Alert.alert('Bluetooth disrupted. Please reconnect.');
+      setIsConnected(false);
+      disconnect();
+    } finally {
+      stillReading = false;
     }
   }, [selectedDevice, isConnected]);
 
