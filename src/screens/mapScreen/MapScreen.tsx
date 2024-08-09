@@ -123,8 +123,6 @@ export default function MapScreen() {
             'metadata',
             pack?.metadata,
           );
-
-          // console.log('=> status', await pack?.status());
         }
       },
     },
@@ -176,7 +174,7 @@ export default function MapScreen() {
         styleURL={MAP_STYLE}
         onPress={handleMapPress}
         compassEnabled={true}>
-        <Camera followUserLocation followZoomLevel={12} heading={90} />
+        <Camera followUserLocation followZoomLevel={14} heading={90} />
         <Images images={{puckArrow: puckArrow}} />
         <LocationPuck
           puckBearingEnabled
@@ -184,10 +182,6 @@ export default function MapScreen() {
           bearingImage="puckArrow"
           scale={0.2}
         />
-        {/* {rocketData.latitude !== 0 &&
-          rocketData.longitude !== 0 &&
-          rocketData.latitude !== undefined &&
-          rocketData.longitude !== undefined && <RocketMarkers />} */}
         <RocketMarkers />
         {directionCoordinates && (
           <LineRoute coordinates={directionCoordinates} />

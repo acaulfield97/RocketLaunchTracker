@@ -11,12 +11,14 @@ import styles from '../../styles/locationDataPageStyles';
 import useFirebaseDataService from '../../services/useDatabase';
 
 export default function StartRecordingView() {
-  const {isRecording, setIsRecording, flightName, setFlightName} =
-    useFirebaseDataService();
+  const {isRecording, setIsRecording, setFlightName} = useFirebaseDataService();
   const [modalVisible, setModalVisible] = useState(false);
   const [inputFlightName, setInputFlightName] = useState('');
 
   const handleStartRecording = () => {
+    if (isRecording) {
+      setIsRecording(false);
+    }
     setModalVisible(true);
     console.log('Start Recording button pressed');
   };
@@ -34,7 +36,9 @@ export default function StartRecordingView() {
       <TouchableOpacity
         style={styles.recordButton}
         onPress={handleStartRecording}>
-        <Text style={styles.recordButtonText}>START RECORDING</Text>
+        <Text style={styles.recordButtonText}>
+          {isRecording ? 'STOP RECORDING' : 'START RECORDING'}
+        </Text>
       </TouchableOpacity>
 
       <Modal

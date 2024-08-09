@@ -40,7 +40,7 @@ export const useBluetooth = (): BluetoothContextType => {
   const debouncedSetRocketData = useCallback(
     debounce(newRocketData => {
       setRocketData(newRocketData);
-    }, 1000),
+    }, 500),
     [],
   );
 
