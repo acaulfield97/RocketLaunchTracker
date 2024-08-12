@@ -1,6 +1,6 @@
 // DropdownMenu.tsx
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import colors from '../../styles/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import commonStyles from '../../styles/commonStyles';

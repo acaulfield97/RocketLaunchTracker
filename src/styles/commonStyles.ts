@@ -170,7 +170,7 @@ const commonStyles = StyleSheet.create({
   },
   dropownMenuContainer: {
     position: 'absolute',
-    top: 80,
+    top: 130,
     left: 10,
     backgroundColor: colors.white,
     borderColor: colors.accent,
@@ -197,7 +197,7 @@ const commonStyles = StyleSheet.create({
     height: 40,
     position: 'absolute',
     zIndex: 1,
-    top: 40,
+    top: 90,
     left: 10,
   },
 });

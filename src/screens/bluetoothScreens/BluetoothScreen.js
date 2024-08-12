@@ -4,10 +4,6 @@ import {useNavigation} from '@react-navigation/native';
 import {useBluetoothContext} from '../../contexts/BluetoothContext';
 import styles from '../../styles/commonStyles';
 import bluetoothPageStyles from '../../styles/bluetoothPageStyles';
-import {
-  exportAllDataToCSV,
-  exportAllDataToText,
-} from '../../components/helpers/ExportData';
 
 const BluetoothScreen = () => {
   const {
@@ -80,20 +76,6 @@ const BluetoothScreen = () => {
               style={styles.viewDataButton}
               onPress={navigateToRawData}>
               <Text style={styles.viewDataButtonText}>View Raw Data</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.viewDataButton}
-              onPress={() => exportAllDataToText(receivedData)}>
-              <Text style={styles.exportButtonText}>
-                Export All Data as Text
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.viewDataButton}
-              onPress={() => exportAllDataToCSV(receivedData)}>
-              <Text style={styles.exportButtonText}>
-                Export All Data as CSV
-              </Text>
             </TouchableOpacity>
           </>
         )}

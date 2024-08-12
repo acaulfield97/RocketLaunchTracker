@@ -25,6 +25,9 @@ import DropdownMenu from '../../components/fragments/DropdownMenu';
 // @ts-ignore
 import puckArrow from '../../assets/media/icons/puck_arrow.webp';
 import commonStyles from '../../styles/commonStyles';
+import styles from '../../styles/mapPageStyles';
+import {Icon} from 'react-native-vector-icons/Icon';
+import ToggleMapStyle from './ToggleMapStyle';
 
 export default function MapScreen() {
   const [touchCoordinates, setTouchCoordinates] = useState<
@@ -33,11 +36,17 @@ export default function MapScreen() {
   const CENTER_COORD: [number, number] = [-73.970895, 40.723279];
   const MAPBOX_VECTOR_TILE_SIZE = 512;
   const ZOOM_LEVEL = 12;
-
-  const MAP_STYLE = Mapbox.StyleURL.Outdoors;
-
   const [packName, setPackName] = useState('pack-1');
   const [showEditTitle, setShowEditTitle] = useState(false);
+  const [mapStyle, setMapStyle] = useState(Mapbox.StyleURL.Outdoors);
+
+  const toggleMapStyle = () => {
+    setMapStyle(prevStyle =>
+      prevStyle === Mapbox.StyleURL.Outdoors
+        ? Mapbox.StyleURL.Satellite
+        : Mapbox.StyleURL.Outdoors,
+    );
+  };
 
   const handleMapPress = (event: any) => {
     const {geometry} = event;
@@ -60,7 +69,7 @@ export default function MapScreen() {
 
     const options = {
       name: packName,
-      styleURL: MAP_STYLE,
+      styleURL: mapStyle,
       bounds: [
         [bounds[0], bounds[1]],
         [bounds[2], bounds[3]],
@@ -126,6 +135,7 @@ export default function MapScreen() {
   return (
     <View style={{flex: 1}}>
       <DropdownMenu options={menuOptions} />
+      <ToggleMapStyle onPress={toggleMapStyle} />
       <Modal
         visible={showEditTitle}
         transparent={true}
@@ -150,7 +160,7 @@ export default function MapScreen() {
 
       <MapView
         style={{flex: 1}}
-        styleURL={MAP_STYLE}
+        styleURL={mapStyle}
         onPress={handleMapPress}
         compassEnabled={true}>
         <Camera followUserLocation followZoomLevel={14} heading={90} />
