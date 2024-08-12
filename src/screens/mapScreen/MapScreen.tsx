@@ -16,8 +16,6 @@ import Mapbox, {
   offlineManager,
   Images,
 } from '@rnmapbox/maps';
-import {useRocket} from '../../contexts/RocketContext';
-import LineRoute from './LineRoute';
 import RocketMarkers from './RocketMarkers';
 // import styles from '../../styles/commonStyles';
 import SelectedRocketBottomSheet from './SelectedRocketBottomDrawer';
@@ -27,14 +25,11 @@ import DropdownMenu from '../../components/fragments/DropdownMenu';
 // @ts-ignore
 import puckArrow from '../../assets/media/icons/puck_arrow.webp';
 import commonStyles from '../../styles/commonStyles';
-import {useBluetooth} from '../../components/bluetooth/useBluetooth';
 
 export default function MapScreen() {
-  const {directionCoordinates} = useRocket();
   const [touchCoordinates, setTouchCoordinates] = useState<
     [number, number] | null
   >(null);
-  const {rocketData} = useBluetooth();
   const CENTER_COORD: [number, number] = [-73.970895, 40.723279];
   const MAPBOX_VECTOR_TILE_SIZE = 512;
   const ZOOM_LEVEL = 12;
@@ -126,22 +121,6 @@ export default function MapScreen() {
         }
       },
     },
-    // {
-    //   title: 'Resume pack',
-    //   onPress: async () => {
-    //     const pack = await offlineManager.getPack(packName);
-    //     if (pack) {
-    //       await pack.resume();
-    //     }
-    //   },
-    // },
-    {
-      title: 'Remove packs',
-      onPress: async () => {
-        const result = await offlineManager.resetDatabase();
-        // console.log('Reset DB done:', result);
-      },
-    },
   ];
 
   return (
@@ -183,9 +162,6 @@ export default function MapScreen() {
           scale={0.2}
         />
         <RocketMarkers />
-        {directionCoordinates && (
-          <LineRoute coordinates={directionCoordinates} />
-        )}
       </MapView>
 
       <SelectedRocketBottomSheet />

@@ -57,7 +57,6 @@ export type BluetoothContextType = {
 
 export type GPVTG = {
   type: 'GPVTG';
-  // course: string;
   speed: string;
 };
 
@@ -73,34 +72,20 @@ export type GPGGA = {
 
 export type GPRMC = {
   type: 'GPRMC';
-  // time: string;
-  // status: string;
-  // latitude: string;
-  // longitude: string;
-  // speed: string;
   date: string;
 };
 
 export type GPGSV = {
   type: 'GPGSV';
-  // numberOfMessages: string;
-  // messageNumber: string;
   satellitesInView: string;
-  // satellitesInfo: string[];
 };
 
 export type GPGSA = {
   type: 'GPGSA';
-  // mode: string;
-  // fixType: string;
-  // satellitesUsed: string[];
 };
 
 export type GPGLL = {
   type: 'GPGLL';
-  // latitude: string;
-  // longitude: string;
-  // time: string;
 };
 
 export type NMEASentence =

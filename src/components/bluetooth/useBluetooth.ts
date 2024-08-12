@@ -10,7 +10,6 @@ import {
 } from './BluetoothUtils';
 import {parseDataStream} from './DataParserNMEA';
 import {RocketData, BluetoothContextType} from '../../types/types';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 import {debounce} from 'lodash';
 import {Alert} from 'react-native';
 
@@ -35,12 +34,11 @@ export const useBluetooth = (): BluetoothContextType => {
     satellitesInView: 0,
     fixQuality: 0,
   });
-  const LAST_KNOWN_LOCATION_KEY = 'LAST_KNOWN_LOCATION';
 
   const debouncedSetRocketData = useCallback(
     debounce(newRocketData => {
       setRocketData(newRocketData);
-    }, 500),
+    }, 1000),
     [],
   );
 
@@ -66,10 +64,6 @@ export const useBluetooth = (): BluetoothContextType => {
       }
     };
   }, [isConnected, selectedDevice]);
-
-  // useEffect(() => {
-  //   retrieveLastKnownLocation();
-  // }, []);
 
   const startDeviceDiscovery = useCallback(async () => {
     console.log('Searching for devices...');
@@ -106,37 +100,6 @@ export const useBluetooth = (): BluetoothContextType => {
       }
     }
   };
-
-  // const saveLastKnownLocation = async (location: RocketData) => {
-  //   try {
-  //     const {latitude, longitude, altitude, time} = location;
-  //     const lastKnownLocation = {latitude, longitude, altitude, time};
-  //     await AsyncStorage.setItem(
-  //       LAST_KNOWN_LOCATION_KEY,
-  //       JSON.stringify(lastKnownLocation),
-  //     );
-  //   } catch (error) {
-  //     console.error('Error saving last known location:', error);
-  //   }
-  // };
-
-  // const retrieveLastKnownLocation = async () => {
-  //   try {
-  //     const location = await AsyncStorage.getItem(LAST_KNOWN_LOCATION_KEY);
-  //     if (location) {
-  //       const {latitude, longitude, altitude, time} = JSON.parse(location);
-  //       setRocketData(prevData => ({
-  //         ...prevData,
-  //         latitude,
-  //         longitude,
-  //         altitude,
-  //         time,
-  //       }));
-  //     }
-  //   } catch (error) {
-  //     console.error('Error retrieving last known location:', error);
-  //   }
-  // };
 
   let stillReading = false;
 
@@ -201,8 +164,6 @@ export const useBluetooth = (): BluetoothContextType => {
                   ...prevData,
                   speed: parseFloat(parsedData.speed),
                 };
-              // case 'GPGLL':
-              // case 'GPGSA':
               default:
                 return prevData;
             }

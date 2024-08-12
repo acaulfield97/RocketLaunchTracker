@@ -16,40 +16,29 @@ const useFirebaseDataService = (): FirebaseDataServiceProps => {
 
   const {rocketData} = useBluetoothContext();
 
-  /**
-   * Adds datapoint to flight, creates new flight if it doesn't exist
-   * Creates custom document ID, and sanitises data to avoid undefined entries
-   * @param flightName - name of the flight to be added to
-   * @param rocketData - data to be added to the flight
-   */
   const addFlightEntry = async (flightName: string, rocketData: RocketData) => {
     try {
       const flight = firestore().collection('launch_data').doc(flightName);
-      const customDocumentID = 'data_point_' + generateRandomString(10); // 10 is the length of the random string
+      // Get the current number of data points
+      const snapshot = await flight.collection('launch_data_points').get();
+      const count = snapshot.size;
+
+      const dataPointID = `data_point_${count + 1}`;
+
       const sanitisedRocketData = Object.fromEntries(
         Object.entries(rocketData).map(([key, value]) => [
           key,
           value === undefined ? null : value,
         ]),
       );
+
       await flight
         .collection('launch_data_points')
-        .doc(customDocumentID)
+        .doc(dataPointID)
         .set(sanitisedRocketData);
     } catch (error) {
       console.error('Error adding flight data: ', error);
     }
-  };
-
-  const generateRandomString = (length: number): string => {
-    const characters =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
   };
 
   const prevRocketDataRef = useRef(rocketData);
@@ -58,13 +47,12 @@ const useFirebaseDataService = (): FirebaseDataServiceProps => {
       if (prevRocketDataRef.current !== rocketData) {
         addFlightEntry(flightName, rocketData);
       } else {
-        let count = 0;
-        console.log(
-          'rocketData/isRecording changed but no new data to record',
-          count++,
-        );
+        console.log('rocketData changed but no new data to record');
       }
     }
+
+    // Update the ref with the current rocketData after the logic has run
+    prevRocketDataRef.current = rocketData;
   }, [rocketData, isRecording]);
 
   return {
