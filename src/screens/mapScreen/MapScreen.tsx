@@ -23,10 +23,8 @@ import SelectedRocketBottomSheet from './SelectedRocketBottomDrawer';
 import geoViewport from '@mapbox/geo-viewport';
 import DropdownMenu from '../../components/fragments/DropdownMenu';
 // @ts-ignore
-import puckArrow from '../../assets/media/icons/puck_arrow.webp';
+import puckArrow from '../../assets/media/icons/puck_arrow_outline.png';
 import commonStyles from '../../styles/commonStyles';
-import styles from '../../styles/mapPageStyles';
-import {Icon} from 'react-native-vector-icons/Icon';
 import ToggleMapStyle from './ToggleMapStyle';
 
 export default function MapScreen() {
@@ -90,11 +88,11 @@ export default function MapScreen() {
 
   const menuOptions = [
     {
-      title: `Pack name: ${packName}`,
+      title: `Create offline map`,
       onPress: () => setShowEditTitle(!showEditTitle),
     },
     {
-      title: 'Get all packs',
+      title: 'Get all offline maps',
       onPress: async () => {
         const packs = await offlineManager.getPacks();
         console.log('=> packs:', packs);
@@ -113,7 +111,7 @@ export default function MapScreen() {
       },
     },
     {
-      title: 'Get pack',
+      title: 'Get offline map',
       onPress: async () => {
         const pack = await offlineManager.getPack(packName);
         if (pack) {

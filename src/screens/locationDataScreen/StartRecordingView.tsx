@@ -1,12 +1,5 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  Modal,
-  TextInput,
-  Button,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, Modal, TextInput, TouchableOpacity} from 'react-native';
 import styles from '../../styles/locationDataPageStyles';
 import useFirebaseDataService from '../../services/useDatabase';
 

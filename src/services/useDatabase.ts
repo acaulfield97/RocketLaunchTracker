@@ -19,6 +19,11 @@ const useFirebaseDataService = (): FirebaseDataServiceProps => {
   const addFlightEntry = async (flightName: string, rocketData: RocketData) => {
     try {
       const flight = firestore().collection('launch_data').doc(flightName);
+
+      // Add an empty field to "launch_data" document (necessary otherwise the document 'does not exist')
+      // { merge: true } option ensures that this new field is added without overwriting any existing data in the document
+      await flight.set({initialized: true}, {merge: true});
+
       // Get the current number of data points
       const snapshot = await flight.collection('launch_data_points').get();
       const count = snapshot.size;
