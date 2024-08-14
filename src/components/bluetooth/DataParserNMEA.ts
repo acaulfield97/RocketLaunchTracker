@@ -16,7 +16,7 @@ export const parseDataStream = (data: string): NMEASentence => {
     case '$GPRMC':
       return {
         type: 'GPRMC',
-        // time: fields[1],
+        time: fields[1],
         // status: fields[2],
         // latitude: `${fields[3]} ${fields[4]}`,
         // longitude: `${fields[5]} ${fields[6]}`,
@@ -32,7 +32,7 @@ export const parseDataStream = (data: string): NMEASentence => {
     case '$GPGGA':
       return {
         type: 'GPGGA',
-        time: fields[1],
+        // time: fields[1],
         latitude: `${fields[2]} ${fields[3]}`,
         longitude: `${fields[4]} ${fields[5]}`,
         fixQuality: fields[6],

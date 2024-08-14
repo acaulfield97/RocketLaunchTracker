@@ -23,7 +23,7 @@ export type RocketData = {
   longitude: number;
   altitude: number;
   time: number;
-  date: string;
+  date: number;
   speed: number;
   numberOfSatellitesBeingTracked: number;
   satellitesInView: number;
@@ -34,6 +34,7 @@ export type RocketPosition = {
   latitude: number;
   longitude: number;
   altitude: number;
+  date: number;
   time: number;
 };
 
@@ -62,7 +63,6 @@ export type GPVTG = {
 
 export type GPGGA = {
   type: 'GPGGA';
-  time: string;
   latitude: string;
   longitude: string;
   fixQuality: string;
@@ -72,6 +72,7 @@ export type GPGGA = {
 
 export type GPRMC = {
   type: 'GPRMC';
+  time: string;
   date: string;
 };
 

@@ -29,7 +29,7 @@ export const useBluetooth = (): BluetoothContextType => {
     altitude: 0,
     speed: 0,
     time: 0,
-    date: '',
+    date: 0,
     numberOfSatellitesBeingTracked: 0,
     satellitesInView: 0,
     fixQuality: 0,
@@ -140,10 +140,6 @@ export const useBluetooth = (): BluetoothContextType => {
                   altitude: isNaN(parseFloat(parsedData.altitude))
                     ? 0
                     : parseFloat(parsedData.altitude),
-                  time: getDateFromFields(
-                    prevData.date,
-                    parsedData.time,
-                  ).getTime(),
                   numberOfSatellitesBeingTracked: parseFloat(
                     parsedData.numberOfSatellitesBeingTracked,
                   ),
@@ -157,6 +153,7 @@ export const useBluetooth = (): BluetoothContextType => {
               case 'GPRMC':
                 return {
                   ...prevData,
+                  time: parsedData.time,
                   date: parsedData.date,
                 };
               case 'GPVTG':
@@ -206,16 +203,16 @@ export const useBluetooth = (): BluetoothContextType => {
     return decimal;
   };
 
-  const getDateFromFields = (dateField: string, timeField: string) => {
-    const day = parseInt(dateField.slice(0, 2));
-    const month = parseInt(dateField.slice(2, 4)) - 1; // Month is 0-based in JS Date
-    const year = 2000 + parseInt(dateField.slice(4, 6));
-    const hours = parseInt(timeField.slice(0, 2));
-    const minutes = parseInt(timeField.slice(2, 4));
-    const seconds = parseInt(timeField.slice(4, 6));
+  // const getDateFromFields = (dateField: string, timeField: string) => {
+  //   const day = parseInt(dateField.slice(0, 2));
+  //   const month = parseInt(dateField.slice(2, 4)) - 1; // Month is 0-based in JS Date
+  //   const year = 2000 + parseInt(dateField.slice(4, 6));
+  //   const hours = parseInt(timeField.slice(0, 2));
+  //   const minutes = parseInt(timeField.slice(2, 4));
+  //   const seconds = parseInt(timeField.slice(4, 6));
 
-    return new Date(Date.UTC(year, month, day, hours, minutes, seconds));
-  };
+  //   return new Date(Date.UTC(year, month, day, hours, minutes, seconds));
+  // };
 
   return {
     pairedDevices: paired,
