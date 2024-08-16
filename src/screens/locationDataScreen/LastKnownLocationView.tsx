@@ -76,33 +76,25 @@ export default function LastKnownLocationView() {
       <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Latitude: </Text>
         <Text style={styles.bodyText}>
-          {rocketData && rocketData.latitude
-            ? rocketData.latitude
-            : 'Not available'}
+          {rocketData.latitude ? rocketData.latitude : 'Not available'}
         </Text>
       </View>
       <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Longitude: </Text>
         <Text style={styles.bodyText}>
-          {rocketData && rocketData.longitude
-            ? rocketData.longitude
-            : 'Not available'}
+          {rocketData.longitude ? rocketData.longitude : 'Not available'}
         </Text>
       </View>
       <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Altitude: </Text>
         <Text style={styles.bodyText}>
-          {rocketData && rocketData.altitude
-            ? rocketData.altitude + 'm'
-            : 'Not available'}
+          {rocketData.altitude ? rocketData.altitude + 'm' : 'Not available'}
         </Text>
       </View>
       <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Date: </Text>
         <Text style={styles.bodyText}>
-          {rocketData?.date && rocketData?.time
-            ? formatDate(rocketData.date)
-            : 'Not available'}
+          {rocketData?.date ? formatDate(rocketData.date) : 'Not available'}
         </Text>
       </View>
       <View style={styles.bodyContainer}>
