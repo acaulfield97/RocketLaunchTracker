@@ -54,6 +54,7 @@ export type BluetoothContextType = {
   connectToDevice: (device: BluetoothDevice) => void;
   connectingDeviceId: string | null;
   disconnect: () => void;
+  dataReceivingStatus: boolean;
 };
 
 export type GPVTG = {

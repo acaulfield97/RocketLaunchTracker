@@ -91,12 +91,12 @@ export default function LastKnownLocationView() {
           {rocketData.altitude ? rocketData.altitude + 'm' : 'Not available'}
         </Text>
       </View>
-      <View style={styles.bodyContainer}>
+      {/* <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Date: </Text>
         <Text style={styles.bodyText}>
           {rocketData?.date ? formatDate(rocketData.date) : 'Not available'}
         </Text>
-      </View>
+      </View> */}
       <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Time: </Text>
         <Text style={styles.bodyText}>

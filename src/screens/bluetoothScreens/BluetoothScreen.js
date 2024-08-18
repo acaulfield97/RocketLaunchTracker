@@ -25,12 +25,12 @@ const BluetoothScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={bluetoothPageStyles.titleContainer}>
-        <Text style={styles.titleText}>Paired devices</Text>
-      </View>
       <ScrollView>
         {!isConnected && (
           <>
+            <View style={bluetoothPageStyles.titleContainer}>
+              <Text style={styles.titleText}>Paired devices</Text>
+            </View>
             <TouchableOpacity
               onPress={startDeviceDiscovery}
               style={bluetoothPageStyles.scanButton}>
@@ -60,23 +60,32 @@ const BluetoothScreen = () => {
         )}
         {selectedDevice && isConnected && (
           <>
+            <View style={bluetoothPageStyles.titleContainer}>
+              <Text style={styles.titleText}>Connected device</Text>
+            </View>
             <View style={styles.deviceContainer}>
-              <View style={styles.deviceItem}>
-                <Text style={styles.deviceName}>{selectedDevice.name}</Text>
-                <Text style={styles.deviceInfo}>{selectedDevice.id}</Text>
+              <View style={bluetoothPageStyles.deviceItem}>
+                <Text style={bluetoothPageStyles.deviceName}>
+                  {selectedDevice.name}
+                </Text>
               </View>
               <TouchableOpacity
                 onPress={disconnect}
-                style={styles.viewDataButton}>
-                <Text style={styles.connectButtonText}>Disconnect</Text>
+                style={bluetoothPageStyles.connectToDeviceButton}>
+                <Text style={bluetoothPageStyles.connectToDeviceButtonText}>
+                  Disconnect
+                </Text>
               </TouchableOpacity>
             </View>
-
-            <TouchableOpacity
-              style={styles.viewDataButton}
-              onPress={navigateToRawData}>
-              <Text style={styles.viewDataButtonText}>View Raw Data</Text>
-            </TouchableOpacity>
+            <View style={bluetoothPageStyles.viewRawButtonContainer}>
+              <TouchableOpacity
+                style={bluetoothPageStyles.viewRawButton}
+                onPress={navigateToRawData}>
+                <Text style={bluetoothPageStyles.viewRawButtonText}>
+                  View Raw Data
+                </Text>
+              </TouchableOpacity>
+            </View>
           </>
         )}
       </ScrollView>

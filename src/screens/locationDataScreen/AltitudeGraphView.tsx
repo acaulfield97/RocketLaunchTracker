@@ -10,6 +10,7 @@ import {View, Dimensions, Text, ScrollView} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import colors from '../../styles/colors';
 import {RocketData} from '../../types/types';
+import styles from '../../styles/locationDataPageStyles';
 
 interface AltitudeGraphViewProps {
   rocketData: RocketData[];
@@ -26,7 +27,6 @@ const AltitudeGraphView: FC<AltitudeGraphViewProps> = ({rocketData}) => {
 
   // Type guard to ensure LatestRocketLocation is valid
   const isLastKnownDataValid = useCallback((data: any): data is RocketData => {
-    // console.log('DATA GO HERE', data);
     return (
       data &&
       typeof data.latitude === 'number' &&
@@ -48,7 +48,7 @@ const AltitudeGraphView: FC<AltitudeGraphViewProps> = ({rocketData}) => {
           return [
             ...prevData,
             {
-              time: rocketData.time,
+              time: rocketData.time, // no longer used for labels
               altitude: rocketData.altitude,
             },
           ];
@@ -58,21 +58,10 @@ const AltitudeGraphView: FC<AltitudeGraphViewProps> = ({rocketData}) => {
     }
   }, [rocketData, isLastKnownDataValid]);
 
-  // if (altitudeData.length === 0) {
-  //   return <Text>No altitude data available</Text>;
-  // }
-
   // useMemo hook is used to memoize the data object. This prevents unnecessary recalculations of the data object unless altitudeData changes.
   const data = useMemo(() => {
     return {
-      labels: altitudeData.map(dataPoint =>
-        new Date(dataPoint.time).toLocaleTimeString('en-GB', {
-          hour12: false,
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-        }),
-      ),
+      labels: altitudeData.map((_, index) => index.toString()),
       datasets: [
         {
           data: altitudeData.map(dataPoint => dataPoint.altitude),
@@ -84,10 +73,13 @@ const AltitudeGraphView: FC<AltitudeGraphViewProps> = ({rocketData}) => {
   const screenWidth = Dimensions.get('window').width;
   const intervalWidth = 75; // Width of each interval in pixels
   const chartWidth = Math.max(screenWidth, altitudeData.length * intervalWidth);
+
   return (
     <>
       {altitudeData.length === 0 ? (
-        <Text>No altitude data available</Text>
+        <View style={styles.bodyContainer}>
+          <Text style={styles.bodyText}>Not available</Text>
+        </View>
       ) : (
         <ScrollView horizontal ref={scrollViewRef}>
           <View style={{paddingLeft: 5}}>

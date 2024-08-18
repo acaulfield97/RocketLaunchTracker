@@ -20,14 +20,14 @@ export default function RocketMarkers() {
           type: 'Feature',
           geometry: {
             type: 'Point',
-            // coordinates: [-5.9353561, 54.5847267],
-            coordinates: [rocketData.longitude, rocketData.latitude],
+            coordinates: [-5.9353561, 54.5847267],
+            // coordinates: [rocketData.longitude, rocketData.latitude],
           },
-          // properties: {
-          //   id: 1,
-          //   rocket: {id: 1, latitude: 54.5847267, longitude: -5.9353561},
-          // },
-          properties: {id: 1},
+          properties: {
+            id: 1,
+            rocket: {id: 1, latitude: 54.5847267, longitude: -5.9353561},
+          },
+          // properties: {id: 1},
         },
       ]
     : [];
@@ -35,7 +35,6 @@ export default function RocketMarkers() {
   const rocketsFeatures = featureCollection(points);
 
   const onRocketPress = async (event: OnPressEvent) => {
-    console.log('rocket seelcted ', event.coordinates);
     if (event.coordinates) {
       setSelectedRocket(event.coordinates);
     }

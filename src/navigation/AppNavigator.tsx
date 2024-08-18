@@ -35,7 +35,7 @@ const AppNavigator = () => {
           options={{headerShown: false}}
         />
         <Tab.Screen
-          name="LocationData"
+          name="Stats"
           component={LocationDataScreen}
           options={{headerShown: false}}
         />

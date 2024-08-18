@@ -1,33 +1,32 @@
-
-import { StyleSheet, Dimensions } from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 import colors from './colors';
 
 const bluetoothPageStyles = StyleSheet.create({
-scanButtonText: {
+  scanButtonText: {
     color: colors.white,
     fontSize: 14,
     textAlign: 'center',
     fontFamily: 'AstroSpace',
-    fontWeight: 'normal'
+    fontWeight: 'normal',
   },
   noDevicesText: {
     textAlign: 'center',
     marginTop: 10,
     fontStyle: 'italic',
-    color: colors.white
+    color: colors.white,
   },
   deviceItem: {
     margin: 2,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   deviceName: {
     fontSize: 14,
     color: colors.white,
-    fontFamily: 'AstroSpace'
+    fontFamily: 'AstroSpace',
   },
   deviceInfo: {
     fontSize: 8,
-    color: colors.white
+    color: colors.white,
   },
   connectToDeviceButton: {
     marginBottom: 8,
@@ -38,17 +37,16 @@ scanButtonText: {
     borderWidth: 2,
     borderColor: colors.white,
     shadowColor: colors.white,
-    shadowOffset: { width: 2, height: 4 },
+    shadowOffset: {width: 2, height: 4},
     shadowOpacity: 1,
     shadowRadius: 5,
     elevation: 10,
     alignItems: 'center',
   },
- connectToDeviceButtonText: {
+  connectToDeviceButtonText: {
     fontFamily: 'ZenDots-Regular',
     fontSize: 12,
     color: colors.dark,
-    
   },
   titleContainer: {
     marginTop: 10,
@@ -65,12 +63,39 @@ scanButtonText: {
     borderWidth: 2,
     borderColor: colors.white,
     shadowColor: colors.white,
-    shadowOffset: { width: 2, height: 4 },
+    shadowOffset: {width: 2, height: 4},
     shadowOpacity: 1,
     shadowRadius: 5,
     elevation: 10,
     alignItems: 'center',
-  }
+  },
+  viewRawButtonContainer: {
+    marginTop: 10,
+    gap: 8,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  viewRawButton: {
+    width: '100%',
+    backgroundColor: colors.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: colors.white,
+    shadowColor: '#000',
+    shadowOffset: {width: 2, height: 2},
+    shadowOpacity: 0.8,
+    shadowRadius: 3,
+    elevation: 5,
+    alignItems: 'center',
+  },
+  viewRawButtonText: {
+    fontFamily: 'AstroSpace',
+    fontSize: 14,
+    color: colors.white,
+  },
 });
 
 export default bluetoothPageStyles;

@@ -21,6 +21,7 @@ export const useBluetooth = (): BluetoothContextType => {
   const [connectingDeviceId, setConnectingDeviceId] = useState<string | null>(
     null,
   );
+  const [dataReceivingStatus, setDataReceivingStatus] = useState(false);
 
   const rocketDataRef = useRef<RocketData>({
     latitude: 0,
@@ -37,6 +38,7 @@ export const useBluetooth = (): BluetoothContextType => {
   const rocketDataStreamRef = useRef<any[]>([]); // Store entire stream as ref
   const bufferRef = useRef<any[]>([]);
   const stillReadingRef = useRef(false);
+  const lastReceivedDataTimestamp = useRef<number | null>(null); // Track last received data time
 
   const [, forceUpdate] = useState(false);
 
@@ -52,12 +54,14 @@ export const useBluetooth = (): BluetoothContextType => {
   }, []);
 
   useEffect(() => {
-    let readInterval: NodeJS.Timer | undefined;
+    let readInterval: ReturnType<typeof setInterval> | undefined;
     if (selectedDevice && isConnected) {
-      readInterval = setInterval(() => readData(), 100); // Reduced the read interval to avoid delays
+      readInterval = setInterval(() => readData(), 100);
     }
     return () => {
-      if (readInterval) clearInterval(readInterval);
+      if (readInterval) {
+        clearInterval(readInterval);
+      }
     };
   }, [selectedDevice, isConnected]);
 
@@ -66,6 +70,14 @@ export const useBluetooth = (): BluetoothContextType => {
       if (bufferRef.current.length > 0) {
         processBuffer();
         forceUpdate(prev => !prev); // Trigger re-render to update the UI with the latest data
+      }
+
+      // Check if data has stopped being received (timeout after 5 seconds)
+      if (
+        lastReceivedDataTimestamp.current &&
+        Date.now() - lastReceivedDataTimestamp.current > 5000
+      ) {
+        setDataReceivingStatus(false);
       }
     }, 1000);
 
@@ -121,6 +133,10 @@ export const useBluetooth = (): BluetoothContextType => {
           if (parsedData) {
             bufferRef.current.push(parsedData); // Add to buffer
             rocketDataStreamRef.current.push(parsedData); // Save entire stream to ref
+
+            // Update the timestamp of the last received data
+            lastReceivedDataTimestamp.current = Date.now();
+            setDataReceivingStatus(true);
           }
         }
       }
@@ -151,22 +167,36 @@ export const useBluetooth = (): BluetoothContextType => {
 
   const getUpdatedRocketData = (parsedData: any) => {
     switch (parsedData.type) {
-      case 'GPGGA':
+      case 'GPGGA': {
+        const latitude = convertToDecimal(
+          parsedData.latitude.split(' ')[0],
+          parsedData.latitude.split(' ')[1],
+        );
+        const longitude = convertToDecimal(
+          parsedData.longitude.split(' ')[0],
+          parsedData.longitude.split(' ')[1],
+        );
+
+        // Check if latitude or longitude is 0 or undefined, break/return if true
+        if (
+          latitude === 0 ||
+          longitude === 0 ||
+          latitude === undefined ||
+          longitude === undefined
+        ) {
+          return {};
+        }
+
         return {
-          latitude: convertToDecimal(
-            parsedData.latitude.split(' ')[0],
-            parsedData.latitude.split(' ')[1],
-          ),
-          longitude: convertToDecimal(
-            parsedData.longitude.split(' ')[0],
-            parsedData.longitude.split(' ')[1],
-          ),
+          latitude,
+          longitude,
           altitude: parseFloat(parsedData.altitude) || 0,
           numberOfSatellitesBeingTracked: parseFloat(
             parsedData.numberOfSatellitesBeingTracked,
           ),
           fixQuality: parseFloat(parsedData.fixQuality),
         };
+      }
       case 'GPGSV':
         return {satellitesInView: parseFloat(parsedData.satellitesInView)};
       case 'GPRMC':
@@ -209,5 +239,6 @@ export const useBluetooth = (): BluetoothContextType => {
     connectToDevice,
     connectingDeviceId,
     disconnect,
+    dataReceivingStatus,
   };
 };

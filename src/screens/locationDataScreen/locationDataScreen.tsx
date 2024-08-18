@@ -15,7 +15,7 @@ export default function LocationDataScreen() {
   const {rocketData} = useBluetoothContext();
 
   // Ensure rocketData is an array
-  // const rocketDataArray = Array.isArray(rocketData) ? rocketData : [rocketData];
+  const rocketDataArray = Array.isArray(rocketData) ? rocketData : [rocketData];
 
   return (
     <View style={styles.container}>
@@ -29,7 +29,7 @@ export default function LocationDataScreen() {
             <View style={styles.titleContainer}>
               <Text style={styles.titleText}>Altitude</Text>
             </View>
-            <AltitudeGraphView rocketData={rocketData} />
+            <AltitudeGraphView rocketData={rocketDataArray} />
           </View>
           <UserLocationView />
         </ScrollView>

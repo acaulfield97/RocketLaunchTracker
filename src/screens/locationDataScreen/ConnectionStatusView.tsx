@@ -4,7 +4,7 @@ import styles from '../../styles/locationDataPageStyles';
 import {useBluetoothContext} from '../../contexts/BluetoothContext';
 
 export default function ConnectionStatusView() {
-  const {rocketData} = useBluetoothContext();
+  const {rocketData, dataReceivingStatus} = useBluetoothContext();
 
   return (
     <View style={styles.sectionContainer}>
@@ -15,8 +15,20 @@ export default function ConnectionStatusView() {
         {rocketData.fixQuality === 0 ? (
           <Text style={styles.connectionStatusText}>NO FIX</Text>
         ) : rocketData.fixQuality === 1 ? (
-          <Text style={styles.connectionStatusText}>BASIC</Text>
+          <Text style={styles.connectionStatusText}>STANDARD</Text>
+        ) : rocketData.fixQuality === 2 ? (
+          <Text style={styles.connectionStatusText}>GOOD</Text>
+        ) : rocketData.fixQuality === 3 ? (
+          <Text style={styles.connectionStatusText}>GREAT</Text>
+        ) : rocketData.fixQuality === 6 ? (
+          <Text style={styles.connectionStatusText}>DEAD RECKONING MODE</Text>
         ) : null}
+      </View>
+      <View style={styles.bodyContainer}>
+        <Text style={styles.subTitleText}>Receiving data: </Text>
+        <Text style={styles.bodyText}>
+          {dataReceivingStatus ? 'Yes' : 'No'}
+        </Text>
       </View>
       <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Number of satellites in use: </Text>

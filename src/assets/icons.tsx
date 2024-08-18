@@ -5,7 +5,7 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 
 const getIcon = (route, focused, color, size) => {
   let iconName = 'help-circle-outline'; // Default value
-  let IconComponent = Ionicons; // Default to Ionicons
+  let IconComponent = Ionicons;
 
   switch (route.name) {
     case 'Account':
@@ -21,7 +21,7 @@ const getIcon = (route, focused, color, size) => {
       iconName = 'test-tube';
       IconComponent = Fontisto;
       break;
-    case 'LocationData':
+    case 'Stats':
       iconName = focused ? 'rocket' : 'rocket-outline';
       break;
     default:

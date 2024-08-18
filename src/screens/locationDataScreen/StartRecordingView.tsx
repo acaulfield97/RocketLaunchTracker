@@ -6,14 +6,17 @@ import useFirebaseDataService from '../../services/useDatabase';
 export default function StartRecordingView() {
   const {isRecording, setIsRecording, setFlightName} = useFirebaseDataService();
   const [modalVisible, setModalVisible] = useState(false);
+  const [stopRecordingModalVisible, setStopRecordingModalVisible] =
+    useState(false);
   const [inputFlightName, setInputFlightName] = useState('');
 
   const handleStartRecording = () => {
     if (isRecording) {
-      setIsRecording(false);
+      setStopRecordingModalVisible(true); // Show the stop recording confirmation modal
+    } else {
+      setModalVisible(true); // Show the flight name modal
+      console.log('Start Recording button pressed');
     }
-    setModalVisible(true);
-    console.log('Start Recording button pressed');
   };
 
   const handleSetFlightName = () => {
@@ -22,6 +25,12 @@ export default function StartRecordingView() {
     setFlightName(inputFlightName);
     setIsRecording(true);
     setModalVisible(false);
+  };
+
+  const handleConfirmStopRecording = () => {
+    setIsRecording(false);
+    setStopRecordingModalVisible(false);
+    console.log('Recording stopped');
   };
 
   return (
@@ -34,6 +43,7 @@ export default function StartRecordingView() {
         </Text>
       </TouchableOpacity>
 
+      {/* Modal for entering flight name */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -55,6 +65,33 @@ export default function StartRecordingView() {
               <Text style={styles.recordButtonText}>
                 Submit & Start Recording
               </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal for confirming stop recording */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={stopRecordingModalVisible}
+        onRequestClose={() => {
+          setStopRecordingModalVisible(false);
+        }}>
+        <View style={styles.setFlightNamePopupContainer}>
+          <View style={styles.setFlightNamePopupView}>
+            <Text style={styles.recordButtonText}>
+              Are you sure you want to stop recording?
+            </Text>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleConfirmStopRecording}>
+              <Text style={styles.recordButtonText}>Confirm Stop</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={() => setStopRecordingModalVisible(false)}>
+              <Text style={styles.recordButtonText}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
