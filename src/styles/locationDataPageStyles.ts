@@ -167,6 +167,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  chartContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default styles;

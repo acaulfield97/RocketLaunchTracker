@@ -1,12 +1,5 @@
-import React, {
-  useEffect,
-  useRef,
-  FC,
-  useState,
-  useCallback,
-  useMemo,
-} from 'react';
-import {View, Dimensions, Text, ScrollView} from 'react-native';
+import React, {useEffect, FC, useState, useCallback, useMemo} from 'react';
+import {View, Text} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
 import colors from '../../styles/colors';
 import {RocketData} from '../../types/types';
@@ -17,13 +10,11 @@ interface AltitudeGraphViewProps {
 }
 
 interface AltitudeGraphData {
-  time: number;
   altitude: number;
 }
 
 const AltitudeGraphView: FC<AltitudeGraphViewProps> = ({rocketData}) => {
   const [altitudeData, setAltitudeData] = useState<AltitudeGraphData[]>([]);
-  const scrollViewRef = useRef<ScrollView>(null);
 
   // Type guard to ensure LatestRocketLocation is valid
   const isLastKnownDataValid = useCallback((data: any): data is RocketData => {
@@ -36,84 +27,72 @@ const AltitudeGraphView: FC<AltitudeGraphViewProps> = ({rocketData}) => {
     );
   }, []);
 
-  // Updating altitude data from rocketData if valid
   useEffect(() => {
-    if (isLastKnownDataValid(rocketData)) {
-      setAltitudeData(prevData => {
-        // Only add new data if it's different from the last entry to avoid redundant updates
-        if (
-          prevData.length === 0 ||
-          prevData[prevData.length - 1].time !== rocketData.time
-        ) {
-          return [
-            ...prevData,
-            {
-              time: rocketData.time, // no longer used for labels
-              altitude: rocketData.altitude,
-            },
-          ];
-        }
-        return prevData;
-      });
+    if (rocketData && Array.isArray(rocketData)) {
+      const validData = rocketData.filter(isLastKnownDataValid);
+
+      if (validData.length > 0) {
+        setAltitudeData(prevData => {
+          const newData = validData.map(data => ({altitude: data.altitude}));
+          return [...prevData, ...newData];
+        });
+      }
     }
   }, [rocketData, isLastKnownDataValid]);
+
+  // Limit the data to the most recent 12 points
+  const limitedAltitudeData = altitudeData.slice(-12);
 
   // useMemo hook is used to memoize the data object. This prevents unnecessary recalculations of the data object unless altitudeData changes.
   const data = useMemo(() => {
     return {
-      labels: altitudeData.map((_, index) => index.toString()),
+      labels: limitedAltitudeData.map((_, index) => (index + 1).toString()), // Labels from 1 to 12
       datasets: [
         {
-          data: altitudeData.map(dataPoint => dataPoint.altitude),
+          data: limitedAltitudeData.map(dataPoint => dataPoint.altitude),
         },
       ],
     };
-  }, [altitudeData]);
-
-  const screenWidth = Dimensions.get('window').width;
-  const intervalWidth = 75; // Width of each interval in pixels
-  const chartWidth = Math.max(screenWidth, altitudeData.length * intervalWidth);
+  }, [limitedAltitudeData]);
 
   return (
     <>
-      {altitudeData.length === 0 ? (
+      {limitedAltitudeData.length === 0 ? (
         <View style={styles.bodyContainer}>
           <Text style={styles.bodyText}>Not available</Text>
         </View>
       ) : (
-        <ScrollView horizontal ref={scrollViewRef}>
-          <View style={{paddingLeft: 5}}>
-            <LineChart
-              data={data}
-              width={chartWidth}
-              height={250}
-              yAxisLabel=""
-              yAxisSuffix="m"
-              yAxisInterval={1}
-              chartConfig={{
-                backgroundColor: colors.accent,
-                backgroundGradientFrom: colors.primary,
-                backgroundGradientTo: colors.secondary,
-                decimalPlaces: 2,
-                color: (opacity = 1) => colors.accent,
-                labelColor: (opacity = 1) => colors.white,
-                style: {
-                  borderRadius: 5,
-                },
-                propsForDots: {
-                  r: '3',
-                  strokeWidth: '2',
-                  stroke: colors.white,
-                },
-              }}
-              bezier
-              style={{
-                marginVertical: 8,
+        <View style={[styles.chartContainer, {flex: 1}]}>
+          <LineChart
+            data={data}
+            width={370}
+            height={300}
+            yAxisLabel=""
+            yAxisSuffix="m"
+            yAxisInterval={1}
+            chartConfig={{
+              backgroundColor: colors.accent,
+              backgroundGradientFrom: colors.primary,
+              backgroundGradientTo: colors.secondary,
+              decimalPlaces: 2,
+              color: (opacity = 1) => colors.accent,
+              labelColor: (opacity = 1) => colors.white,
+              style: {
                 borderRadius: 5,
-              }}
-            />
-          </View>
-        </ScrollView>
+              },
+              propsForDots: {
+                r: '3',
+                strokeWidth: '2',
+                stroke: colors.white,
+              },
+            }}
+            bezier
+            style={{
+              marginVertical: 8,
+              borderRadius: 5,
+            }}
+          />
+        </View>
       )}
     </>
   );

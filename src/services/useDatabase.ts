@@ -8,6 +8,7 @@ export interface FirebaseDataServiceProps {
   flightName: string;
   setFlightName: (flightName: string) => void;
   setIsRecording: (isRecording: boolean) => void;
+  doesFlightNameExist: (flightName: string) => Promise<boolean>;
 }
 
 const useFirebaseDataService = (): FirebaseDataServiceProps => {
@@ -46,6 +47,19 @@ const useFirebaseDataService = (): FirebaseDataServiceProps => {
     }
   };
 
+  const doesFlightNameExist = async (flightName: string): Promise<boolean> => {
+    try {
+      const doc = await firestore()
+        .collection('launch_data')
+        .doc(flightName)
+        .get();
+      return doc.exists;
+    } catch (error) {
+      console.error('Error checking if flight name exists: ', error);
+      return false;
+    }
+  };
+
   const prevRocketDataRef = useRef(rocketData);
   useEffect(() => {
     if (isRecording) {
@@ -65,6 +79,7 @@ const useFirebaseDataService = (): FirebaseDataServiceProps => {
     flightName,
     setFlightName,
     setIsRecording,
+    doesFlightNameExist,
   };
 };
 

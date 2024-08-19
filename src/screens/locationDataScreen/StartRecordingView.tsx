@@ -1,10 +1,18 @@
 import React, {useState} from 'react';
-import {View, Text, Modal, TextInput, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Modal,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import styles from '../../styles/locationDataPageStyles';
 import useFirebaseDataService from '../../services/useDatabase';
 
 export default function StartRecordingView() {
-  const {isRecording, setIsRecording, setFlightName} = useFirebaseDataService();
+  const {isRecording, setIsRecording, setFlightName, doesFlightNameExist} =
+    useFirebaseDataService();
   const [modalVisible, setModalVisible] = useState(false);
   const [stopRecordingModalVisible, setStopRecordingModalVisible] =
     useState(false);
@@ -19,12 +27,23 @@ export default function StartRecordingView() {
     }
   };
 
-  const handleSetFlightName = () => {
+  const handleSetFlightName = async () => {
     console.log('Submit & Start Recording button pressed');
     console.log('Flight Name:', inputFlightName);
-    setFlightName(inputFlightName);
-    setIsRecording(true);
-    setModalVisible(false);
+
+    // Check if the flight name already exists
+    const flightNameExists = await doesFlightNameExist(inputFlightName);
+
+    if (flightNameExists) {
+      Alert.alert(
+        'Flight Name Already Exists',
+        'Please choose a different flight name, as this one already exists.',
+      );
+    } else {
+      setFlightName(inputFlightName);
+      setIsRecording(true);
+      setModalVisible(false);
+    }
   };
 
   const handleConfirmStopRecording = () => {

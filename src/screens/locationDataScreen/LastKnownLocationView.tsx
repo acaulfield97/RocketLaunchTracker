@@ -35,19 +35,6 @@ export default function LastKnownLocationView() {
     requestWritePermission();
   }, []);
 
-  const formatDate = (date: number) => {
-    // Ensure the number is a string and pad with leading zeros if needed
-    const dateStr = date.toString().padStart(6, '0');
-
-    // Extract day, month, and year from the string
-    const day = dateStr.slice(0, 2);
-    const month = dateStr.slice(2, 4);
-    const year = dateStr.slice(4, 6);
-
-    // Format the date as dd/mm/yy
-    return `${day}/${month}/${year}`;
-  };
-
   const formatTimeToUK = (time: number) => {
     const timeStr = time.toString().padStart(6, '0');
     const hour = timeStr.slice(0, 2);
@@ -91,12 +78,6 @@ export default function LastKnownLocationView() {
           {rocketData.altitude ? rocketData.altitude + 'm' : 'Not available'}
         </Text>
       </View>
-      {/* <View style={styles.bodyContainer}>
-        <Text style={styles.subTitleText}>Date: </Text>
-        <Text style={styles.bodyText}>
-          {rocketData?.date ? formatDate(rocketData.date) : 'Not available'}
-        </Text>
-      </View> */}
       <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Time: </Text>
         <Text style={styles.bodyText}>
