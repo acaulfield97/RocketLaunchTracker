@@ -1,12 +1,12 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import colors from './colors';
+import colours from './colours';
 
 const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.dark,
+    backgroundColor: colours.dark,
   },
   backgroundImage: {
     flex: 1,
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 5,
     borderWidth: 2,
-    borderColor: colors.accent,
+    borderColor: colours.accent,
     position: 'relative',
     backgroundColor: 'rgba(150, 202, 231, 0.3)',
   },
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 5,
     borderWidth: 2,
-    borderColor: colors.accent,
+    borderColor: colours.accent,
     position: 'relative',
     backgroundColor: 'rgba(150, 202, 231, 0.3)',
   },
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontFamily: 'AstroSpace',
     fontSize: 18,
-    color: colors.white,
+    color: colours.white,
   },
   bodyContainer: {
     marginBottom: 5,
@@ -57,13 +57,13 @@ const styles = StyleSheet.create({
   subTitleText: {
     fontFamily: 'ZenDots-Regular',
     fontSize: 14,
-    color: colors.accent,
+    color: colours.accent,
     marginRight: 5,
   },
   bodyText: {
     fontFamily: 'ZenDots-Regular',
     fontSize: 14,
-    color: colors.white,
+    color: colours.white,
   },
   exportButtonContainer: {
     marginTop: 10,
@@ -74,12 +74,12 @@ const styles = StyleSheet.create({
   },
   exportButton: {
     width: '50%',
-    backgroundColor: colors.primary,
+    backgroundColor: colours.primary,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     borderWidth: 2,
-    borderColor: colors.white,
+    borderColor: colours.white,
     shadowColor: '#000',
     shadowOffset: {width: 2, height: 2},
     shadowOpacity: 0.8,
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   exportButtonText: {
     fontFamily: 'ZenDots-Regular',
     fontSize: 10,
-    color: colors.white,
+    color: colours.white,
   },
   connectionStatusContainer: {
     marginBottom: 5,
@@ -101,16 +101,16 @@ const styles = StyleSheet.create({
   connectionStatusText: {
     fontFamily: 'AstroSpace',
     fontSize: 16,
-    color: colors.light,
+    color: colours.light,
   },
   recordButton: {
     width: '100%',
-    backgroundColor: colors.primary,
+    backgroundColor: colours.primary,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     borderWidth: 2,
-    borderColor: colors.white,
+    borderColor: colours.white,
     shadowColor: '#000',
     shadowOffset: {width: 2, height: 2},
     shadowOpacity: 0.8,
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   recordButtonText: {
     fontFamily: 'AstroSpace',
     fontSize: 16,
-    color: colors.light,
+    color: colours.light,
     textAlign: 'center',
   },
   setFlightNamePopupContainer: {
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   },
   setFlightNamePopupView: {
     width: '80%',
-    backgroundColor: colors.white,
+    backgroundColor: colours.white,
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
@@ -150,15 +150,16 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     marginBottom: 20,
+    color: colours.darkPurple,
   },
   submitButton: {
     width: '100%',
-    backgroundColor: colors.primary,
+    backgroundColor: colours.primary,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     borderWidth: 2,
-    borderColor: colors.white,
+    borderColor: colours.white,
     shadowColor: '#000',
     shadowOffset: {width: 2, height: 2},
     shadowOpacity: 0.8,

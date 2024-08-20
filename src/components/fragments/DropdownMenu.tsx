@@ -1,7 +1,7 @@
 // DropdownMenu.tsx
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import colors from '../../styles/colors';
+import colours from '../../styles/colours';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import commonStyles from '../../styles/commonStyles';
 
@@ -20,7 +20,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({options}) => {
         <Icon
           name={visible ? 'times' : 'bars'}
           size={20}
-          color={colors.white}
+          color={colours.white}
         />
       </TouchableOpacity>
       {visible && (

@@ -1,7 +1,7 @@
 import React, {useEffect, FC, useState, useCallback, useMemo} from 'react';
 import {View, Text} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
-import colors from '../../styles/colors';
+import colours from '../../styles/colours';
 import {RocketData} from '../../types/types';
 import styles from '../../styles/locationDataPageStyles';
 
@@ -71,19 +71,19 @@ const AltitudeGraphView: FC<AltitudeGraphViewProps> = ({rocketData}) => {
             yAxisSuffix="m"
             yAxisInterval={1}
             chartConfig={{
-              backgroundColor: colors.accent,
-              backgroundGradientFrom: colors.primary,
-              backgroundGradientTo: colors.secondary,
+              backgroundColor: colours.accent,
+              backgroundGradientFrom: colours.primary,
+              backgroundGradientTo: colours.secondary,
               decimalPlaces: 2,
-              color: (opacity = 1) => colors.accent,
-              labelColor: (opacity = 1) => colors.white,
+              color: (opacity = 1) => colours.accent,
+              labelColor: (opacity = 1) => colours.white,
               style: {
                 borderRadius: 5,
               },
               propsForDots: {
                 r: '3',
                 strokeWidth: '2',
-                stroke: colors.white,
+                stroke: colours.white,
               },
             }}
             bezier

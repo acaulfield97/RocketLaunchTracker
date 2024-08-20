@@ -1,9 +1,13 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {View, ScrollView, Text, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useBluetoothContext} from '../../contexts/BluetoothContext';
 import styles from '../../styles/commonStyles';
 import bluetoothPageStyles from '../../styles/bluetoothPageStyles';
+import {
+  checkBluetoothEnabled,
+  requestBluetoothPermissions,
+} from '../../components/bluetooth/BluetoothUtils';
 
 const BluetoothScreen = () => {
   const {
@@ -22,6 +26,31 @@ const BluetoothScreen = () => {
   const navigateToRawData = useCallback(() => {
     navigation.navigate('RawData', {parsedData: receivedData});
   }, [navigation, receivedData]);
+
+  // request Bluetooth permissions when the screen is opened
+  useEffect(() => {
+    const requestPermissions = async () => {
+      try {
+        await checkBluetoothEnabled();
+        const permissionsGranted = await requestBluetoothPermissions();
+
+        if (!permissionsGranted) {
+          Alert.alert(
+            'Permissions required',
+            'Bluetooth permissions are required to proceed.',
+            [{text: 'OK'}],
+          );
+        } else {
+          // if permissions are granted
+          startDeviceDiscovery();
+        }
+      } catch (error) {
+        console.error('Error requesting Bluetooth permissions:', error);
+      }
+    };
+
+    requestPermissions();
+  }, []); // Empty dependency array means this effect runs once when the screen is opened
 
   return (
     <View style={styles.container}>

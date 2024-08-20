@@ -1,5 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import colors from './colors';
+import colours from './colours';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -13,12 +13,12 @@ const styles = StyleSheet.create({
   },
   showCompassButton: {
     width: '100%',
-    backgroundColor: colors.primary,
+    backgroundColor: colours.primary,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     borderWidth: 2,
-    borderColor: colors.white,
+    borderColor: colours.white,
     shadowColor: '#000',
     shadowOffset: {width: 2, height: 2},
     shadowOpacity: 0.8,
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   showCompassButtonText: {
     fontFamily: 'ZenDots-Regular',
     fontSize: 16,
-    color: colors.white,
+    color: colours.white,
   },
   toggleButtonContainer: {
     position: 'absolute',
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   toggleButton: {
-    backgroundColor: colors.dark,
+    backgroundColor: colours.dark,
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',

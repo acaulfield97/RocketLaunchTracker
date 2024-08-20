@@ -1,6 +1,6 @@
 // styles.ts
 import {StyleSheet, Dimensions} from 'react-native';
-import colors from './colors';
+import colours from './colours';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -20,17 +20,17 @@ const commonStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: colors.dark,
+    backgroundColor: colours.dark,
   },
   dataContainer: {
     marginBottom: 10,
     padding: 10,
-    backgroundColor: colors.dark,
+    backgroundColor: colours.dark,
     borderRadius: 5,
   },
   dataText: {
     fontSize: 14,
-    color: colors.white,
+    color: colours.white,
   },
   noDataText: {
     fontSize: 16,
@@ -42,7 +42,7 @@ const commonStyles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'center',
     borderBottomWidth: 1,
-    color: colors.white,
+    color: colours.white,
   },
   deviceContainer: {
     flexDirection: 'row',
@@ -52,26 +52,26 @@ const commonStyles = StyleSheet.create({
   connectButtonText: {
     fontWeight: 'bold',
     fontSize: 12,
-    color: colors.dark,
+    color: colours.dark,
   },
   exportButtonText: {
     fontFamily: 'ZenDots-Regular',
     fontSize: 12,
-    color: colors.dark,
+    color: colours.dark,
   },
   viewDataButton: {
     padding: 10,
-    backgroundColor: colors.accent,
+    backgroundColor: colours.accent,
     borderRadius: 5,
     margin: 5,
   },
   viewDataButtonText: {
-    color: colors.dark,
+    color: colours.dark,
     textAlign: 'center',
   },
   button: {
     alignItems: 'center',
-    backgroundColor: colors.dark,
+    backgroundColor: colours.dark,
     borderRadius: 10,
     elevation: 5,
     flexDirection: 'row',
@@ -86,19 +86,19 @@ const commonStyles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   buttonText: {
-    color: colors.white,
+    color: colours.white,
     fontSize: 18,
     fontWeight: 'normal',
     textAlign: 'center',
     fontFamily: 'ZenDots-Regular',
   },
   retroButton: {
-    backgroundColor: colors.primary,
+    backgroundColor: colours.primary,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     borderWidth: 2,
-    borderColor: colors.white,
+    borderColor: colours.white,
     shadowColor: '#000',
     shadowOffset: {width: 2, height: 2},
     shadowOpacity: 0.8,
@@ -110,7 +110,7 @@ const commonStyles = StyleSheet.create({
   retroButtonText: {
     fontWeight: 'normal',
     fontSize: 14,
-    color: colors.white,
+    color: colours.white,
     textAlign: 'center',
     fontFamily: 'AstroSpace',
   },
@@ -123,7 +123,7 @@ const commonStyles = StyleSheet.create({
   titleText: {
     fontFamily: 'AstroSpace',
     fontSize: 30,
-    color: colors.white,
+    color: colours.white,
   },
   modalContainer: {
     flex: 1,
@@ -133,7 +133,7 @@ const commonStyles = StyleSheet.create({
   },
   modalView: {
     width: '80%',
-    backgroundColor: colors.white,
+    backgroundColor: colours.white,
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
@@ -154,12 +154,12 @@ const commonStyles = StyleSheet.create({
   },
   modalSubmitButton: {
     width: '100%',
-    backgroundColor: colors.primary,
+    backgroundColor: colours.primary,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     borderWidth: 2,
-    borderColor: colors.white,
+    borderColor: colours.white,
     shadowColor: '#000',
     shadowOffset: {width: 2, height: 2},
     shadowOpacity: 0.8,
@@ -172,8 +172,8 @@ const commonStyles = StyleSheet.create({
     position: 'absolute',
     top: 130,
     left: 10,
-    backgroundColor: colors.white,
-    borderColor: colors.accent,
+    backgroundColor: colours.white,
+    borderColor: colours.accent,
     borderWidth: 1,
     borderRadius: 5,
     width: 150,
@@ -185,11 +185,11 @@ const commonStyles = StyleSheet.create({
   dropdownOptionText: {
     fontFamily: 'ZenDots-Regular',
     fontSize: 12,
-    color: colors.dark,
+    color: colours.dark,
   },
   burgerMenuIconButton: {
     padding: 10,
-    backgroundColor: colors.dark,
+    backgroundColor: colours.dark,
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',

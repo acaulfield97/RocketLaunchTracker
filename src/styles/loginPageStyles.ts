@@ -1,17 +1,17 @@
-import { StyleSheet, Dimensions } from 'react-native';
-import colors from './colors';
+import {StyleSheet, Dimensions} from 'react-native';
+import colours from './colours';
 
 const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.dark,
+    backgroundColor: colours.dark,
   },
   backgroundImage: {
     flex: 1,
     resizeMode: 'cover',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   titleContainer: {
     marginTop: 90,
@@ -22,11 +22,11 @@ const styles = StyleSheet.create({
   titleText: {
     fontFamily: 'AstroSpace',
     fontSize: 30,
-    color: colors.white,
+    color: colours.white,
   },
   inputsContainer: {
     height: 325,
-    width: "90%",
+    width: '90%',
     marginTop: 20,
     padding: 10,
     borderRadius: 20,
@@ -36,26 +36,26 @@ const styles = StyleSheet.create({
   subTitleText: {
     fontFamily: 'ZenDots-Regular',
     fontSize: 14,
-    color: colors.accent,
+    color: colours.accent,
     marginRight: 5,
   },
   bodyText: {
     fontFamily: 'ZenDots-Regular',
     fontSize: 14,
-    color: colors.white,
+    color: colours.white,
   },
-loginButton: {
+  loginButton: {
     marginRight: 20,
     marginBottom: 20,
     padding: 10,
-    backgroundColor: colors.primary,
+    backgroundColor: colours.primary,
     width: '100%' as '100%',
     justifyContent: 'center' as 'center',
     borderRadius: 5,
     borderWidth: 2,
-    borderColor: colors.white,
+    borderColor: colours.white,
     shadowColor: '#000',
-    shadowOffset: { width: 2, height: 2 },
+    shadowOffset: {width: 2, height: 2},
     shadowOpacity: 0.8,
     shadowRadius: 3,
     elevation: 5,
@@ -64,7 +64,7 @@ loginButton: {
   loginButtonText: {
     fontFamily: 'ZenDots-Regular',
     fontSize: 15,
-    color: colors.white,
+    color: colours.white,
   },
   inputContainer: {
     height: 50,
@@ -72,27 +72,27 @@ loginButton: {
     justifyContent: 'center',
     paddingHorizontal: 10,
     marginBottom: 20,
-    backgroundColor: colors.white,
+    backgroundColor: colours.white,
     borderRadius: 20,
   },
   input: {
     height: 50,
-width: '100%',
+    width: '100%',
   },
-  border:{
+  border: {
     width: '100%',
     height: 1,
     alignSelf: 'center',
   },
   textDontHave: {
-    color: colors.white,
+    color: colours.white,
     fontFamily: 'ZenDots-Regular',
-    fontSize: 12
+    fontSize: 12,
   },
   noAccountButton: {
     alignSelf: 'flex-end',
     marginRight: 5,
-  }
+  },
 });
 
 export default styles;

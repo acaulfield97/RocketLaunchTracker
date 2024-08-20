@@ -7,7 +7,7 @@ import LocationDataScreen from '../screens/locationDataScreen/locationDataScreen
 import BluetoothStack from './BluetoothStack';
 import AccountStack from './AccountStack';
 import getIcon from '../assets/icons';
-import colors from '../styles/colors';
+import colours from '../styles/colours';
 
 const Tab = createBottomTabNavigator();
 
@@ -18,10 +18,10 @@ const AppNavigator = () => {
         screenOptions={({route}) => ({
           tabBarIcon: ({focused, color, size}) =>
             getIcon(route, focused, color, size),
-          tabBarActiveTintColor: colors.primary,
-          tabBarInactiveTintColor: colors.dark,
+          tabBarActiveTintColor: colours.primary,
+          tabBarInactiveTintColor: colours.dark,
           tabBarStyle: {
-            backgroundColor: colors.accent,
+            backgroundColor: colours.accent,
           },
         })}>
         <Tab.Screen

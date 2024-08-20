@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import styles from '../../styles/locationDataPageStyles';
 import useFirebaseDataService from '../../services/useDatabase';
+import colours from '../../styles/colours';
 
 export default function StartRecordingView() {
   const {isRecording, setIsRecording, setFlightName, doesFlightNameExist} =
@@ -75,6 +76,7 @@ export default function StartRecordingView() {
             <TextInput
               style={styles.input}
               placeholder="Enter Flight Name"
+              placeholderTextColor={colours.bright}
               value={inputFlightName}
               onChangeText={setInputFlightName}
             />

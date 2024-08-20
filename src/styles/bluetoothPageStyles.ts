@@ -1,9 +1,9 @@
 import {StyleSheet, Dimensions} from 'react-native';
-import colors from './colors';
+import colours from './colours';
 
 const bluetoothPageStyles = StyleSheet.create({
   scanButtonText: {
-    color: colors.white,
+    color: colours.white,
     fontSize: 14,
     textAlign: 'center',
     fontFamily: 'AstroSpace',
@@ -13,7 +13,7 @@ const bluetoothPageStyles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 10,
     fontStyle: 'italic',
-    color: colors.white,
+    color: colours.white,
   },
   deviceItem: {
     margin: 2,
@@ -21,22 +21,22 @@ const bluetoothPageStyles = StyleSheet.create({
   },
   deviceName: {
     fontSize: 14,
-    color: colors.white,
+    color: colours.white,
     fontFamily: 'AstroSpace',
   },
   deviceInfo: {
     fontSize: 8,
-    color: colors.white,
+    color: colours.white,
   },
   connectToDeviceButton: {
     marginBottom: 8,
-    backgroundColor: colors.accent,
+    backgroundColor: colours.accent,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     borderWidth: 2,
-    borderColor: colors.white,
-    shadowColor: colors.white,
+    borderColor: colours.white,
+    shadowColor: colours.white,
     shadowOffset: {width: 2, height: 4},
     shadowOpacity: 1,
     shadowRadius: 5,
@@ -46,7 +46,7 @@ const bluetoothPageStyles = StyleSheet.create({
   connectToDeviceButtonText: {
     fontFamily: 'ZenDots-Regular',
     fontSize: 12,
-    color: colors.dark,
+    color: colours.dark,
   },
   titleContainer: {
     marginTop: 10,
@@ -56,13 +56,13 @@ const bluetoothPageStyles = StyleSheet.create({
   },
   scanButton: {
     marginBottom: 20,
-    backgroundColor: colors.primary,
+    backgroundColor: colours.primary,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     borderWidth: 2,
-    borderColor: colors.white,
-    shadowColor: colors.white,
+    borderColor: colours.white,
+    shadowColor: colours.white,
     shadowOffset: {width: 2, height: 4},
     shadowOpacity: 1,
     shadowRadius: 5,
@@ -78,12 +78,12 @@ const bluetoothPageStyles = StyleSheet.create({
   },
   viewRawButton: {
     width: '100%',
-    backgroundColor: colors.primary,
+    backgroundColor: colours.primary,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     borderWidth: 2,
-    borderColor: colors.white,
+    borderColor: colours.white,
     shadowColor: '#000',
     shadowOffset: {width: 2, height: 2},
     shadowOpacity: 0.8,
@@ -94,7 +94,7 @@ const bluetoothPageStyles = StyleSheet.create({
   viewRawButtonText: {
     fontFamily: 'AstroSpace',
     fontSize: 14,
-    color: colors.white,
+    color: colours.white,
   },
 });
 
