@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   exportButton: {
-    width: '50%',
+    width: '75%',
     backgroundColor: colours.primary,
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   exportButtonText: {
     fontFamily: 'ZenDots-Regular',
-    fontSize: 10,
+    fontSize: 12,
     color: colours.white,
   },
   connectionStatusContainer: {

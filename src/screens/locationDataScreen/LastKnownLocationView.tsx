@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Alert} from 'react-native';
 import {useBluetoothContext} from '../../contexts/BluetoothContext';
 import {
   exportToText,
@@ -8,6 +8,7 @@ import {
 } from '../../components/helpers/ExportData';
 import styles from '../../styles/locationDataPageStyles';
 import {RocketPosition} from '../../types/types';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 export default function LastKnownLocationView() {
   const {rocketData} = useBluetoothContext();
@@ -55,6 +56,16 @@ export default function LastKnownLocationView() {
     }).format(utcDateTime);
   };
 
+  const copyToClipboard = () => {
+    // Format the location data into a single line string
+    const dataString = `${
+      lastKnownRocketPosition.latitude || 'Not available'
+    }, ${lastKnownRocketPosition.longitude || 'Not available'}`;
+
+    Clipboard.setString(dataString.trim());
+    Alert.alert('Location data copied to clipboard!');
+  };
+
   return (
     <View style={styles.sectionContainer}>
       <View style={styles.titleContainer}>
@@ -85,15 +96,8 @@ export default function LastKnownLocationView() {
         </Text>
       </View>
       <View style={styles.exportButtonContainer}>
-        <TouchableOpacity
-          onPress={() => exportToText(lastKnownRocketPosition)}
-          style={styles.exportButton}>
-          <Text style={styles.exportButtonText}>Export to Plain Text</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => exportToCSV(lastKnownRocketPosition)}
-          style={styles.exportButton}>
-          <Text style={styles.exportButtonText}>Export to CSV</Text>
+        <TouchableOpacity onPress={copyToClipboard} style={styles.exportButton}>
+          <Text style={styles.exportButtonText}>Copy to Clipboard</Text>
         </TouchableOpacity>
       </View>
     </View>
