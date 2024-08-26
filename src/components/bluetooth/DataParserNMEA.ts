@@ -1,13 +1,5 @@
 // DataParserNMEA.ts
-import {
-  NMEASentence,
-  GPGGA,
-  GPGSA,
-  GPGLL,
-  GPGSV,
-  GPRMC,
-  GPVTG,
-} from '../../types/types';
+import {NMEASentence, GPGGA, GPGSV, GPRMC, GPVTG} from '../../types/types';
 
 export const parseDataStream = (data: string): NMEASentence => {
   const fields = data.split(',');

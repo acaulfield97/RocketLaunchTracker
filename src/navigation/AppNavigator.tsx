@@ -5,7 +5,6 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MapScreen from '../screens/mapScreen/MapScreen';
 import LocationDataScreen from '../screens/locationDataScreen/locationDataScreen';
 import BluetoothStack from './BluetoothStack';
-import AccountStack from './AccountStack';
 import getIcon from '../assets/icons';
 import colours from '../styles/colours';
 
@@ -24,11 +23,6 @@ const AppNavigator = () => {
             backgroundColor: colours.accent,
           },
         })}>
-        <Tab.Screen
-          name="Account"
-          component={AccountStack}
-          options={{headerShown: false}}
-        />
         <Tab.Screen
           name="Map"
           component={MapScreen}

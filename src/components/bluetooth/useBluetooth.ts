@@ -6,7 +6,6 @@ import {
   checkBluetoothEnabled,
   requestBluetoothPermissions,
   connectToDeviceUtil,
-  disconnectFromDevice,
 } from './BluetoothUtils';
 import {parseDataStream} from './DataParserNMEA';
 import {RocketData, BluetoothContextType} from '../../types/types';

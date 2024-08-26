@@ -67,7 +67,7 @@ export default function RocketProvider({children}: PropsWithChildren<{}>) {
         enableHighAccuracy: true,
         distanceFilter: 3, // Update the location when the user moves by 3 meters
         interval: 5000, // Check for updates every 5 seconds
-        fastestInterval: 2000, // The fastest rate at which your app can handle updates
+        fastestInterval: 2000,
       },
     );
 

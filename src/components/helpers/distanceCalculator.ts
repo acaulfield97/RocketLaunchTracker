@@ -1,5 +1,5 @@
-// Haversine formula, which determines the great-circle distance between two points on a sphere given their longitudes and latitudes.
-
+// Haversine formula, which determines the great-circle distance between two
+// points on a sphere given their longitudes and latitudes.
 export const calculateDistance = (
   lat1: number,
   lon1: number,

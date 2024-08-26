@@ -14,30 +14,35 @@ export interface FirebaseDataServiceProps {
 const useFirebaseDataService = (): FirebaseDataServiceProps => {
   const [flightName, setFlightName] = useState<string>('');
   const [isRecording, setIsRecording] = useState<boolean>(false);
-
   const {rocketData} = useBluetoothContext();
 
   const addFlightEntry = async (flightName: string, rocketData: RocketData) => {
     try {
+      // if document *flightName* doesn't exist, firestore will create it when data is added
+      // if it exists, firestore will access it
       const flight = firestore().collection('launch_data').doc(flightName);
 
-      // Add an empty field to "launch_data" document (necessary otherwise the document 'does not exist')
-      // { merge: true } option ensures that this new field is added without overwriting any existing data in the document
+      // Add an empty placeholder field to "launch_data" document (necessary otherwise the document
+      // 'does not exist')
+      // { merge: true } option ensures that this new field is added without overwriting any existing
+      // data in the document
       await flight.set({initialised: true}, {merge: true});
 
       // Get the current number of data points
       const snapshot = await flight.collection('launch_data_points').get();
       const count = snapshot.size;
-
       const dataPointID = `data_point_${count + 1}`;
 
       const sanitisedRocketData = Object.fromEntries(
+        // convert undefined values in the rocketData object to null since Firestore does not accept
+        // undefined as a valid value
         Object.entries(rocketData).map(([key, value]) => [
           key,
           value === undefined ? null : value,
         ]),
       );
 
+      // store data
       await flight
         .collection('launch_data_points')
         .doc(dataPointID)
@@ -47,6 +52,7 @@ const useFirebaseDataService = (): FirebaseDataServiceProps => {
     }
   };
 
+  // check if flight name already exists to avoid adding data to previous flights
   const doesFlightNameExist = async (flightName: string): Promise<boolean> => {
     try {
       const doc = await firestore()
@@ -63,10 +69,11 @@ const useFirebaseDataService = (): FirebaseDataServiceProps => {
   const prevRocketDataRef = useRef(rocketData);
   useEffect(() => {
     if (isRecording) {
+      // if rocketData has changed, record new flight data to db
       if (prevRocketDataRef.current !== rocketData) {
         addFlightEntry(flightName, rocketData);
       } else {
-        console.log('rocketData changed but no new data to record');
+        console.log('No change in data');
       }
     }
 

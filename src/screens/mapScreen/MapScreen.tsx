@@ -1,5 +1,3 @@
-// MapScreen.tsx
-
 import React, {useState} from 'react';
 import {
   View,
@@ -18,9 +16,7 @@ import Mapbox, {
   Images,
 } from '@rnmapbox/maps';
 import RocketMarkers from './RocketMarkers';
-// import styles from '../../styles/commonStyles';
 import SelectedRocketBottomSheet from './SelectedRocketBottomDrawer';
-// @ts-ignore
 import geoViewport from '@mapbox/geo-viewport';
 import DropdownMenu from '../../components/fragments/DropdownMenu';
 // @ts-ignore
@@ -29,9 +25,9 @@ import commonStyles from '../../styles/commonStyles';
 import ToggleMapStyle from './ToggleMapStyle';
 
 export default function MapScreen() {
-  const [touchCoordinates, setTouchCoordinates] = useState<
-    [number, number] | null
-  >(null);
+  // const [touchCoordinates, setTouchCoordinates] = useState<
+  //   [number, number] | null
+  // >(null);
   const CENTER_COORD: [number, number] = [-73.970895, 40.723279];
   const MAPBOX_VECTOR_TILE_SIZE = 512;
   const ZOOM_LEVEL = 12;
@@ -47,56 +43,81 @@ export default function MapScreen() {
     );
   };
 
-  const handleMapPress = (event: any) => {
-    const {geometry} = event;
-    const coords: [number, number] = geometry.coordinates;
-    setTouchCoordinates(coords);
-    console.log('User touched coordinates:', coords);
-  };
+  // const handleMapPress = (event: any) => {
+  //   const {geometry} = event;
+  //   const coords: [number, number] = geometry.coordinates;
+  //   setTouchCoordinates(coords);
+  //   console.log('User touched coordinates:', coords);
+  // };
 
   const submitCreatePack = () => {
-    setPackName(packName);
-    setShowEditTitle(false);
+    try {
+      setPackName(packName);
+      setShowEditTitle(false);
 
-    const {width, height} = Dimensions.get('window');
+      const {width, height} = Dimensions.get('window');
 
-    const bounds: [number, number, number, number] = geoViewport.bounds(
-      CENTER_COORD,
-      ZOOM_LEVEL,
-      [width, height],
-      MAPBOX_VECTOR_TILE_SIZE,
-    );
+      const bounds: [number, number, number, number] = geoViewport.bounds(
+        CENTER_COORD,
+        ZOOM_LEVEL,
+        [width, height],
+        MAPBOX_VECTOR_TILE_SIZE,
+      );
 
-    const packBounds: [[number, number], [number, number]] = [
-      [bounds[0], bounds[1]], // Southwest coordinate [longitude, latitude]
-      [bounds[2], bounds[3]], // Northeast coordinate [longitude, latitude]
-    ];
+      const packBounds: [[number, number], [number, number]] = [
+        [bounds[0], bounds[1]], // Southwest coordinate [longitude, latitude]
+        [bounds[2], bounds[3]], // Northeast coordinate [longitude, latitude]
+      ];
 
-    const options = {
-      name: packName,
-      styleURL: mapStyle,
-      bounds: packBounds,
-      minZoom: 10,
-      maxZoom: 20,
-      metadata: {
-        creationDate: new Date().toISOString(),
-      },
-    };
+      const options = {
+        name: packName,
+        styleURL: mapStyle,
+        bounds: packBounds,
+        minZoom: 10,
+        maxZoom: 20,
+        metadata: {
+          creationDate: new Date().toISOString(),
+        },
+      };
 
-    offlineManager.createPack(options, (region, status) => {
-      console.log('=> progress callback region:', 'status: ', status);
+      offlineManager.createPack(
+        options,
+        (region, status) => {
+          console.log(
+            '=> progress callback region:',
+            region,
+            'status:',
+            status,
+          );
 
-      // Check if the download is complete
-      if (status && status.percentage === 100) {
-        Alert.alert(
-          'Offline Map Downloaded',
-          `The offline map "${packName}" has been successfully downloaded.`,
-          [{text: 'OK'}],
-        );
-      }
-    });
-
-    console.log('Pack name submitted:', packName);
+          // Check if the download is complete
+          if (status && status.percentage === 100) {
+            Alert.alert(
+              'Offline Map Downloaded',
+              `The offline map "${packName}" has been successfully downloaded.`,
+              [{text: 'OK'}],
+            );
+          }
+        },
+        error => {
+          // Error Handling: Handle any errors that occur during pack creation
+          console.error('Error creating offline map pack:', error);
+          Alert.alert(
+            'Creation Error',
+            `An error occurred while creating the offline map pack "${packName}". Please check your network connection and try again.`,
+            [{text: 'OK'}],
+          );
+        },
+      );
+    } catch (error) {
+      // Error Handling: Handle any other unexpected errors
+      console.error('Unexpected error during offline map creation:', error);
+      Alert.alert(
+        'Unexpected Error',
+        'An unexpected error occurred while processing your request. Please try again.',
+        [{text: 'OK'}],
+      );
+    }
   };
 
   const menuOptions = [
@@ -113,20 +134,29 @@ export default function MapScreen() {
     {
       title: 'Get offline maps',
       onPress: async () => {
-        const packs = await offlineManager.getPacks();
-        console.log('=> packs:', packs);
-        packs.forEach(pack => {
-          console.log(
-            'pack:',
-            pack,
-            'name:',
-            pack.name,
-            'bounds:',
-            pack?.bounds,
-            'metadata',
-            pack?.metadata,
+        try {
+          const packs = await offlineManager.getPacks();
+          console.log('=> packs:', packs);
+          packs.forEach(pack => {
+            console.log(
+              'pack:',
+              pack,
+              'name:',
+              pack.name,
+              'bounds:',
+              pack?.bounds,
+              'metadata',
+              pack?.metadata,
+            );
+          });
+        } catch (error) {
+          console.error('Error fetching offline maps:', error);
+          Alert.alert(
+            'Fetch Error',
+            'There was an error fetching the offline maps. Please try again.',
+            [{text: 'OK'}],
           );
-        });
+        }
       },
     },
   ];
@@ -160,7 +190,7 @@ export default function MapScreen() {
       <MapView
         style={{flex: 1}}
         styleURL={mapStyle}
-        onPress={handleMapPress}
+        // onPress={handleMapPress}
         compassEnabled={true}>
         <Camera followUserLocation followZoomLevel={14} heading={90} />
         <Images images={{puckArrow: puckArrow}} />

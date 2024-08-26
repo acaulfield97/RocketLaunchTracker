@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, TextInput} from 'react-native';
+import {View, TextInput} from 'react-native';
 import React from 'react';
 import styles from '../../styles/loginPageStyles';
 

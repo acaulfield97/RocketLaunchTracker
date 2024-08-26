@@ -24,14 +24,10 @@ export default function StartRecordingView() {
       setStopRecordingModalVisible(true); // Show the stop recording confirmation modal
     } else {
       setModalVisible(true); // Show the flight name modal
-      console.log('Start Recording button pressed');
     }
   };
 
   const handleSetFlightName = async () => {
-    console.log('Submit & Start Recording button pressed');
-    console.log('Flight Name:', inputFlightName);
-
     // Check if the flight name already exists
     const flightNameExists = await doesFlightNameExist(inputFlightName);
 
