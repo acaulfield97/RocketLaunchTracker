@@ -12,7 +12,7 @@ export default function CreateAccountScreen({navigation}: {navigation: any}) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const signUpTestFn = () => {
+  const signUpFn = () => {
     auth()
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
@@ -48,7 +48,7 @@ export default function CreateAccountScreen({navigation}: {navigation: any}) {
             placeholder="Confirm password"
             secureTextEntry
           />
-          <TouchableOpacity style={styles.loginButton} onPress={signUpTestFn}>
+          <TouchableOpacity style={styles.loginButton} onPress={signUpFn}>
             <Text style={styles.loginButtonText}>Create Account</Text>
           </TouchableOpacity>
         </View>

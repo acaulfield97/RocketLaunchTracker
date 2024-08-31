@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
-import {View, ScrollView, Text, TouchableOpacity} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {View, ScrollView, Text, TouchableOpacity, Alert} from 'react-native';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
 import {useBluetoothContext} from '../../contexts/BluetoothContext';
 import styles from '../../styles/commonStyles';
 import bluetoothPageStyles from '../../styles/bluetoothPageStyles';
@@ -8,8 +8,11 @@ import {
   checkBluetoothEnabled,
   requestBluetoothPermissions,
 } from '../../components/bluetooth/BluetoothUtils';
+import {BluetoothDevice} from 'react-native-bluetooth-classic';
 
-const BluetoothScreen = () => {
+type BluetoothScreenNavigationProp = NavigationProp<any>;
+
+const BluetoothScreen: React.FC = () => {
   const {
     pairedDevices,
     selectedDevice,
@@ -21,13 +24,13 @@ const BluetoothScreen = () => {
     disconnect,
   } = useBluetoothContext();
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<BluetoothScreenNavigationProp>();
 
   const navigateToRawData = useCallback(() => {
     navigation.navigate('RawData', {parsedData: receivedData});
   }, [navigation, receivedData]);
 
-  // request Bluetooth permissions when the screen is opened
+  // Request Bluetooth permissions when the screen is opened
   useEffect(() => {
     const requestPermissions = async () => {
       try {
@@ -41,7 +44,7 @@ const BluetoothScreen = () => {
             [{text: 'OK'}],
           );
         } else {
-          // if permissions are granted
+          // If permissions are granted
           startDeviceDiscovery();
         }
       } catch (error) {
@@ -67,7 +70,7 @@ const BluetoothScreen = () => {
                 SCAN FOR PAIRED DEVICES
               </Text>
             </TouchableOpacity>
-            {pairedDevices.map((device, index) => (
+            {pairedDevices.map((device: BluetoothDevice, index: number) => (
               <View key={index} style={styles.deviceContainer}>
                 <View style={bluetoothPageStyles.deviceItem}>
                   <Text style={bluetoothPageStyles.deviceName}>

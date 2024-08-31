@@ -1,3 +1,5 @@
+// useBluetooth.ts
+
 import {useEffect, useState, useCallback, useRef} from 'react';
 import RNBluetoothClassic, {
   BluetoothDevice,
@@ -6,6 +8,7 @@ import {
   checkBluetoothEnabled,
   requestBluetoothPermissions,
   connectToDeviceUtil,
+  disconnectFromDevice,
 } from './BluetoothUtils';
 import {parseDataStream} from './DataParserNMEA';
 import {RocketData, BluetoothContextType} from '../../types/types';
@@ -38,7 +41,7 @@ export const useBluetooth = (): BluetoothContextType => {
   const bufferRef = useRef<any[]>([]);
   const stillReadingRef = useRef(false);
   const lastReceivedDataTimestamp = useRef<number | null>(null); // Track last received data time
-
+  const readIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [, forceUpdate] = useState(false);
 
   useEffect(() => {
@@ -55,11 +58,12 @@ export const useBluetooth = (): BluetoothContextType => {
   useEffect(() => {
     let readInterval: ReturnType<typeof setInterval> | undefined;
     if (selectedDevice && isConnected) {
-      readInterval = setInterval(() => readData(), 100);
+      readIntervalRef.current = setInterval(() => readData(), 100);
     }
     return () => {
-      if (readInterval) {
-        clearInterval(readInterval);
+      if (readIntervalRef.current) {
+        clearInterval(readIntervalRef.current);
+        readIntervalRef.current = null;
       }
     };
   }, [selectedDevice, isConnected]);
@@ -102,22 +106,31 @@ export const useBluetooth = (): BluetoothContextType => {
     setConnectingDeviceId(null);
   }, []);
 
-  const disconnect = () => {
+  const disconnect = async () => {
     if (selectedDevice) {
       try {
-        selectedDevice.clear();
-        selectedDevice.disconnect().then(() => {
-          setSelectedDevice(undefined);
-          setIsConnected(false);
-          console.log('Disconnected from device');
+        await disconnectFromDevice(selectedDevice, () => {
+          if (readIntervalRef.current) {
+            clearInterval(readIntervalRef.current);
+            readIntervalRef.current = null;
+          }
         });
+
+        // Clear only the raw data and buffer, but keep processed data intact
+        rocketDataStreamRef.current = []; // Clear the data stream for raw data
+        bufferRef.current = []; // Clear the buffer
+
+        setSelectedDevice(undefined);
+        setIsConnected(false);
+        console.log('Disconnected from device');
       } catch (error) {
         console.error('Error disconnecting:', error);
+        Alert.alert('Error disconnecting');
       }
     }
   };
-
   const readData = useCallback(async () => {
+    console.log('readData called');
     if (stillReadingRef.current || !selectedDevice || !isConnected) {
       return;
     }
@@ -130,6 +143,7 @@ export const useBluetooth = (): BluetoothContextType => {
         if (message !== '' && message !== ' ') {
           const parsedData = parseDataStream(message.toString());
           if (parsedData) {
+            console.log('Raw Parsed Data:', parsedData);
             bufferRef.current.push(parsedData); // Add to buffer
             rocketDataStreamRef.current.push(parsedData); // Save entire stream to ref
 
@@ -152,6 +166,7 @@ export const useBluetooth = (): BluetoothContextType => {
     if (bufferRef.current.length === 0) return;
 
     const latestData = bufferRef.current[bufferRef.current.length - 1];
+    console.log('Processing Buffer Data:', latestData);
     updateRocketData(latestData);
 
     bufferRef.current = []; // Clear the buffer after processing
@@ -165,6 +180,7 @@ export const useBluetooth = (): BluetoothContextType => {
   };
 
   const getUpdatedRocketData = (parsedData: any) => {
+    console.log('Parsed Data:', parsedData); // Log the parsed data
     switch (parsedData.type) {
       case 'GPGGA': {
         const latitude = convertToDecimal(
@@ -176,6 +192,10 @@ export const useBluetooth = (): BluetoothContextType => {
           parsedData.longitude.split(' ')[1],
         );
 
+        // Log converted values
+        console.log('Converted Latitude:', latitude);
+        console.log('Converted Longitude:', longitude);
+
         // Check if latitude or longitude is 0 or undefined, break/return if true
         if (
           latitude === 0 ||
@@ -183,6 +203,10 @@ export const useBluetooth = (): BluetoothContextType => {
           latitude === undefined ||
           longitude === undefined
         ) {
+          console.warn('Latitude or Longitude is invalid:', {
+            latitude,
+            longitude,
+          });
           return {};
         }
 
@@ -210,7 +234,7 @@ export const useBluetooth = (): BluetoothContextType => {
     }
   };
 
-  const convertToDecimal = (coordinate: string, direction: string) => {
+  const convertToDecimal = (coordinate: string, direction: string): number => {
     if (!coordinate || !direction) return 0;
     let degrees = 0,
       minutes = 0;
@@ -239,5 +263,7 @@ export const useBluetooth = (): BluetoothContextType => {
     connectingDeviceId,
     disconnect,
     dataReceivingStatus,
+    setDataReceivingStatus,
+    readData,
   };
 };

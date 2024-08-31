@@ -96,6 +96,30 @@ const bluetoothPageStyles = StyleSheet.create({
     fontSize: 14,
     color: colours.white,
   },
+  refreshButton: {
+    width: '25%',
+    backgroundColor: colours.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: colours.white,
+    shadowColor: '#000',
+    shadowOffset: {width: 2, height: 2},
+    shadowOpacity: 0.8,
+    shadowRadius: 3,
+    elevation: 5,
+    alignItems: 'center',
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 1,
+  },
+  refreshButtonText: {
+    fontFamily: 'ZenDots-Regular',
+    fontSize: 10,
+    color: colours.white,
+  },
 });
 
 export default bluetoothPageStyles;

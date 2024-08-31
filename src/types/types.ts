@@ -1,4 +1,5 @@
 import {GeoPoint} from '@react-native-firebase/firestore';
+import {Dispatch, SetStateAction} from 'react';
 import {BluetoothDevice} from 'react-native-bluetooth-classic';
 
 export type RouteTab = {
@@ -55,6 +56,8 @@ export type BluetoothContextType = {
   connectingDeviceId: string | null;
   disconnect: () => void;
   dataReceivingStatus: boolean;
+  setDataReceivingStatus: Dispatch<SetStateAction<boolean>>;
+  readData: () => void;
 };
 
 export type GPVTG = {

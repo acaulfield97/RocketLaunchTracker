@@ -26,7 +26,7 @@ export default function LoginScreen({navigation}: {navigation: any}) {
       })
       .catch(err => {
         console.log(err);
-        Alert.alert(err.nativeErrorMessage);
+        Alert.alert('Login Error', err.message);
       });
   };
 

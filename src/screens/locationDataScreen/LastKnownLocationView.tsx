@@ -1,11 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity, Alert} from 'react-native';
 import {useBluetoothContext} from '../../contexts/BluetoothContext';
-import {
-  exportToText,
-  exportToCSV,
-  requestWritePermission,
-} from '../../components/helpers/ExportData';
 import styles from '../../styles/locationDataPageStyles';
 import {RocketPosition} from '../../types/types';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -32,11 +27,33 @@ export default function LastKnownLocationView() {
     });
   }, [rocketData]);
 
-  useEffect(() => {
-    requestWritePermission();
-  }, []);
+  const isValidTime = (time: number): boolean => {
+    // Ensure time is a six-digit number
+    const timeStr = time.toString().padStart(6, '0');
+    const hour = parseInt(timeStr.slice(0, 2), 10);
+    const minute = parseInt(timeStr.slice(2, 4), 10);
+    const second = parseInt(timeStr.slice(4, 6), 10);
+
+    // Validate hour, minute, and second ranges
+    return (
+      hour >= 0 &&
+      hour < 24 &&
+      minute >= 0 &&
+      minute < 60 &&
+      second >= 0 &&
+      second < 60
+    );
+  };
 
   const formatTimeToUK = (time: number) => {
+    if (typeof time !== 'number' || isNaN(time)) {
+      return 'Invalid time';
+    }
+
+    if (!isValidTime(time)) {
+      return 'Invalid time';
+    }
+
     const timeStr = time.toString().padStart(6, '0');
     const hour = timeStr.slice(0, 2);
     const minute = timeStr.slice(2, 4);

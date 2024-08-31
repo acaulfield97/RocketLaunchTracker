@@ -59,16 +59,16 @@ export const connectToDeviceUtil = async (device: BluetoothDevice) => {
   }
 };
 
-// // handle disconnection from specified bluetooth device
-// export const disconnectFromDevice = async (
-//   device: BluetoothDevice,
-//   clearIntervalId: () => void,
-// ) => {
-//   try {
-//     clearIntervalId();
-//     await device.clear();
-//     await device.disconnect();
-//   } catch (error) {
-//     console.error('Error disconnecting:', error);
-//   }
-// };
+// handle disconnection from specified bluetooth device
+export const disconnectFromDevice = async (
+  device: BluetoothDevice,
+  clearIntervalId: () => void,
+) => {
+  try {
+    clearIntervalId();
+    await device.clear();
+    await device.disconnect();
+  } catch (error) {
+    console.error('Error disconnecting:', error);
+  }
+};

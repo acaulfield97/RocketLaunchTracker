@@ -1,0 +1,17 @@
+// __mocks__/react-native.ts
+export const Alert = {
+  alert: jest.fn(),
+};
+
+export const PermissionsAndroid = {
+  PERMISSIONS: {
+    BLUETOOTH_SCAN: 'BLUETOOTH_SCAN',
+    BLUETOOTH_CONNECT: 'BLUETOOTH_CONNECT',
+    ACCESS_FINE_LOCATION: 'ACCESS_FINE_LOCATION',
+  },
+  RESULTS: {
+    GRANTED: 'granted',
+    DENIED: 'denied',
+  },
+  request: jest.fn(),
+};
