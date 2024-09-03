@@ -11,7 +11,7 @@
 - Connect your device to an Eggtimer Receiver to track your rocket.
 - View the raw telemtry data for your rocket.
 
-<img src="src/assets/media/images/screenshots/rawdatascreen.jpeg" alt="Raw Data Screen" width="400"/>
+<img src="src/assets/media/images/screenshots/rawdatascreen.jpeg" alt="Raw Data Screen" width="200"/>
 
 ### 🌍 **Map screen**
 
@@ -19,7 +19,7 @@
 - Download offline maps for use in remote areas.
 - Caluculate the distance between you and your rocket.
 
-<img src="src/assets/media/images/screenshots/mapscreen.jpeg" alt="Map Screen" width="400"/>
+<img src="src/assets/media/images/screenshots/mapscreen.jpeg" alt="Map Screen" width="200"/>
 
 ### 🚀 **Stats screen**
 
@@ -28,8 +28,8 @@
 - Record the data for future reviewal.
 
 <div style="display: flex; flex-direction: row; gap: 20px;">
-    <img src="src/assets/media/images/screenshots/statsscreen1.jpeg" alt="Stats Screen 1" width="400"/>
-    <img src="src/assets/media/images/screenshots/statsscreen2.jpeg" alt="Stats Screen 2" width="400"/>
+    <img src="src/assets/media/images/screenshots/statsscreen1.jpeg" alt="Stats Screen 1" width="200"/>
+    <img src="src/assets/media/images/screenshots/statsscreen2.jpeg" alt="Stats Screen 2" width="200"/>
 </div>
 
 ## Getting Started
