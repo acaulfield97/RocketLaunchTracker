@@ -8,7 +8,10 @@ export type RouteTab = {
 
 export type RootStackParamList = {
   BluetoothTerminal: undefined;
-  RawData: {parsedData: any[]};
+  RawData: {
+    parsedData: any[];
+    onRefresh?: () => Promise<any[]>;
+  };
   CreateAccount: undefined;
   Login: undefined;
 };

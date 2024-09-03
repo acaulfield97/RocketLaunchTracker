@@ -10,18 +10,13 @@ import {
 } from 'react-native';
 import styles from '../../styles/commonStyles';
 import bluetoothPageStyles from '../../styles/bluetoothPageStyles';
+import {RootStackParamList} from '../../types/types';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-interface RawDataScreenProps {
-  route: {
-    params: {
-      parsedData?: Array<any>;
-      onRefresh?: () => Promise<Array<any>>;
-    };
-  };
-}
+type RawDataScreenProps = NativeStackScreenProps<RootStackParamList, 'RawData'>;
 
 const RawDataScreen: React.FC<RawDataScreenProps> = ({route}) => {
-  const {parsedData = [], onRefresh} = route.params || {};
+  const {parsedData = [], onRefresh} = route.params;
   const [data, setData] = useState(parsedData);
   const scrollViewRef = useRef<ScrollView>(null);
   const [isAtBottom, setIsAtBottom] = useState(true);

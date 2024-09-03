@@ -1,5 +1,5 @@
 // __tests__/DataParserNMEA.test.ts
-import {parseDataStream} from '../../../src/components/bluetooth/DataParserNMEA';
+import {parseDataStream} from '../../../src/components/helpers/dataParserNMEA';
 import {GPRMC, GPVTG, GPGGA, GPGSV} from '../../../src/types/types';
 
 describe('parseDataStream', () => {

@@ -1,9 +1,15 @@
 // icons.tsx
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Fontisto from 'react-native-vector-icons/Fontisto';
+import {RouteProp, ParamListBase} from '@react-navigation/native';
+import {ColorValue} from 'react-native';
 
-const getIcon = (route, focused, color, size) => {
+const getIcon = (
+  route: RouteProp<ParamListBase, string>,
+  focused: boolean,
+  color: number | ColorValue | undefined,
+  size: number | undefined,
+) => {
   let iconName = 'help-circle-outline'; // Default value
   let IconComponent = Ionicons;
 
@@ -16,10 +22,6 @@ const getIcon = (route, focused, color, size) => {
       break;
     case 'Bluetooth':
       iconName = focused ? 'bluetooth' : 'bluetooth-outline';
-      break;
-    case 'RawData':
-      iconName = 'test-tube';
-      IconComponent = Fontisto;
       break;
     case 'Stats':
       iconName = focused ? 'rocket' : 'rocket-outline';

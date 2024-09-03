@@ -7,7 +7,7 @@ import {
   connectToDeviceUtil,
   disconnectFromDevice,
 } from '../../../src/components/bluetooth/BluetoothUtils';
-import {parseDataStream} from '../../../src/components/bluetooth/DataParserNMEA';
+import {parseDataStream} from '../../../src/components/helpers/dataParserNMEA';
 import {Alert} from 'react-native';
 
 function convertToDecimal(coordinate: string, direction: string): number {

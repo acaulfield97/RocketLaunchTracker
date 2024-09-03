@@ -43,6 +43,7 @@ export default function MapScreen() {
     );
   };
 
+  // // Leaving this in in case I want to change how the offline map location is set (e.g. by user tapping on map where they want to set boundaries)
   // const handleMapPress = (event: any) => {
   //   const {geometry} = event;
   //   const coords: [number, number] = geometry.coordinates;
@@ -83,13 +84,6 @@ export default function MapScreen() {
       offlineManager.createPack(
         options,
         (region, status) => {
-          console.log(
-            '=> progress callback region:',
-            region,
-            'status:',
-            status,
-          );
-
           // Check if the download is complete
           if (status && status.percentage === 100) {
             Alert.alert(
@@ -135,20 +129,7 @@ export default function MapScreen() {
       title: 'Get offline maps',
       onPress: async () => {
         try {
-          const packs = await offlineManager.getPacks();
-          console.log('=> packs:', packs);
-          packs.forEach(pack => {
-            console.log(
-              'pack:',
-              pack,
-              'name:',
-              pack.name,
-              'bounds:',
-              pack?.bounds,
-              'metadata',
-              pack?.metadata,
-            );
-          });
+          await offlineManager.getPacks();
         } catch (error) {
           console.error('Error fetching offline maps:', error);
           Alert.alert(

@@ -10,7 +10,7 @@ import {
   connectToDeviceUtil,
   disconnectFromDevice,
 } from './BluetoothUtils';
-import {parseDataStream} from './DataParserNMEA';
+import {parseDataStream} from '../helpers/dataParserNMEA';
 import {RocketData, BluetoothContextType} from '../../types/types';
 import {Alert} from 'react-native';
 
@@ -130,7 +130,6 @@ export const useBluetooth = (): BluetoothContextType => {
     }
   };
   const readData = useCallback(async () => {
-    console.log('readData called');
     if (stillReadingRef.current || !selectedDevice || !isConnected) {
       return;
     }
@@ -143,7 +142,6 @@ export const useBluetooth = (): BluetoothContextType => {
         if (message !== '' && message !== ' ') {
           const parsedData = parseDataStream(message.toString());
           if (parsedData) {
-            console.log('Raw Parsed Data:', parsedData);
             bufferRef.current.push(parsedData); // Add to buffer
             rocketDataStreamRef.current.push(parsedData); // Save entire stream to ref
 
@@ -192,10 +190,6 @@ export const useBluetooth = (): BluetoothContextType => {
           parsedData.longitude.split(' ')[1],
         );
 
-        // Log converted values
-        console.log('Converted Latitude:', latitude);
-        console.log('Converted Longitude:', longitude);
-
         // Check if latitude or longitude is 0 or undefined, break/return if true
         if (
           latitude === 0 ||
@@ -203,10 +197,6 @@ export const useBluetooth = (): BluetoothContextType => {
           latitude === undefined ||
           longitude === undefined
         ) {
-          console.warn('Latitude or Longitude is invalid:', {
-            latitude,
-            longitude,
-          });
           return {};
         }
 
