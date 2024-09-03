@@ -9,7 +9,7 @@
 ### 🔵 **Bluetooth screen**
 
 - Connect your device to an Eggtimer Receiver to track your rocket.
-- View the raw telemtry data for your rocket.
+- View the raw telemetry data for your rocket.
 
 <img src="src/assets/media/images/screenshots/rawdatascreen.jpeg" alt="Raw Data Screen" width="200"/>
 
@@ -23,8 +23,8 @@
 
 ### 🚀 **Stats screen**
 
-- View live telemtry data for your rocket.
-- Longitude & Latitude coordinates, altitude, and speed.
+- View live telemetry data for your rocket.
+- Longitude & latitude coordinates, altitude, and speed.
 - Record the data for future reviewal.
 
 <div style="display: flex; flex-direction: row; gap: 20px;">
@@ -36,8 +36,8 @@
 
 ### Prerequisites:
 
-- Android device with Bluetooth capabilities
-- Node.js and npm (Node Package Manager)
+- Android device with Bluetooth capabilities.
+- Node.js and npm (Node Package Manager).
 
 ### Installation:
 
