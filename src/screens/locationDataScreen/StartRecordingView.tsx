@@ -27,6 +27,8 @@ export default function StartRecordingView() {
     }
   };
 
+  // ensure a flight name is not used if it already exists in database as this would cause
+  // appendeing data to the wrong flight
   const handleSetFlightName = async () => {
     // Check if the flight name already exists
     const flightNameExists = await doesFlightNameExist(inputFlightName);
@@ -43,6 +45,7 @@ export default function StartRecordingView() {
     }
   };
 
+  // when stop recording is pressed
   const handleConfirmStopRecording = () => {
     setIsRecording(false);
     setStopRecordingModalVisible(false);

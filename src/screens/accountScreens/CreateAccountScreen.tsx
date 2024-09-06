@@ -12,6 +12,7 @@ export default function CreateAccountScreen({navigation}: {navigation: any}) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  // sign up managed by firebase
   const signUpFn = () => {
     auth()
       .createUserWithEmailAndPassword(email, password)

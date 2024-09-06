@@ -66,6 +66,8 @@ const useFirebaseDataService = (): FirebaseDataServiceProps => {
     }
   };
 
+  // useRef hook is being used here to keep a reference to the previous value of rocketData across re-renders.
+  // This allows the useEffect hook to compare the previous value of rocketData with its current value, which helps determine if a change has occurred
   const prevRocketDataRef = useRef(rocketData);
   useEffect(() => {
     if (isRecording) {

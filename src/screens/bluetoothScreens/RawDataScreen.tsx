@@ -16,12 +16,14 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 type RawDataScreenProps = NativeStackScreenProps<RootStackParamList, 'RawData'>;
 
 const RawDataScreen: React.FC<RawDataScreenProps> = ({route}) => {
+  // route object passed into the component includes parameters (parsedData and onRefresh)
   const {parsedData = [], onRefresh} = route.params;
-  const [data, setData] = useState(parsedData);
-  const scrollViewRef = useRef<ScrollView>(null);
-  const [isAtBottom, setIsAtBottom] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [data, setData] = useState(parsedData); // holds parsed data that is displayed
+  const scrollViewRef = useRef<ScrollView>(null); // reference to the ScrollView component, allowing programmatic scrolling to the end when new data is addeds
+  const [isAtBottom, setIsAtBottom] = useState(true); //boolean flag to determine if the user is scrolled to the bottom of the list.
+  const [isRefreshing, setIsRefreshing] = useState(false); //tracks whether the data is currently being refreshed.
 
+  // Tracks whether the user is scrolled to the bottom by comparing the scroll position (contentOffset.y) and the total height of the scrollable content.
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
     const isAtBottomNow =
@@ -29,12 +31,15 @@ const RawDataScreen: React.FC<RawDataScreenProps> = ({route}) => {
     setIsAtBottom(isAtBottomNow);
   };
 
+  // scroll to bottom when new data is added
   useEffect(() => {
     if (scrollViewRef.current && isAtBottom) {
       scrollViewRef.current.scrollToEnd({animated: true});
     }
   }, [parsedData]);
 
+  // async function that calls the onRefresh method passed via the route.params.
+  // updates the data and turns off the refreshing state once new data is received.
   const handleRefresh = async () => {
     if (onRefresh) {
       setIsRefreshing(true);

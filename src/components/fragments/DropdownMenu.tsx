@@ -1,10 +1,10 @@
-// DropdownMenu.tsx
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import colours from '../../styles/colours';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import commonStyles from '../../styles/commonStyles';
 
+// define structure of props expetced to receive
 interface DropdownMenuProps {
   options: {title: string; onPress: () => void}[];
 }

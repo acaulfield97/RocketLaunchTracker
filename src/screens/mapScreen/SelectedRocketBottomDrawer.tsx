@@ -12,6 +12,8 @@ export default function SelectedRocketBottomSheet() {
   const {selectedRocket, distanceToRocket} = useRocket();
   const bottomDrawerRef = useRef<BottomSheet>(null);
 
+  // if rocket marker is selected, expand the bottom drawer
+  // displays distance between user and rocket
   useEffect(() => {
     if (selectedRocket) {
       bottomDrawerRef.current?.expand();

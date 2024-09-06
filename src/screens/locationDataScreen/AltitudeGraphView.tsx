@@ -1,3 +1,4 @@
+// displays a line chart of altitude data using the react-native-chart-kit library
 import React, {useEffect, FC, useState, useCallback, useMemo} from 'react';
 import {View, Text} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
@@ -13,7 +14,9 @@ interface AltitudeGraphData {
   altitude: number;
 }
 
+// component receives rocketData as a prop
 const AltitudeGraphView: FC<AltitudeGraphViewProps> = ({rocketData}) => {
+  // altitudeData holds an array of altitude values extracted from the valid RocketData objects. This state is updated when the component receives new rocketData.
   const [altitudeData, setAltitudeData] = useState<AltitudeGraphData[]>([]);
 
   // Type guard to ensure LatestRocketLocation is valid
@@ -27,6 +30,8 @@ const AltitudeGraphView: FC<AltitudeGraphViewProps> = ({rocketData}) => {
     );
   }, []);
 
+  // hook listens for changes to the rocketData prop. When it changes, it filters out any invalid data using the isLastKnownDataValid function.
+  // If there’s valid data, the altitudeData state is updated to include the new data points.
   useEffect(() => {
     if (rocketData && Array.isArray(rocketData)) {
       const validData = rocketData.filter(isLastKnownDataValid);
@@ -40,10 +45,11 @@ const AltitudeGraphView: FC<AltitudeGraphViewProps> = ({rocketData}) => {
     }
   }, [rocketData, isLastKnownDataValid]);
 
-  // Limit the data to the most recent 12 points
+  // Limit the data to the most recent 12 points to avoid lag
   const limitedAltitudeData = altitudeData.slice(-12);
 
-  // useMemo hook is used to memoise the data object. This prevents unnecessary recalculations of the data object unless altitudeData changes.
+  // useMemo hook is used to memoise the data object (chart data). This prevents unnecessary recalculations of the data object unless altitudeData changes.
+  // chart only re-renders when the altitudeData changes
   const data = useMemo(() => {
     return {
       labels: limitedAltitudeData.map((_, index) => (index + 1).toString()), // Labels from 1 to 12

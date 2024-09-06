@@ -1,10 +1,10 @@
-// AccountStack.tsx
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import LoginScreen from '../screens/accountScreens/LoginScreen';
 import CreateAccountScreen from '../screens/accountScreens/CreateAccountScreen';
 import DashboardScreen from '../screens/accountScreens/DashboardScreen';
 
+// creates a stack of screens related to account management
 const Stack = createNativeStackNavigator();
 
 const AccountStack = () => (

@@ -32,9 +32,10 @@ export default function MapScreen() {
   const MAPBOX_VECTOR_TILE_SIZE = 512;
   const ZOOM_LEVEL = 12;
   const [packName, setPackName] = useState('');
-  const [showEditTitle, setShowEditTitle] = useState(false);
+  const [showEditTitle, setShowEditTitle] = useState(false); //  visibility of the modal that prompts the user to enter a name for the offline map pack
   const [mapStyle, setMapStyle] = useState(Mapbox.StyleURL.Outdoors);
 
+  // switch between the "Outdoors" and "Satellite" styles of maps
   const toggleMapStyle = () => {
     setMapStyle(prevStyle =>
       prevStyle === Mapbox.StyleURL.Outdoors
@@ -51,23 +52,27 @@ export default function MapScreen() {
   //   console.log('User touched coordinates:', coords);
   // };
 
+  // Once the name is submitted, submitCreatePack() is called, which calculates the boundaries of the area on the map
+  // currently visible using geoViewport and creates an offline map pack through offlineManager.
   const submitCreatePack = () => {
     try {
       setPackName(packName);
       setShowEditTitle(false);
 
+      // width and height of the screen in pixels.
       const {width, height} = Dimensions.get('window');
 
+      // the area covered by the map based on the center coordinates, zoom level, screen dimensions, and tile size.
       const bounds: [number, number, number, number] = geoViewport.bounds(
         CENTER_COORD,
-        ZOOM_LEVEL,
+        ZOOM_LEVEL, // Higher zoom levels show more detail, while lower zoom levels show a larger area.
         [width, height],
         MAPBOX_VECTOR_TILE_SIZE,
       );
 
       const packBounds: [[number, number], [number, number]] = [
-        [bounds[0], bounds[1]], // Southwest coordinate [longitude, latitude]
-        [bounds[2], bounds[3]], // Northeast coordinate [longitude, latitude]
+        [bounds[0], bounds[1]], // bottom left coordinate [longitude, latitude]
+        [bounds[2], bounds[3]], // top right coordinate [longitude, latitude]
       ];
 
       const options = {
@@ -77,6 +82,7 @@ export default function MapScreen() {
         minZoom: 10,
         maxZoom: 20,
         metadata: {
+          // additional info
           creationDate: new Date().toISOString(),
         },
       };
@@ -126,6 +132,7 @@ export default function MapScreen() {
       },
     },
     {
+      // retrieve offline map packs that have been downloaded
       title: 'Get offline maps',
       onPress: async () => {
         try {

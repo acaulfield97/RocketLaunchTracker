@@ -16,6 +16,7 @@ export default function LoginScreen({navigation}: {navigation: any}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // login fucntion managed by firebase
   const loginWithEmailAndPass = () => {
     auth()
       .signInWithEmailAndPassword(email, password)

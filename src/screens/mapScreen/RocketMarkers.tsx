@@ -12,6 +12,8 @@ export default function RocketMarkers() {
   const {setSelectedRocket} = useRocket();
   const {rocketData} = useBluetoothContext();
 
+  //  Creates a GeoJSON Feature for the rocket if rocketData is available.
+  // defines the type as 'Point' with coordinates based on rocketData.longitude and rocketData.latitude.
   const points = rocketData
     ? [
         {
@@ -25,9 +27,11 @@ export default function RocketMarkers() {
       ]
     : [];
 
+  // Creates a GeoJSON FeatureCollection from the points array. This is the data structure required by the Mapbox ShapeSource.
   const rocketsFeatures = featureCollection(points);
 
-  // Handle rocket press event
+  // Event handler for when a rocket marker is pressed on the map.
+  // calls setSelectedRocket with the coordinates of the pressed marker to update the context with the selected rocket’s position.
   const onRocketPress = async (event: OnPressEvent) => {
     if (event.coordinates) {
       setSelectedRocket(event.coordinates);

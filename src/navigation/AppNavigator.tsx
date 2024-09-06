@@ -8,12 +8,15 @@ import BluetoothStack from './BluetoothStack';
 import getIcon from '../assets/icons';
 import colours from '../styles/colours';
 
+// bottom tabs at bottom of each screen
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
   return (
+    // component wraps the entire navigation structure. It manages the navigation tree and the app's navigation state
     <NavigationContainer>
       <Tab.Navigator
+        // set up look and behaviour of each tab
         screenOptions={({route}) => ({
           tabBarIcon: ({focused, color, size}) =>
             getIcon(route, focused, color, size),

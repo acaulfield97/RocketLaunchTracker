@@ -1,6 +1,6 @@
-// DataParserNMEA.ts
 import {NMEASentence, GPGGA, GPGSV, GPRMC, GPVTG} from '../../types/types';
 
+// parse sentence according to its type
 export const parseDataStream = (data: string): NMEASentence => {
   const fields = data.split(',');
   const sentenceType = fields[0];

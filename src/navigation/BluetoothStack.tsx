@@ -4,6 +4,8 @@ import BluetoothScreen from '../screens/bluetoothScreens/BluetoothScreen';
 import RawDataScreen from '../screens/bluetoothScreens/RawDataScreen';
 import {RootStackParamList} from '../types/types';
 
+// stack of screens realte to bluetooth
+// main bluetooth screen an raw data screen
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const BluetoothStack = () => (

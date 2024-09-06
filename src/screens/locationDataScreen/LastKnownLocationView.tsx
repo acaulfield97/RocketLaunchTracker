@@ -6,8 +6,11 @@ import {RocketPosition} from '../../types/types';
 import Clipboard from '@react-native-clipboard/clipboard';
 
 export default function LastKnownLocationView() {
+  //rocketData comes from the BluetoothContext, fetched via the useBluetoothContext hook.
   const {rocketData} = useBluetoothContext();
 
+  // state holds the most recent rocket location data (latitude, longitude, altitude, date, and time).
+  // Initially, the values are set to 0, this state is updated whenever the rocketData changes
   const [lastKnownRocketPosition, setLastKnownRocketPosition] =
     useState<RocketPosition>({
       latitude: 0,
@@ -17,6 +20,7 @@ export default function LastKnownLocationView() {
       time: 0,
     });
 
+  // hook updates lastKnownRocketPosition every time rocketData changes.
   useEffect(() => {
     setLastKnownRocketPosition({
       latitude: rocketData.latitude,
@@ -34,7 +38,7 @@ export default function LastKnownLocationView() {
     const minute = parseInt(timeStr.slice(2, 4), 10);
     const second = parseInt(timeStr.slice(4, 6), 10);
 
-    // Validate hour, minute, and second ranges
+    // ensures each part falls within valid ranges (0-23 for hours, 0-59 for minutes/seconds).
     return (
       hour >= 0 &&
       hour < 24 &&
@@ -46,6 +50,7 @@ export default function LastKnownLocationView() {
   };
 
   const formatTimeToUK = (time: number) => {
+    // validate time
     if (typeof time !== 'number' || isNaN(time)) {
       return 'Invalid time';
     }

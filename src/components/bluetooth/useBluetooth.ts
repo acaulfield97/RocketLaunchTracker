@@ -1,5 +1,4 @@
 // useBluetooth.ts
-
 import {useEffect, useState, useCallback, useRef} from 'react';
 import RNBluetoothClassic, {
   BluetoothDevice,
@@ -41,7 +40,7 @@ export const useBluetooth = (): BluetoothContextType => {
   const bufferRef = useRef<any[]>([]);
   const stillReadingRef = useRef(false);
   const lastReceivedDataTimestamp = useRef<number | null>(null); // Track last received data time
-  const readIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const readIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null); // useRef allows to persist interval across renders
   const [, forceUpdate] = useState(false);
 
   useEffect(() => {
@@ -55,12 +54,18 @@ export const useBluetooth = (): BluetoothContextType => {
     setupBluetooth();
   }, []);
 
+  // if selectedDevice is truthy and isConnected is true, the interval is
+  // set up to call the readData() function every 100 milliseconds
   useEffect(() => {
     let readInterval: ReturnType<typeof setInterval> | undefined;
     if (selectedDevice && isConnected) {
+      // call the readData function every 100 milliseconds
       readIntervalRef.current = setInterval(() => readData(), 100);
     }
+    // return cleanup function that clears interval when effect is cleaned up
+    // occurs when selectedDevice or isConnected changes
     return () => {
+      // if readIntervalRef.current is not null, clear the interval to avoid memory leaks or multiple intervals being set
       if (readIntervalRef.current) {
         clearInterval(readIntervalRef.current);
         readIntervalRef.current = null;
@@ -87,6 +92,7 @@ export const useBluetooth = (): BluetoothContextType => {
     return () => clearInterval(updateInterval);
   }, []);
 
+  // search for paired devices
   const startDeviceDiscovery = useCallback(async () => {
     try {
       const pairedDevices = await RNBluetoothClassic.getBondedDevices();
@@ -96,6 +102,7 @@ export const useBluetooth = (): BluetoothContextType => {
     }
   }, []);
 
+  // connect to device
   const connectToDevice = useCallback(async (device: BluetoothDevice) => {
     setConnectingDeviceId(device.id);
     const connectionSuccess = await connectToDeviceUtil(device);
@@ -106,6 +113,7 @@ export const useBluetooth = (): BluetoothContextType => {
     setConnectingDeviceId(null);
   }, []);
 
+  // disconnect from device
   const disconnect = async () => {
     if (selectedDevice) {
       try {
@@ -129,6 +137,7 @@ export const useBluetooth = (): BluetoothContextType => {
       }
     }
   };
+
   const readData = useCallback(async () => {
     if (stillReadingRef.current || !selectedDevice || !isConnected) {
       return;
@@ -136,10 +145,12 @@ export const useBluetooth = (): BluetoothContextType => {
 
     stillReadingRef.current = true;
     try {
+      // take in the message via Bluetooth
       let message = await selectedDevice.read();
       if (message) {
         message = message.trim();
         if (message !== '' && message !== ' ') {
+          // parse message
           const parsedData = parseDataStream(message.toString());
           if (parsedData) {
             bufferRef.current.push(parsedData); // Add to buffer
@@ -160,6 +171,7 @@ export const useBluetooth = (): BluetoothContextType => {
     }
   }, [selectedDevice, isConnected]);
 
+  // process buffered data and update rocket's state
   const processBuffer = () => {
     if (bufferRef.current.length === 0) return;
 
@@ -170,6 +182,7 @@ export const useBluetooth = (): BluetoothContextType => {
     bufferRef.current = []; // Clear the buffer after processing
   };
 
+  // update the rocket data by taking existing data and merging it with the new parsed data
   const updateRocketData = (parsedData: any) => {
     rocketDataRef.current = {
       ...rocketDataRef.current,
@@ -177,8 +190,8 @@ export const useBluetooth = (): BluetoothContextType => {
     };
   };
 
+  // extract relevant data from parsed sentence
   const getUpdatedRocketData = (parsedData: any) => {
-    console.log('Parsed Data:', parsedData); // Log the parsed data
     switch (parsedData.type) {
       case 'GPGGA': {
         const latitude = convertToDecimal(
@@ -224,6 +237,7 @@ export const useBluetooth = (): BluetoothContextType => {
     }
   };
 
+  // convert long and lat from hours/minutes to decimal format
   const convertToDecimal = (coordinate: string, direction: string): number => {
     if (!coordinate || !direction) return 0;
     let degrees = 0,
