@@ -4,7 +4,7 @@ import {useBluetoothContext} from '../../contexts/BluetoothContext';
 import styles from '../../styles/locationDataPageStyles';
 
 const SpeedView = () => {
-  const {rocketData} = useBluetoothContext();
+  const {rocketData, dataReceivingStatus} = useBluetoothContext();
 
   return (
     <View style={styles.sectionContainer}>
@@ -14,8 +14,10 @@ const SpeedView = () => {
       <View style={styles.bodyContainer}>
         <Text style={styles.subTitleText}>Speed: </Text>
         <Text style={styles.bodyText}>
-          {rocketData && rocketData.speed
-            ? rocketData.speed + ' kmph'
+          {dataReceivingStatus // Check if data is being received
+            ? rocketData.speed !== undefined && rocketData.speed !== null
+              ? `${rocketData.speed} kmph` // Display speed including 0
+              : 'Not available' // If speed is undefined or null
             : 'Not available'}
         </Text>
       </View>

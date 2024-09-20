@@ -13,36 +13,39 @@ import bluetoothPageStyles from '../../styles/bluetoothPageStyles';
 import {RootStackParamList} from '../../types/types';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
+// Define props for the screen using navigation stack params
 type RawDataScreenProps = NativeStackScreenProps<RootStackParamList, 'RawData'>;
 
 const RawDataScreen: React.FC<RawDataScreenProps> = ({route}) => {
-  // route object passed into the component includes parameters (parsedData and onRefresh)
   const {parsedData = [], onRefresh} = route.params;
-  const [data, setData] = useState(parsedData); // holds parsed data that is displayed
-  const scrollViewRef = useRef<ScrollView>(null); // reference to the ScrollView component, allowing programmatic scrolling to the end when new data is addeds
-  const [isAtBottom, setIsAtBottom] = useState(true); //boolean flag to determine if the user is scrolled to the bottom of the list.
-  const [isRefreshing, setIsRefreshing] = useState(false); //tracks whether the data is currently being refreshed.
+  const [data, setData] = useState(parsedData);
+  const scrollViewRef = useRef<ScrollView>(null); //Ref for the ScrollView component to control scrolling
+  const [isAtBottom, setIsAtBottom] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false); // State to manage the refreshing status (to disable button when refreshing)
 
-  // Tracks whether the user is scrolled to the bottom by comparing the scroll position (contentOffset.y) and the total height of the scrollable content.
+  // handles scrolling and checks if the user has scrolled to the bottom
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
+    // Determine if the scroll position is near the bottom of the content
     const isAtBottomNow =
       layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
+
+    // Update the state to reflect if it's at the bottom
     setIsAtBottom(isAtBottomNow);
   };
 
-  // scroll to bottom when new data is added
+  // Scroll to the bottom of the list when new data is added, if already at the bottom
   useEffect(() => {
     if (scrollViewRef.current && isAtBottom) {
       scrollViewRef.current.scrollToEnd({animated: true});
     }
   }, [parsedData]);
 
-  // async function that calls the onRefresh method passed via the route.params.
-  // updates the data and turns off the refreshing state once new data is received.
+  // handle the refresh action, calling the passed onRefresh function
   const handleRefresh = async () => {
     if (onRefresh) {
       setIsRefreshing(true);
+      // Await new data from onRefresh, then update the data and reset refreshing state
       const newData = await onRefresh();
       setData(newData);
       setIsRefreshing(false);
